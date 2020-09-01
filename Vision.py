@@ -85,6 +85,9 @@ while(cap.isOpened()):
 		# cv2.imshow("Sample",sample_img)
 		# cv2.imshow("Rock", rock_img)
 		# cv2.imshow("Obstacle", obstacle_img)
+		# blurred = cv2.GaussianBlur(total_img, (5, 5), 0)
+		# thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
+
 		cv2.namedWindow('Thresholder_App', cv2.WINDOW_NORMAL) #sets window as resizable
 		cv2.imshow("Total", total_img)
 
