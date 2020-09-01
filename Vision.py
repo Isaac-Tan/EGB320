@@ -29,7 +29,7 @@ r_hmax = 110
 r_smin = 71
 r_smax = 255
 #Value
-r_vmin = 90
+r_vmin = 80
 r_vmax = 255
 
 ##Obstacle
@@ -40,7 +40,7 @@ o_hmax = 56
 o_smin = 133
 o_smax = 255
 #Value
-o_vmin = 90
+o_vmin = 80
 o_vmax = 255
 
 
@@ -49,8 +49,8 @@ o_vmax = 255
 cap = cv2.VideoCapture(sys.argv[1])
 #Camera
 #cap = cv2.VideoCapture(0)
-cap.set(3, 320)									# Set the frame width
-cap.set(4, 240)									# Set the frame height
+# cap.set(3, 640)									# Set the frame width
+# cap.set(4, 480)									# Set the frame height
 
 # Check if camera opened successfully
 if (cap.isOpened()== False): 
@@ -75,9 +75,11 @@ while(cap.isOpened()):
 		r_mask = cv2.inRange(hsv, r_min_arr, r_max_arr)
 		o_mask = cv2.inRange(hsv, o_min_, o_max_)
 
-		sample_img = cv2.bitwise_and(frame, frame, mask= s_mask)
-		rock_img = cv2.bitwise_and(frame, frame, mask= r_mask)
-		obstacle_img = cv2.bitwise_and(frame, frame, mask= o_mask)
+		blurred = cv2.GaussianBlur(frame, (5, 5), 0)
+
+		sample_img = cv2.bitwise_and(blurred, blurred, mask= s_mask)
+		rock_img = cv2.bitwise_and(blurred, blurred, mask= r_mask)
+		obstacle_img = cv2.bitwise_and(blurred, blurred, mask= o_mask)
 
 		total_img = sample_img + rock_img + obstacle_img
 
@@ -85,11 +87,20 @@ while(cap.isOpened()):
 		# cv2.imshow("Sample",sample_img)
 		# cv2.imshow("Rock", rock_img)
 		# cv2.imshow("Obstacle", obstacle_img)
-		# blurred = cv2.GaussianBlur(total_img, (5, 5), 0)
-		# thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
+		# rgb_tot = cv2.cvtColor(total_img, cv2.COLOR_HSV2RGB)
+		# gray = cv2.cvtColor(rgb_tot, cv2.COLOR_BGR2GRAY)
+		
+		thresh = cv2.threshold(total_img, 0, 255, cv2.THRESH_BINARY)[1]
+		kernel = np.ones((5,5),np.uint8)
+		# opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
+		# closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
+		dilation = cv2.dilate(thresh,kernel,iterations = 1)
+		erosion = cv2.erode(dilation,kernel,iterations = 2)
+		opened = cv2.dilate(erosion,kernel,iterations = 1)
+		blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)
 
 		cv2.namedWindow('Thresholder_App', cv2.WINDOW_NORMAL) #sets window as resizable
-		cv2.imshow("Total", total_img)
+		cv2.imshow("Total", blurred_thresh)
 
 		k = cv2.waitKey(1) & 0xFF
 
