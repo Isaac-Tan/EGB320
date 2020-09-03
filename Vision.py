@@ -2,6 +2,8 @@
 import cv2
 import numpy as np
 import sys
+import argparse
+import imutils
 
 if(len(sys.argv) < 2):
   exit(0)
@@ -29,7 +31,7 @@ r_hmax = 110
 r_smin = 71
 r_smax = 255
 #Value
-r_vmin = 80
+r_vmin = 70
 r_vmax = 255
 
 ##Obstacle
@@ -40,26 +42,32 @@ o_hmax = 56
 o_smin = 133
 o_smax = 255
 #Value
-o_vmin = 80
+o_vmin = 70
 o_vmax = 255
 
+# ap = argparse.ArgumentParser()
+# ap.add_argument("-i", "--image", required=True, help="path to the input image")
+# args = vars(ap.parse_args())
 
 
 #Video
-cap = cv2.VideoCapture(sys.argv[1])
+# cap = cv2.VideoCapture(sys.argv[1])
 #Camera
-#cap = cv2.VideoCapture(0)
-# cap.set(3, 640)									# Set the frame width
-# cap.set(4, 480)									# Set the frame height
+cap = cv2.VideoCapture(0)
+cap.set(3, 640)									# Set the frame width
+cap.set(4, 480)									# Set the frame height
 
 # Check if camera opened successfully
 if (cap.isOpened()== False): 
   print("Error opening video stream or file")
 
+
+
 while(cap.isOpened()): 
 	# Capture frame-by-frame
 	ret, frame = cap.read()
 	if ret == True:
+
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
 		s_min_arr = np.array([s_hmin,s_smin,s_vmin])
@@ -87,20 +95,47 @@ while(cap.isOpened()):
 		# cv2.imshow("Sample",sample_img)
 		# cv2.imshow("Rock", rock_img)
 		# cv2.imshow("Obstacle", obstacle_img)
-		# rgb_tot = cv2.cvtColor(total_img, cv2.COLOR_HSV2RGB)
-		# gray = cv2.cvtColor(rgb_tot, cv2.COLOR_BGR2GRAY)
+		rgb_tot = cv2.cvtColor(total_img, cv2.COLOR_HSV2RGB)
+		gray = cv2.cvtColor(rgb_tot, cv2.COLOR_BGR2GRAY)
 		
-		thresh = cv2.threshold(total_img, 0, 255, cv2.THRESH_BINARY)[1]
+		thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]
 		kernel = np.ones((5,5),np.uint8)
 		# opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 		# closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-		dilation = cv2.dilate(thresh,kernel,iterations = 1)
-		erosion = cv2.erode(dilation,kernel,iterations = 2)
-		opened = cv2.dilate(erosion,kernel,iterations = 1)
+		dilation = cv2.dilate(thresh,kernel,iterations = 5)
+		erosion = cv2.erode(dilation,kernel,iterations = 10)
+		opened = cv2.dilate(erosion,kernel,iterations = 5)
 		blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)
 
+		ims = blurred_thresh.copy()
+
+		# info = np.iinfo(ims.dtype) # Get the information of the incoming image type
+		# ims = ims.astype(np.float64) / info.max # normalize the data to 0 - 1
+		# ims = 255 * ims # Now scale by 255
+		# ims = ims.astype(np.uint8)
+
+		# find contours in the thresholded image
+		cnts = cv2.findContours(ims, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+		cnts = imutils.grab_contours(cnts)
+
+		# loop over the contours
+		for c in cnts:
+			# compute the center of the contour
+			M = cv2.moments(c)
+			cX = int(M["m10"] / M["m00"])#Centre x-coord
+			cY = int(M["m01"] / M["m00"])#Centre y-coord
+			# draw the contour and center of the shape on the image
+			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+			cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
+
+			cv2.putText(total_img, "center", (cX - 20, cY - 20),
+				cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+			# show the image
+			# cv2.imshow("Image", total_img)
+			#cv2.waitKey(0)
+
 		cv2.namedWindow('Thresholder_App', cv2.WINDOW_NORMAL) #sets window as resizable
-		cv2.imshow("Total", blurred_thresh)
+		cv2.imshow("Total", total_img)
 
 		k = cv2.waitKey(1) & 0xFF
 
