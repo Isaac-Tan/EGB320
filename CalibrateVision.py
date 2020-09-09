@@ -46,6 +46,7 @@ def capture():
 		if ret == True:
 			# height = frame.shape[0]
 			# width = frame.shape[1]
+			frame = cv2.rotate(frame, cv2.ROTATE_180)
 			process(frame)
 			k = cv2.waitKey(1) & 0xFF
 
