@@ -13,6 +13,7 @@ def nothing(x):
 cap = None
 
 cv2.namedWindow('Thresholder_App')
+cv2.namedWindow('Live_feed')
 
 cv2.createTrackbar("VMax", "Thresholder_App",0,255,nothing)
 cv2.createTrackbar("VMin", "Thresholder_App",0,255,nothing)
@@ -70,7 +71,7 @@ def process(frame):
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	mask = cv2.inRange(hsv, min_, max_)
 	thresholded_img = cv2.bitwise_and(frame, frame, mask = mask)
-	cv2.imshow("Thresholder_App", thresholded_img)
+	cv2.imshow("Live_feed", thresholded_img)
 
 	k = cv2.waitKey(1) & 0xFF
 	# exit if r is pressed
