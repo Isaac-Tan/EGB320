@@ -6,11 +6,8 @@ import argparse
 import imutils
 import time
 
-# if(len(sys.argv) < 2):
-#   exit(0)
-
-# def nothing(x):
-#   pass
+FREQUENCY = 10 #Hz
+INTERVAL = 1.0/FREQUENCY
 
 #HSV Value arrays
 s_min_ = [int]*3
@@ -48,16 +45,16 @@ def bounds():
 # ap.add_argument("-i", "--image", required=True, help="path to the input image")
 # args = vars(ap.parse_args())
 cap = None
-height = 360
-width = 1280
+HEIGHT = 240
+WIDTH = 320
 
 def capture():
 	#Video
 	cap = cv2.VideoCapture(sys.argv[1])
 	#Camera
 	#cap = cv2.VideoCapture(0)
-	cap.set(3, 320)									# Set the frame width
-	cap.set(4, 240)									# Set the frame height
+	cap.set(3, 320)									# Set the frame WIDTH
+	cap.set(4, 240)									# Set the frame HEIGHT
 	# Check if camera opened successfully
 	if (cap.isOpened()== False): 
 	  print("Error opening video stream or file")
@@ -66,8 +63,6 @@ def capture():
 	# Capture frame-by-frame
 		ret, frame = cap.read()
 		if ret == True:
-			# height = frame.shape[0]
-			# width = frame.shape[1]
 			process(frame)
 			k = cv2.waitKey(1) & 0xFF
 
@@ -83,6 +78,7 @@ def capture():
 
 
 def process(frame):
+	frame = cv2.rotate(frame, cv2.ROTATE_180)
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
 	s_min_arr = np.array(s_min_)
@@ -140,21 +136,29 @@ def process(frame):
 		cX = int(M["m10"] / M["m00"])#Centre x-coord
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
 		# compute bearing of the contour
-		bearing = round(31.1 * ((cX - (width/2))/(width/2)),3)
+		bearing = round(31.1 * ((cX - (WIDTH/2))/(WIDTH/2)),3)
 		# draw the contour and center of the shape on the image
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
-		cv2.line(total_img, ((int(width/2)),0), ((int(width/2)),int(height)), (255, 0, 0))
+		# draw a line down the centre of the screen
+		cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
+		# get height/width of contour
+		x,y,h,w = cv2.boundingRect(c)
+		#calculate distance
+		dist = round((3.04*700)/(h),3)
+		cv2.putText(total_img, str(dist), (cX - 20, cY + 40),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 0, 0), 2)
 		cv2.putText(total_img, str(bearing), (cX - 20, cY + 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 0, 0), 2)
 		cv2.putText(total_img, "center", (cX - 20, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 0, 0), 2)
 		# show the image
 		# cv2.imshow("Image", total_img)
 		#cv2.waitKey(0)
 
 	#cv2.namedWindow('Thresholder_App', cv2.WINDOW_NORMAL) #sets window as resizable
 	cv2.imshow("Total", total_img)
+	time.sleep(0.0001)
 
 
 def cleanUp():
@@ -168,3 +172,4 @@ if __name__ == '__main__':
 		init = True
 	capture()
 	elapsed = time.time() - now
+	# time.sleep(INTERVAL - elapsed)
