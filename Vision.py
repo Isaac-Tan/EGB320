@@ -106,31 +106,46 @@ def process(frame):
 	# cv2.imshow("Sample",sample_img)
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
-	rgb_tot = cv2.cvtColor(total_img, cv2.COLOR_HSV2RGB)
-	gray = cv2.cvtColor(rgb_tot, cv2.COLOR_BGR2GRAY)
+	rgb_s = cv2.cvtColor(sample_img, cv2.COLOR_HSV2RGB)
+	rgb_r = cv2.cvtColor(rock_img, cv2.COLOR_HSV2RGB)
+	rgb_o = cv2.cvtColor(obstacle_img, cv2.COLOR_HSV2RGB)
+
+	gray_s = cv2.cvtColor(rgb_s, cv2.COLOR_BGR2GRAY)
+	gray_r = cv2.cvtColor(rgb_r, cv2.COLOR_BGR2GRAY)
+	gray_o = cv2.cvtColor(rgb_o, cv2.COLOR_BGR2GRAY)
 	
-	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]
+	thresh_s = cv2.threshold(gray_s, 0, 255, cv2.THRESH_BINARY)[1]
+	thresh_r = cv2.threshold(gray_r, 0, 255, cv2.THRESH_BINARY)[1]
+	thresh_o = cv2.threshold(gray_o, 0, 255, cv2.THRESH_BINARY)[1]
 	kernel = np.ones((5,5),np.uint8)
 	# opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 	# closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-	dilation = cv2.dilate(thresh,kernel,iterations = 5)
-	erosion = cv2.erode(dilation,kernel,iterations = 10)
-	opened = cv2.dilate(erosion,kernel,iterations = 5)
-	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)
+	dilation_s = cv2.dilate(thresh_s,kernel,iterations = 15)
+	dilation_r = cv2.dilate(thresh_r,kernel,iterations = 15)
+	dilation_o = cv2.dilate(thresh_o,kernel,iterations = 15)
 
-	ims = blurred_thresh.copy()
+	erosion_s = cv2.erode(dilation_s,kernel,iterations = 30)
+	erosion_r = cv2.erode(dilation_r,kernel,iterations = 30)
+	erosion_o = cv2.erode(dilation_o,kernel,iterations = 30)
 
-	# info = np.iinfo(ims.dtype) # Get the information of the incoming image type
-	# ims = ims.astype(np.float64) / info.max # normalize the data to 0 - 1
-	# ims = 255 * ims # Now scale by 255
-	# ims = ims.astype(np.uint8)
+	opened_s = cv2.dilate(erosion_s,kernel,iterations = 15)
+	opened_r = cv2.dilate(erosion_r,kernel,iterations = 15)
+	opened_o = cv2.dilate(erosion_o,kernel,iterations = 15)
+
+	blurred_thresh_s = cv2.GaussianBlur(opened_s, (5, 5), 0)
+	blurred_thresh_r = cv2.GaussianBlur(opened_r, (5, 5), 0)
+	blurred_thresh_o = cv2.GaussianBlur(opened_o, (5, 5), 0)
+
+	ims_s = blurred_thresh_s.copy()
+	ims_r = blurred_thresh_r.copy()
+	ims_o = blurred_thresh_o.copy()
 
 	# find contours in the thresholded image
-	cnts = cv2.findContours(ims, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-	cnts = imutils.grab_contours(cnts)
+	cnts_s = cv2.findContours(ims_s, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+	cnts_s = imutils.grab_contours(cnts_s)
 
 	# loop over the contours
-	for c in cnts:
+	for c in cnts_s:
 		# compute the center of the contour
 		M = cv2.moments(c)
 		cX = int(M["m10"] / M["m00"])#Centre x-coord
@@ -140,25 +155,75 @@ def process(frame):
 		# draw the contour and center of the shape on the image
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
-		# draw a line down the centre of the screen
-		cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
 		# get height/width of contour
 		x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
 		dist = round((3.04*700)/(h),3)
-		cv2.putText(total_img, str(dist), (cX - 20, cY + 40),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 0, 0), 2)
-		cv2.putText(total_img, str(bearing), (cX - 20, cY + 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 0, 0), 2)
-		cv2.putText(total_img, "center", (cX - 20, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 0, 0), 2)
+		cv2.putText(total_img, "R: " + str(dist), (cX - 15, cY + 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		# show the image
 		# cv2.imshow("Image", total_img)
 		#cv2.waitKey(0)
+		# find contours in the thresholded image
+	cnts_r = cv2.findContours(ims_r, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+	cnts_r = imutils.grab_contours(cnts_r)
 
+	# loop over the contours
+	for c in cnts_r:
+		# compute the center of the contour
+		M = cv2.moments(c)
+		cX = int(M["m10"] / M["m00"])#Centre x-coord
+		cY = int(M["m01"] / M["m00"])#Centre y-coord
+		# compute bearing of the contour
+		bearing = round(31.1 * ((cX - (WIDTH/2))/(WIDTH/2)),3)
+		# draw the contour and center of the shape on the image
+		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
+		# get height/width of contour
+		x,y,h,w = cv2.boundingRect(c)
+		#calculate distance
+		dist = round((3.04*700)/(h),3)
+		cv2.putText(total_img, "R: " + str(dist), (cX - 15, cY + 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+	
+		# find contours in the thresholded image
+	cnts_o = cv2.findContours(ims_o, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+	cnts_o = imutils.grab_contours(cnts_o)
+
+	# loop over the contours
+	for c in cnts_o:
+		# compute the center of the contour
+		M = cv2.moments(c)
+		cX = int(M["m10"] / M["m00"])#Centre x-coord
+		cY = int(M["m01"] / M["m00"])#Centre y-coord
+		# compute bearing of the contour
+		bearing = round(31.1 * ((cX - (WIDTH/2))/(WIDTH/2)),3)
+		# draw the contour and center of the shape on the image
+		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
+		# get height/width of contour
+		x,y,h,w = cv2.boundingRect(c)
+		#calculate distance
+		dist = round((3.04*700)/(h),3)
+		cv2.putText(total_img, "R: " + str(dist), (cX - 15, cY + 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	#cv2.namedWindow('Thresholder_App', cv2.WINDOW_NORMAL) #sets window as resizable
+			# draw a line down the centre of the screen
+	cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
 	cv2.imshow("Total", total_img)
-	time.sleep(0.0001)
+	# time.sleep(0.0001)
 
 
 def cleanUp():
