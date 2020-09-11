@@ -6,7 +6,7 @@ import argparse
 import imutils
 import time
 
-FREQUENCY = 10 #Hz
+FREQUENCY = 40 #Hz
 INTERVAL = 1.0/FREQUENCY
 FOCAL_LEN = 3.04 #mm
 SENSOR_HEIGHT = 2.76 #mm
@@ -84,6 +84,7 @@ def capture():
 
 
 def process(frame):
+	now = time.time()
 	frame = cv2.rotate(frame, cv2.ROTATE_180)
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
@@ -157,7 +158,7 @@ def process(frame):
 		cX = int(M["m10"] / M["m00"])#Centre x-coord
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
 		# compute bearing of the contour
-		bearing = round(31.1 * ((cX - (WIDTH/2))/(WIDTH/2)),3)
+		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
 		# draw the contour and center of the shape on the image
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
@@ -185,7 +186,7 @@ def process(frame):
 		cX = int(M["m10"] / M["m00"])#Centre x-coord
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
 		# compute bearing of the contour
-		bearing = round(31.1 * ((cX - int(WIDTH/2))/int(WIDTH/2)),3)
+		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
 		# draw the contour and center of the shape on the image
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
@@ -211,7 +212,7 @@ def process(frame):
 		cX = int(M["m10"] / M["m00"])#Centre x-coord
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
 		# compute bearing of the contour
-		bearing = round(31.1 * ((cX - (WIDTH/2))/(WIDTH/2)),3)
+		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
 		# draw the contour and center of the shape on the image
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
@@ -228,8 +229,18 @@ def process(frame):
 	#cv2.namedWindow('Thresholder_App', cv2.WINDOW_NORMAL) #sets window as resizable
 			# draw a line down the centre of the screen
 	cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
+	
+
+	elapsed = time.time() - now
+	rate = round(1.0/elapsed,0)
+	if (rate > FREQUENCY):
+		time.sleep(INTERVAL - elapsed)
+	elapsed2 = time.time() - now
+	rate2 = round(1.0/elapsed2,0)
+	print("Processing Rate after sleep is {}.".format(rate2))
+	cv2.putText(total_img, "Frquency: " + str(rate2) + "Hz", (15, 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	cv2.imshow("Total", total_img)
-	# time.sleep(0.0001)
 
 
 def cleanUp():
@@ -237,10 +248,7 @@ def cleanUp():
 	cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-	now = time.time()
 	if (init == False):
 		bounds()
 		init = True
 	capture()
-	elapsed = time.time() - now
-	# time.sleep(INTERVAL - elapsed)
