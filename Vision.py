@@ -14,6 +14,8 @@ SENSOR_WIDTH = 3.68 #mm
 OBST_HEIGHT = 70 #mm
 ROCK_HEIGHT = 70 #mm
 SAMPLE_HEIGHT = 40 #mm
+HEIGHT = 240 #screen height
+WIDTH = 320 #screen width
 
 #HSV Value arrays
 s_min_ = [int]*3
@@ -24,6 +26,8 @@ o_min_ = [int]*3
 o_max_ = [int]*3
 
 init = False
+
+cap = None
 
 def bounds():
 	##Gets the HSV values from the .txt files
@@ -46,13 +50,6 @@ def bounds():
 		o_max_[i] = (int(f.readline()))
 	f.close()
 
-
-# ap = argparse.ArgumentParser()
-# ap.add_argument("-i", "--image", required=True, help="path to the input image")
-# args = vars(ap.parse_args())
-cap = None
-HEIGHT = 240
-WIDTH = 320
 
 def capture():
 	#Video
@@ -113,13 +110,10 @@ def process(frame):
 	# cv2.imshow("Sample",sample_img)
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
-	rgb_s = cv2.cvtColor(sample_img, cv2.COLOR_HSV2RGB)
-	rgb_r = cv2.cvtColor(rock_img, cv2.COLOR_HSV2RGB)
-	rgb_o = cv2.cvtColor(obstacle_img, cv2.COLOR_HSV2RGB)
 
-	gray_s = cv2.cvtColor(rgb_s, cv2.COLOR_BGR2GRAY)
-	gray_r = cv2.cvtColor(rgb_r, cv2.COLOR_BGR2GRAY)
-	gray_o = cv2.cvtColor(rgb_o, cv2.COLOR_BGR2GRAY)
+	gray_s = sample_img[:, :, 2]
+	gray_r = rock_img[:, :, 2]
+	gray_o = obstacle_img[:, :, 2]
 	
 	thresh_s = cv2.threshold(gray_s, 0, 255, cv2.THRESH_BINARY)[1]
 	thresh_r = cv2.threshold(gray_r, 0, 255, cv2.THRESH_BINARY)[1]
@@ -143,9 +137,9 @@ def process(frame):
 	blurred_thresh_r = cv2.GaussianBlur(opened_r, (5, 5), 0)
 	blurred_thresh_o = cv2.GaussianBlur(opened_o, (5, 5), 0)
 
-	ims_s = blurred_thresh_s.copy()
-	ims_r = blurred_thresh_r.copy()
-	ims_o = blurred_thresh_o.copy()
+	ims_s = blurred_thresh_s
+	ims_r = blurred_thresh_r
+	ims_o = blurred_thresh_o
 
 	# find contours in the thresholded image
 	cnts_s = cv2.findContours(ims_s, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
@@ -233,11 +227,10 @@ def process(frame):
 
 	elapsed = time.time() - now
 	rate = round(1.0/elapsed,0)
-	if (rate > FREQUENCY):
-		time.sleep(INTERVAL - elapsed)
+	# if (rate > FREQUENCY):
+	# 	time.sleep(INTERVAL - elapsed)
 	elapsed2 = time.time() - now
 	rate2 = round(1.0/elapsed2,0)
-	print("Processing Rate after sleep is {}.".format(rate2))
 	cv2.putText(total_img, "Frquency: " + str(rate2) + "Hz", (15, 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	cv2.imshow("Total", total_img)
