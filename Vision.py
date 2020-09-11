@@ -8,6 +8,12 @@ import time
 
 FREQUENCY = 10 #Hz
 INTERVAL = 1.0/FREQUENCY
+FOCAL_LEN = 3.04 #mm
+SENSOR_HEIGHT = 2.76 #mm
+SENSOR_WIDTH = 3.68 #mm
+OBST_HEIGHT = 70 #mm
+ROCK_HEIGHT = 70 #mm
+SAMPLE_HEIGHT = 40 #mm
 
 #HSV Value arrays
 s_min_ = [int]*3
@@ -120,17 +126,17 @@ def process(frame):
 	kernel = np.ones((5,5),np.uint8)
 	# opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 	# closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
-	dilation_s = cv2.dilate(thresh_s,kernel,iterations = 15)
-	dilation_r = cv2.dilate(thresh_r,kernel,iterations = 15)
-	dilation_o = cv2.dilate(thresh_o,kernel,iterations = 15)
+	dilation_s = cv2.dilate(thresh_s,kernel,iterations = 5)
+	dilation_r = cv2.dilate(thresh_r,kernel,iterations = 5)
+	dilation_o = cv2.dilate(thresh_o,kernel,iterations = 5)
 
-	erosion_s = cv2.erode(dilation_s,kernel,iterations = 30)
-	erosion_r = cv2.erode(dilation_r,kernel,iterations = 30)
-	erosion_o = cv2.erode(dilation_o,kernel,iterations = 30)
+	erosion_s = cv2.erode(dilation_s,kernel,iterations = 10)
+	erosion_r = cv2.erode(dilation_r,kernel,iterations = 10)
+	erosion_o = cv2.erode(dilation_o,kernel,iterations = 10)
 
-	opened_s = cv2.dilate(erosion_s,kernel,iterations = 15)
-	opened_r = cv2.dilate(erosion_r,kernel,iterations = 15)
-	opened_o = cv2.dilate(erosion_o,kernel,iterations = 15)
+	opened_s = cv2.dilate(erosion_s,kernel,iterations = 5)
+	opened_r = cv2.dilate(erosion_r,kernel,iterations = 5)
+	opened_o = cv2.dilate(erosion_o,kernel,iterations = 5)
 
 	blurred_thresh_s = cv2.GaussianBlur(opened_s, (5, 5), 0)
 	blurred_thresh_r = cv2.GaussianBlur(opened_r, (5, 5), 0)
@@ -158,8 +164,8 @@ def process(frame):
 		# get height/width of contour
 		x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
-		dist = round((3.04*700)/(h),3)
-		cv2.putText(total_img, "R: " + str(dist), (cX - 15, cY + 20),
+		dist = round(0.1*(FOCAL_LEN*SAMPLE_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
@@ -179,15 +185,15 @@ def process(frame):
 		cX = int(M["m10"] / M["m00"])#Centre x-coord
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
 		# compute bearing of the contour
-		bearing = round(31.1 * ((cX - (WIDTH/2))/(WIDTH/2)),3)
+		bearing = round(31.1 * ((cX - int(WIDTH/2))/int(WIDTH/2)),3)
 		# draw the contour and center of the shape on the image
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
 		# get height/width of contour
 		x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
-		dist = round((3.04*700)/(h),3)
-		cv2.putText(total_img, "R: " + str(dist), (cX - 15, cY + 20),
+		dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+		cv2.putText(total_img, "R: " + str(dist) +"cm", (cX - 15, cY + 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
@@ -212,8 +218,8 @@ def process(frame):
 		# get height/width of contour
 		x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
-		dist = round((3.04*700)/(h),3)
-		cv2.putText(total_img, "R: " + str(dist), (cX - 15, cY + 20),
+		dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
