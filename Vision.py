@@ -155,11 +155,11 @@ def thresh(input_frame, type, total_img):
 		x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
 		if (type == 0):
-			dist = round(0.1*(FOCAL_LEN*SAMPLE_HEIGHT)/(h),3)
+			dist = round(0.1*(FOCAL_LEN*SAMPLE_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		elif (type == 1):
-			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT)/(h),3)
+			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		elif (type == 2):
-			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT)/(h),3)
+			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
 		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
