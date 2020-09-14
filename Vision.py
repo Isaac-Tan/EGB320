@@ -6,7 +6,7 @@ import argparse
 import imutils
 import time
 
-FREQUENCY = 10 #Hz
+FREQUENCY = 50 #Hz
 INTERVAL = 1.0/FREQUENCY
 FOCAL_LEN = 3.04 #mm
 SENSOR_HEIGHT = 2.76 #mm
@@ -89,7 +89,8 @@ def bounds():
 	for i in range(3):
 		s_min_1[i] = (int(f.readline()))
 		s_max_1[i] = (int(f.readline()))
-		f.seek(0)
+	f.seek(0)
+	for i in range(3):
 		s_min_2[i] = (int(f.readline()))
 		s_max_2[i] = (int(f.readline()))
 	f.close()
@@ -158,7 +159,7 @@ def thresh(input_frame, type, total_img):
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT)/(h),3)
 		elif (type == 2):
-			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT)/(h),3)
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
 		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
@@ -233,6 +234,9 @@ def process(frame):
 
 	blurred = cv2.GaussianBlur(frame, (5, 5), 0)
 
+	# sample_img1 = cv2.bitwise_and(blurred, blurred, mask= s_mask1)
+	# sample_img2 = cv2.bitwise_and(blurred, blurred, mask= s_mask2)
+	# sample_img = sample_img1 + sample_img2
 	sample_img = cv2.bitwise_and(blurred, blurred, mask= s_mask)
 	rock_img = cv2.bitwise_and(blurred, blurred, mask= r_mask)
 	obstacle_img = cv2.bitwise_and(blurred, blurred, mask= o_mask)
@@ -241,7 +245,7 @@ def process(frame):
 	total_img = frame
 
 
-	# cv2.imshow("Sample",sample_img)
+	#cv2.imshow("Sample",sample_img)
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
 	Sample_list = []
