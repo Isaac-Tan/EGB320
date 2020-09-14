@@ -16,7 +16,7 @@ writing = False
 
 obj = 'Live_feed'
 
-cv2.namedWindow('Thresholder_App')
+cv2.namedWindow('Thresholder_App', cv2.WINDOW_NORMAL)
 cv2.namedWindow('Live_feed')
 
 cv2.createTrackbar("HMax", "Thresholder_App",0,179,nothing)
@@ -26,12 +26,19 @@ cv2.createTrackbar("SMin", "Thresholder_App",0,255,nothing)
 cv2.createTrackbar("VMax", "Thresholder_App",0,255,nothing)
 cv2.createTrackbar("VMin", "Thresholder_App",0,255,nothing)
 
-cv2.setTrackbarPos("HMax", "Thresholder_App", 179)
-cv2.setTrackbarPos("HMin", "Thresholder_App", 0)
-cv2.setTrackbarPos("SMax", "Thresholder_App", 255)
-cv2.setTrackbarPos("SMin", "Thresholder_App", 0)
-cv2.setTrackbarPos("VMax", "Thresholder_App", 255)
-cv2.setTrackbarPos("VMin", "Thresholder_App", 0)
+hmax = 179
+hmin = 0
+smax = 255
+smin = 0
+vmax = 255
+vmin = 0
+
+cv2.setTrackbarPos("HMax", "Thresholder_App", hmax)
+cv2.setTrackbarPos("HMin", "Thresholder_App", hmin)
+cv2.setTrackbarPos("SMax", "Thresholder_App", smax)
+cv2.setTrackbarPos("SMin", "Thresholder_App", smin)
+cv2.setTrackbarPos("VMax", "Thresholder_App", vmax)
+cv2.setTrackbarPos("VMin", "Thresholder_App", vmin)
 
 def capture():
 	#Video
@@ -65,6 +72,7 @@ def capture():
 	cleanUp()
 
 def process(frame):
+	global hmax, hmin, smax, smin, vmax, vmin
 	hmax=cv2.getTrackbarPos("HMax", "Thresholder_App")
 	hmin=cv2.getTrackbarPos("HMin", "Thresholder_App")
 	smax=cv2.getTrackbarPos("SMax", "Thresholder_App")
@@ -83,7 +91,7 @@ def process(frame):
 		cv2.putText(thresholded_img,"Reading", (15, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	elif (writing == True):
 		cv2.putText(thresholded_img,"Writing", (15, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-	cv2.putText(thresholded_img, obj, (280, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+	cv2.putText(thresholded_img, obj, (270, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	cv2.imshow('Live_feed', thresholded_img)
 
 	k = cv2.waitKey(1) & 0xFF
@@ -157,14 +165,17 @@ def process(frame):
 			vmin = (int(f.readline()))
 			vmax = (int(f.readline()))
 			f.close()
-			
+	time.sleep(0.0000001)
+	setVals()
+
+def setVals():
+	#Sets Trackbar vals
 	cv2.setTrackbarPos("HMax", "Thresholder_App", hmax)
 	cv2.setTrackbarPos("HMin", "Thresholder_App", hmin)
 	cv2.setTrackbarPos("SMax", "Thresholder_App", smax)
 	cv2.setTrackbarPos("SMin", "Thresholder_App", smin)
 	cv2.setTrackbarPos("VMax", "Thresholder_App", vmax)
 	cv2.setTrackbarPos("VMin", "Thresholder_App", vmin)
-
 
 def cleanUp():
 	# Closes all the frames
