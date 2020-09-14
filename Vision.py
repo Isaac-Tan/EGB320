@@ -18,15 +18,19 @@ HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
 
 #HSV Value arrays
-s_min_ = [int]*3
-s_max_ = [int]*3
+s_min_1 = [int]*3
+s_max_1 = [int]*3
+s_min_2 = [int]*3
+s_max_2 = [int]*3
 r_min_ = [int]*3
 r_max_ = [int]*3
 o_min_ = [int]*3
 o_max_ = [int]*3
 
-s_max_arr = []
-s_min_arr = []
+s_max_arr1 = []
+s_min_arr1 = []
+s_max_arr2 = []
+s_min_arr2 = []
 r_max_arr = []
 r_min_arr = []
 o_max_arr = []
@@ -83,8 +87,11 @@ def bounds():
 	#Sample
 	f = open("sample.txt","r")
 	for i in range(3):
-		s_min_[i] = (int(f.readline()))
-		s_max_[i] = (int(f.readline()))
+		s_min_1[i] = (int(f.readline()))
+		s_max_1[i] = (int(f.readline()))
+		f.seek(0)
+		s_min_2[i] = (int(f.readline()))
+		s_max_2[i] = (int(f.readline()))
 	f.close()
 	#Rock
 	f = open("rock.txt","r")
@@ -99,10 +106,18 @@ def bounds():
 		o_max_[i] = (int(f.readline()))
 	f.close()
 
-	global s_min_arr
-	s_min_arr = np.array(s_min_)
-	global s_max_arr
-	s_max_arr = np.array(s_max_)
+	global s_min_arr1
+	global s_max_arr1
+	s_max_1[0] = s_min_1[0]
+	s_min_1[0] = 0
+	s_min_arr1 = np.array(s_min_1)
+	s_max_arr1 = np.array(s_max_1)
+	global s_min_arr2
+	global s_max_arr2
+	s_min_2[0] = s_max_2[0]
+	s_max_2[0] = 179
+	s_min_arr2 = np.array(s_min_2)
+	s_max_arr2 = np.array(s_max_2)
 
 	global r_min_arr
 	r_min_arr = np.array(r_min_)
@@ -138,7 +153,12 @@ def thresh(input_frame, type, total_img):
 		# get height/width of contour
 		x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
-		dist = round(0.1*(FOCAL_LEN*SAMPLE_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+		if (type == 0):
+			dist = round(0.1*(FOCAL_LEN*SAMPLE_HEIGHT)/(h),3)
+		elif (type == 1):
+			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT)/(h),3)
+		elif (type == 2):
+			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
 		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
@@ -148,7 +168,7 @@ def thresh(input_frame, type, total_img):
 		if (type == 0):
 			global Sample_list
 			sample = Sample(i,dist,bearing,cX,cY)
-			Sample_list[i] = sample
+			Sample_list.append(Sample(i,dist,bearing,cX,cY))
 			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):
@@ -167,7 +187,7 @@ def thresh(input_frame, type, total_img):
 		# elif (type == 3):
 		# 	Lander[c] = Lander(c,dist,bearing,cX,cY)
 		i = i + 1
-		return total_img
+	return total_img
 
 
 def capture():
@@ -204,7 +224,10 @@ def process(frame):
 	frame = cv2.rotate(frame, cv2.ROTATE_180)
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-	s_mask = cv2.inRange(hsv, s_min_arr, s_max_arr)
+	s_mask1 = cv2.inRange(hsv, s_min_arr1, s_max_arr1)
+	s_mask2 = cv2.inRange(hsv, s_min_arr2, s_max_arr2)
+	s_mask = s_mask1 + s_mask2
+	#Note S H range is 0-179 excluding 50-150
 	r_mask = cv2.inRange(hsv, r_min_arr, r_max_arr)
 	o_mask = cv2.inRange(hsv, o_min_arr, o_max_arr)
 
@@ -221,9 +244,9 @@ def process(frame):
 	# cv2.imshow("Sample",sample_img)
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
-	Sample_list.clear()
-	Rock_list.clear()
-	Obstacle_list.clear()
+	Sample_list = []
+	Rock_list = []
+	Obstacle_list = []
 	sample = thresh(sample_img, 0, total_img)
 	rock = thresh(rock_img, 1,total_img)
 	obstacle = thresh(obstacle_img, 2,total_img)
