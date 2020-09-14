@@ -157,7 +157,15 @@ def process(frame):
 			vmin = (int(f.readline()))
 			vmax = (int(f.readline()))
 			f.close()
-    
+			
+	cv2.setTrackbarPos("HMax", "Thresholder_App", hmax)
+	cv2.setTrackbarPos("HMin", "Thresholder_App", hmin)
+	cv2.setTrackbarPos("SMax", "Thresholder_App", smax)
+	cv2.setTrackbarPos("SMin", "Thresholder_App", smin)
+	cv2.setTrackbarPos("VMax", "Thresholder_App", vmax)
+	cv2.setTrackbarPos("VMin", "Thresholder_App", vmin)
+
+
 def cleanUp():
 	# Closes all the frames
 	cv2.destroyAllWindows()
