@@ -17,7 +17,7 @@ writing = False
 obj = 'Live_feed'
 
 cv2.namedWindow('Thresholder_App')
-cv2.namedWindow(str(obj))
+cv2.namedWindow('Live_feed')
 
 cv2.createTrackbar("HMax", "Thresholder_App",0,179,nothing)
 cv2.createTrackbar("HMin", "Thresholder_App",0,179,nothing)
@@ -77,11 +77,14 @@ def process(frame):
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	mask = cv2.inRange(hsv, min_, max_)
 	thresholded_img = cv2.bitwise_and(frame, frame, mask = mask)
+	global writing
+	global obj
 	if (writing == False):
 		cv2.putText(thresholded_img,"Reading", (15, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	elif (writing == True):
 		cv2.putText(thresholded_img,"Writing", (15, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-	cv2.imshow(str(obj), thresholded_img)
+	cv2.putText(thresholded_img, obj, (280, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+	cv2.imshow('Live_feed', thresholded_img)
 
 	k = cv2.waitKey(1) & 0xFF
 	# exit if r is pressed
@@ -91,7 +94,7 @@ def process(frame):
 		elif (writing == True):
 			writing = False
 
-	while (writing == True):
+	if (writing == True):
 		if (k == ord('s')):
 			obj = "Sample"
 			f = open("sample.txt", "w")
@@ -123,7 +126,7 @@ def process(frame):
 			f.write(str(vmax))
 			f.close()
 
-	while (writing == False):
+	if (writing == False):
 		if (k == ord('s')):
 			obj = "Sample"
 			f = open("sample.txt", "r")
