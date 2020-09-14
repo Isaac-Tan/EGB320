@@ -12,22 +12,26 @@ def nothing(x):
 
 cap = None
 
-cv2.namedWindow('Thresholder_App')
-cv2.namedWindow('Live_feed')
+writing = False
 
-cv2.createTrackbar("VMax", "Thresholder_App",0,255,nothing)
-cv2.createTrackbar("VMin", "Thresholder_App",0,255,nothing)
-cv2.createTrackbar("SMax", "Thresholder_App",0,255,nothing)
-cv2.createTrackbar("SMin", "Thresholder_App",0,255,nothing)
+obj = 'Live_feed'
+
+cv2.namedWindow('Thresholder_App')
+cv2.namedWindow(str(obj))
+
 cv2.createTrackbar("HMax", "Thresholder_App",0,179,nothing)
 cv2.createTrackbar("HMin", "Thresholder_App",0,179,nothing)
+cv2.createTrackbar("SMax", "Thresholder_App",0,255,nothing)
+cv2.createTrackbar("SMin", "Thresholder_App",0,255,nothing)
+cv2.createTrackbar("VMax", "Thresholder_App",0,255,nothing)
+cv2.createTrackbar("VMin", "Thresholder_App",0,255,nothing)
 
-cv2.setTrackbarPos("VMax", "Thresholder_App", 255)
-cv2.setTrackbarPos("VMin", "Thresholder_App", 0)
-cv2.setTrackbarPos("SMax", "Thresholder_App", 255)
-cv2.setTrackbarPos("SMin", "Thresholder_App", 0)
 cv2.setTrackbarPos("HMax", "Thresholder_App", 179)
 cv2.setTrackbarPos("HMin", "Thresholder_App", 0)
+cv2.setTrackbarPos("SMax", "Thresholder_App", 255)
+cv2.setTrackbarPos("SMin", "Thresholder_App", 0)
+cv2.setTrackbarPos("VMax", "Thresholder_App", 255)
+cv2.setTrackbarPos("VMin", "Thresholder_App", 0)
 
 def capture():
 	#Video
@@ -61,48 +65,95 @@ def capture():
 	cleanUp()
 
 def process(frame):
-	vmax=cv2.getTrackbarPos("VMax", "Thresholder_App")
-	vmin=cv2.getTrackbarPos("VMin", "Thresholder_App")
-	smax=cv2.getTrackbarPos("SMax", "Thresholder_App")
-	smin=cv2.getTrackbarPos("SMin", "Thresholder_App")
 	hmax=cv2.getTrackbarPos("HMax", "Thresholder_App")
 	hmin=cv2.getTrackbarPos("HMin", "Thresholder_App")
+	smax=cv2.getTrackbarPos("SMax", "Thresholder_App")
+	smin=cv2.getTrackbarPos("SMin", "Thresholder_App")
+	vmax=cv2.getTrackbarPos("VMax", "Thresholder_App")
+	vmin=cv2.getTrackbarPos("VMin", "Thresholder_App")
+
 	min_ = np.array([hmin,smin,vmin])
 	max_ = np.array([hmax,smax,vmax])
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	mask = cv2.inRange(hsv, min_, max_)
 	thresholded_img = cv2.bitwise_and(frame, frame, mask = mask)
-	cv2.imshow("Live_feed", thresholded_img)
+	if (writing == False):
+		cv2.putText(thresholded_img,"Reading", (15, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+	elif (writing == True):
+		cv2.putText(thresholded_img,"Writing", (15, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+	cv2.imshow(str(obj), thresholded_img)
 
 	k = cv2.waitKey(1) & 0xFF
 	# exit if r is pressed
-	if (k == ord('s')):
-		f = open("sample.txt", "w")
-		f.write(str(hmin) + "\n")
-		f.write(str(hmax) + "\n")
-		f.write(str(smin) + "\n")
-		f.write(str(smax) + "\n")
-		f.write(str(vmin) + "\n")
-		f.write(str(vmax))
-		f.close()
-	if (k == ord('r')):
-		f = open("rock.txt", "w")
-		f.write(str(hmin) + "\n")
-		f.write(str(hmax) + "\n")
-		f.write(str(smin) + "\n")
-		f.write(str(smax) + "\n")
-		f.write(str(vmin) + "\n")
-		f.write(str(vmax))
-		f.close()
-	if (k == ord('o')):
-		f = open("obstacle.txt", "w")
-		f.write(str(hmin) + "\n")
-		f.write(str(hmax) + "\n")
-		f.write(str(smin) + "\n")
-		f.write(str(smax) + "\n")
-		f.write(str(vmin) + "\n")
-		f.write(str(vmax))
-		f.close()
+	if (k == ord('w')):
+		if (writing == False):
+			writing = True
+		elif (writing == True):
+			writing = False
+
+	while (writing == True):
+		if (k == ord('s')):
+			obj = "Sample"
+			f = open("sample.txt", "w")
+			f.write(str(hmin) + "\n")
+			f.write(str(hmax) + "\n")
+			f.write(str(smin) + "\n")
+			f.write(str(smax) + "\n")
+			f.write(str(vmin) + "\n")
+			f.write(str(vmax))
+			f.close()
+		if (k == ord('r')):
+			obj = "Rock"
+			f = open("rock.txt", "w")
+			f.write(str(hmin) + "\n")
+			f.write(str(hmax) + "\n")
+			f.write(str(smin) + "\n")
+			f.write(str(smax) + "\n")
+			f.write(str(vmin) + "\n")
+			f.write(str(vmax))
+			f.close()
+		if (k == ord('o')):
+			obj = "Obstacle"
+			f = open("obstacle.txt", "w")
+			f.write(str(hmin) + "\n")
+			f.write(str(hmax) + "\n")
+			f.write(str(smin) + "\n")
+			f.write(str(smax) + "\n")
+			f.write(str(vmin) + "\n")
+			f.write(str(vmax))
+			f.close()
+
+	while (writing == False):
+		if (k == ord('s')):
+			obj = "Sample"
+			f = open("sample.txt", "r")
+			hmin = (int(f.readline()))
+			hmax = (int(f.readline()))
+			smin = (int(f.readline()))
+			smax = (int(f.readline()))
+			vmin = (int(f.readline()))
+			vmax = (int(f.readline()))
+			f.close()
+		if (k == ord('r')):
+			obj = "Rock"
+			f = open("rock.txt", "r")
+			hmin = (int(f.readline()))
+			hmax = (int(f.readline()))
+			smin = (int(f.readline()))
+			smax = (int(f.readline()))
+			vmin = (int(f.readline()))
+			vmax = (int(f.readline()))
+			f.close()
+		if (k == ord('o')):
+			obj = "Obstacle"
+			f = open("obstacle.txt", "r")
+			hmin = (int(f.readline()))
+			hmax = (int(f.readline()))
+			smin = (int(f.readline()))
+			smax = (int(f.readline()))
+			vmin = (int(f.readline()))
+			vmax = (int(f.readline()))
+			f.close()
     
 def cleanUp():
 	# Closes all the frames
