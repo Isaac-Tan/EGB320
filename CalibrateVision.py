@@ -81,7 +81,7 @@ def process(frame):
 	vmin=cv2.getTrackbarPos("VMin", "Thresholder_App")
 
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
+	global obj
 	if (obj == 'Sample'):
 		min_1 = np.array([0,smin,vmin])
 		max_1 = np.array([hmin,smax,vmax])
@@ -95,7 +95,7 @@ def process(frame):
 	else:
 		min_1 = np.array([hmin,smin,vmin])
 		max_1 = np.array([hmax,smax,vmax])
-		mask = cv2.inRange(hsv, min_, max_)
+		mask = cv2.inRange(hsv, min_1, max_1)
 	thresholded_img = cv2.bitwise_and(frame, frame, mask = mask)
 	global writing
 	if (writing == False):
@@ -105,7 +105,6 @@ def process(frame):
 	cv2.putText(thresholded_img, obj, (270, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	cv2.imshow('Live_feed', thresholded_img)
 
-	global obj
 	k = cv2.waitKey(1) & 0xFF
 	# exit if r is pressed
 	if (k == ord('w')):
