@@ -11,7 +11,7 @@ INTERVAL = 1.0/FREQUENCY
 FOCAL_LEN = 3.04 #mm
 SENSOR_HEIGHT = 2.76 #mm
 SENSOR_WIDTH = 3.68 #mm
-OBST_HEIGHT = 70 #mm
+OBST_HEIGHT = 150 #mm
 ROCK_HEIGHT = 70 #mm
 SAMPLE_HEIGHT = 40 #mm
 HEIGHT = 240 #screen height
@@ -135,9 +135,9 @@ def thresh(input_frame, type, total_img):
 	gray = input_frame[:, :, 2]
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]
 	kernel = np.ones((5,5),np.uint8)
-	dilation = cv2.dilate(thresh,kernel,iterations = 5)
-	erosion = cv2.erode(dilation,kernel,iterations = 10)
-	opened = cv2.dilate(erosion,kernel,iterations = 5)
+	dilation = cv2.dilate(thresh,kernel,iterations = 2)
+	erosion = cv2.erode(dilation,kernel,iterations = 4)
+	opened = cv2.dilate(erosion,kernel,iterations = 2)
 	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)
 	ims = blurred_thresh
 	cnts = cv2.findContours(ims, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
@@ -193,9 +193,9 @@ def thresh(input_frame, type, total_img):
 
 def capture():
 	#Video
-	cap = cv2.VideoCapture(sys.argv[1])
+	#cap = cv2.VideoCapture(sys.argv[1])
 	#Camera
-	#cap = cv2.VideoCapture(0)
+	cap = cv2.VideoCapture(0)
 	cap.set(3, 320)									# Set the frame WIDTH
 	cap.set(4, 240)									# Set the frame HEIGHT
 	# Check if camera opened successfully
