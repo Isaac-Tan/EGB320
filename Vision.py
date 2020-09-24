@@ -53,11 +53,11 @@ class Sample:
 	#'Class for Samples'
 	sampleCount = 0
 	def __init__(self, ID, Dist, Bearing, cX, cY):
-		self.Dist = Dist
-		self.Bearing = Bearing
-		self.ID = ID
-		self.cX = cX
-		self.cY = cY
+		self.Dist = Dist	#Distance from camera to object
+		self.Bearing = Bearing		#Angle from centre of POV to object
+		self.ID = ID	#ID of object
+		self.cX = cX	#x-coord of the centre of the object
+		self.cY = cY	#y-coord of the centre of the object
 		Sample.sampleCount += 1
 
 	def __del__(self):
@@ -204,8 +204,9 @@ def thresh(input_frame, type, total_img):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		# elif (type == 3):
 		# 	Lander[c] = Lander(c,dist,bearing,cX,cY)
-		i = i + 1
-	return total_img
+		i = i + 1	#add 1 to the ID of object class
+
+	return total_img		#return output image
 
 
 def capture():
