@@ -42,6 +42,13 @@ Obstacle_list = []
 
 init = False
 
+#Video
+#cap = cv2.VideoCapture(sys.argv[1])
+#Camera
+cap = cv2.VideoCapture(-1)
+cap.set(3, 320)									# Set the frame WIDTH
+cap.set(4, 240)									# Set the frame HEIGHT
+
 class Sample:
 	#'Class for Samples'
 	sampleCount = 0
@@ -156,11 +163,13 @@ def thresh(input_frame, type, total_img):
 		#calculate distance
 		if (type == 0):
 			dist = round(0.1*(FOCAL_LEN*SAMPLE_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+      cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+      cv2.drawContours(total_img, [c], -1, (0, 0, 255), 2)
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-		cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+      cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)
 		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
@@ -192,12 +201,6 @@ def thresh(input_frame, type, total_img):
 
 
 def capture():
-	#Video
-	#cap = cv2.VideoCapture(sys.argv[1])
-	#Camera
-	cap = cv2.VideoCapture(0)
-	cap.set(3, 320)									# Set the frame WIDTH
-	cap.set(4, 240)									# Set the frame HEIGHT
 	# Check if camera opened successfully
 	if (cap.isOpened()== False): 
 	  print("Error opening video stream or file")
