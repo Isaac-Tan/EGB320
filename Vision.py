@@ -166,7 +166,7 @@ def thresh(input_frame, type, total_img):
 			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (0, 0, 255), 2)
+			cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
