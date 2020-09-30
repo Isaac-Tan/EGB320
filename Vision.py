@@ -1,4 +1,3 @@
-# TO run this script, enter a frame path as cmd line arg: python3 color_thresholder_app.py frame01.png
 import cv2
 import numpy as np
 import sys
@@ -26,6 +25,8 @@ r_min_ = [int]*3
 r_max_ = [int]*3
 o_min_ = [int]*3
 o_max_ = [int]*3
+l_min_ = [int]*3
+l_max_ = [int]*3
 
 s_max_arr1 = []
 s_min_arr1 = []
@@ -35,6 +36,8 @@ r_max_arr = []
 r_min_arr = []
 o_max_arr = []
 o_min_arr = []
+l_max_arr = []
+l_min_arr = []
 
 Sample_list = []
 Rock_list = []
@@ -43,9 +46,9 @@ Obstacle_list = []
 init = False
 
 #Video
-#cap = cv2.VideoCapture(sys.argv[1])
+cap = cv2.VideoCapture(sys.argv[1])
 #Camera
-cap = cv2.VideoCapture(-1)
+#cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
 
@@ -113,6 +116,12 @@ def bounds():
 		o_min_[i] = (int(f.readline()))
 		o_max_[i] = (int(f.readline()))
 	f.close()
+	#Lander
+	f = open("lander.txt","r")
+	for i in range(3):
+		l_min_[i] = (int(f.readline()))
+		l_max_[i] = (int(f.readline()))
+	f.close()
 
 	global s_min_arr1
 	global s_max_arr1
@@ -153,6 +162,7 @@ def thresh(input_frame, type, total_img):
 	cnts = cv2.findContours(ims, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
 	cnts = imutils.grab_contours(cnts)		#grabs contours from cnts
 	i = 0	#used for library ID
+
 	# loop over the contours
 	for c in cnts:
 		# compute the center of the contour
@@ -174,6 +184,8 @@ def thresh(input_frame, type, total_img):
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+		elif (type == 3):
+			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)		#draws a circle at the centre of the contour
 		#Displays range and bearing on output img
@@ -182,28 +194,31 @@ def thresh(input_frame, type, total_img):
 		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
+		global Sample_list		#Global needs to be called to store into a global variable
+		global Rock_list
+		global Obstacle_list
 		if (type == 0):		#if sample
-			global Sample_list		#Global needs to be called to store into a global variable
 			sample = Sample(i,dist,bearing,cX,cY)
 			Sample_list.append(Sample(i,dist,bearing,cX,cY))	#adds this sample to the class of samples
+			del sample
 			#Displays "sample" in the centre of the contour
 			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):	#if rock
-			global Rock_list
 			rock = Rock(i,dist,bearing,cX,cY)
 			Rock_list.append(Rock(i,dist,bearing,cX,cY))
+			del rock
 			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 2):	#if obstacle
-			global Obstacle_list
 			obstacle = Obstacle(i,dist,bearing,cX,cY)
 			Obstacle_list.append(Obstacle(i,dist,bearing,cX,cY))
 			del obstacle
 			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		# elif (type == 3):
-		# 	Lander[c] = Lander(c,dist,bearing,cX,cY)
+		elif (type == 3):	#if lander
+			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		i = i + 1	#add 1 to the ID of object class
 
 	return total_img		#return output image
@@ -231,19 +246,34 @@ def capture():
 	cap.release()
 	cleanUp()
 
+# def naviagtion():
+# 	neg_field = [0] * WIDTH
+# 	# peak = Sample_list(4)
+# 	peak = 100
+# 	neg_field[peak] = 1
+# 	for i in range(peak-1,0,-1):
+# 		neg_field[i] = 0.01 * i - 0.6
+# 	for i in range(peak + 1, WIDTH):
+# 		neg_field[i] = ((i - peak) * -0.01 )+ 1
+# 	for i in range(0, WIDTH):
+# 		if (neg_field[i] < 0):
+# 			neg_field[i] = 0
+# 	x = 1
+
 
 def process(frame):
 	now = time.time()	#start process time
 	frame = cv2.rotate(frame, cv2.ROTATE_180)		#rotate the frame 180'
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)	#convert rgb to hsv
 
-	#sampel has 2 mask because hue wraps from 179 around to 0
+	#sample has 2 mask because hue wraps from 179 around to 0
 	s_mask1 = cv2.inRange(hsv, s_min_arr1, s_max_arr1)		#sample mask 1
 	s_mask2 = cv2.inRange(hsv, s_min_arr2, s_max_arr2)		#sample mask 2
 	s_mask = s_mask1 + s_mask2		#adds sample masks together
 	
 	r_mask = cv2.inRange(hsv, r_min_arr, r_max_arr)		#rock mask
 	o_mask = cv2.inRange(hsv, o_min_arr, o_max_arr)		#obstacle mask
+	l_mask = cv2.inRange(hsv, l_min_arr, l_max_arr)		#obstacle mask
 
 	blurred = cv2.GaussianBlur(frame, (5, 5), 0)		#blur the frame with a 5x5
 
@@ -255,6 +285,7 @@ def process(frame):
 	sample_img = cv2.bitwise_and(blurred, blurred, mask= s_mask)
 	rock_img = cv2.bitwise_and(blurred, blurred, mask= r_mask)
 	obstacle_img = cv2.bitwise_and(blurred, blurred, mask= o_mask)
+	lander_img = cv2.bitwise_and(blurred, blurred, mask= l_mask)
 
 	# total_img = sample_img + rock_img + obstacle_img
 	total_img = frame
@@ -264,18 +295,23 @@ def process(frame):
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
 
-	#clear the current classes
+	global Sample_list		#Global needs to be called to store into a global variable
 	Sample_list = []
+	global Rock_list
 	Rock_list = []
+	global Obstacle_list
 	Obstacle_list = []
 
 	#object frame = thresh(input img, obj type, output img)
 	sample = thresh(sample_img, 0, total_img)
 	rock = thresh(rock_img, 1,total_img)
 	obstacle = thresh(obstacle_img, 2,total_img)
+	lander = thresh(lander_img, 3,total_img)
 
 	# draw a line down the centre of the screen
 	cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
+
+	naviagtion()
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
