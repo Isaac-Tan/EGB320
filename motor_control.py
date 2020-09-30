@@ -4,30 +4,17 @@ import RPi.GPIO as GPIO
 import numpy as np
 #setup pins
 GPIO.setmode(GPIO.BCM)
-# BackwardL = gpiozero.OutputDevice(18)
-# FowardL = gpiozero.OutputDevice(23)
-# GPIO.setup(24 , GPIO.OUT)
-# SpeedPWML = GPIO.PWM(24, 100)
-
-# BackwardR = gpiozero.OutputDevice(19)
-# FowardR = gpiozero.OutputDevice(26)
-# GPIO.setup(13, GPIO.OUT)
-# SpeedPWMR = GPIO.PWM(13, 100)
-
-# SpeedPWML.start(0)
-# SpeedPWMR.start(0)
-
-#Isaac
 GPIO.setup(24 , GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
 # Left, Right
-# dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(26)]
-# dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(19)]
 dir1 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)]
 dir2 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)]
 pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]
+#Init pwm at 0
 pwm[0].start(0)
 pwm[1].start(0)
+m1mult = 1.0 #Left motor multiplier
+m2mult = 0.9 #Right motor multiplier
 
 def motor(mot, value):
   if (value > 0):
@@ -45,7 +32,7 @@ def drive(magnitude, rotation, tsec):
   pwm[0].stop()
   pwm[1].stop()
 
-drive(20,0,10)
+drive(40,0,5)
 
 # def motor_control(speedR, speedL,  dirR, dirL, t):
 #   SpeedPWML.start(0)
