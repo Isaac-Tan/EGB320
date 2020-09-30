@@ -144,6 +144,16 @@ def process(frame):
 			f.write(str(vmin) + "\n")
 			f.write(str(vmax))
 			f.close()
+		if (k == ord('l')):
+			obj = "Lander"
+			f = open("lander.txt", "w")
+			f.write(str(hmin) + "\n")
+			f.write(str(hmax) + "\n")
+			f.write(str(smin) + "\n")
+			f.write(str(smax) + "\n")
+			f.write(str(vmin) + "\n")
+			f.write(str(vmax))
+			f.close()
 
 	if (writing == False):
 		if (k == ord('s')):
@@ -169,6 +179,16 @@ def process(frame):
 		if (k == ord('o')):
 			obj = "Obstacle"
 			f = open("obstacle.txt", "r")
+			hmin = (int(f.readline()))
+			hmax = (int(f.readline()))
+			smin = (int(f.readline()))
+			smax = (int(f.readline()))
+			vmin = (int(f.readline()))
+			vmax = (int(f.readline()))
+			f.close()
+		if (k == ord('l')):
+			obj = "Lander"
+			f = open("lander.txt", "r")
 			hmin = (int(f.readline()))
 			hmax = (int(f.readline()))
 			smin = (int(f.readline()))
