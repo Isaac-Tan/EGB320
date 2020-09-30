@@ -190,6 +190,7 @@ def thresh(input_frame, type, total_img):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
+			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)		#draws a circle at the centre of the contour
