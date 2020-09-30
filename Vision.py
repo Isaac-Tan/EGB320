@@ -13,8 +13,8 @@ SENSOR_WIDTH = 3.68 #mm
 OBST_HEIGHT = 150 #mm
 ROCK_HEIGHT = 70 #mm
 SAMPLE_HEIGHT = 40 #mm
-LANDER_HEIGHT = 40 #mm
-WALL_HEIGHT = 450 #mm
+LANDER_HEIGHT = 200 #mm
+WALL_HEIGHT = 650 #mm
 HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
 
