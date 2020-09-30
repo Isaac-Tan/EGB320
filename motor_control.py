@@ -19,9 +19,9 @@ GPIO.setmode(GPIO.BCM)
 
 #Isaac
 # Left, Right
-dir1 = []
-dir2 = []
-pwm = []
+dir1 = [] * 2
+dir2 = [] * 2
+pwm = [] * 2
 
 dir1[0] = gpiozero.OutputDevice(23)
 dir1[1] = gpiozero.OutputDevice(26)
