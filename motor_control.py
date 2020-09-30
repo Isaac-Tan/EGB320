@@ -46,7 +46,7 @@ def motor(motor, value):
 def drive(magnitude, rotation, time):
   motor(0, magnitude - rotation)
   motor(1, magnitude - rotation)
-  time.sleep(t)
+  time.sleep(time)
   pwm[0].stop()
   pwm[1].stop()
 
