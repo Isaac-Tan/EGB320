@@ -26,7 +26,6 @@ import time
 import RPi.GPIO as GPIO
 #setup pins
 GPIO.setmode(GPIO.BCM)
-
 BackwardL = gpiozero.OutputDevice(18)
 FowardL = gpiozero.OutputDevice(23)
 GPIO.setup(24 , GPIO.OUT)
