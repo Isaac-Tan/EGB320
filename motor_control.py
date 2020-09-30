@@ -18,6 +18,8 @@ GPIO.setmode(GPIO.BCM)
 # SpeedPWMR.start(0)
 
 #Isaac
+GPIO.setup(24 , GPIO.OUT)
+GPIO.setup(13, GPIO.OUT)
 # Left, Right
 dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(26)]
 dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(19)]
