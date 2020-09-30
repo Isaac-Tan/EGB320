@@ -4,18 +4,18 @@ import RPi.GPIO as GPIO
 import numpy as np
 #setup pins
 GPIO.setmode(GPIO.BCM)
-BackwardL = gpiozero.OutputDevice(18)
-FowardL = gpiozero.OutputDevice(23)
-GPIO.setup(24 , GPIO.OUT)
-SpeedPWML = GPIO.PWM(24, 100)
+# BackwardL = gpiozero.OutputDevice(18)
+# FowardL = gpiozero.OutputDevice(23)
+# GPIO.setup(24 , GPIO.OUT)
+# SpeedPWML = GPIO.PWM(24, 100)
 
-BackwardR = gpiozero.OutputDevice(19)
-FowardR = gpiozero.OutputDevice(26)
-GPIO.setup(13, GPIO.OUT)
-SpeedPWMR = GPIO.PWM(13, 100)
+# BackwardR = gpiozero.OutputDevice(19)
+# FowardR = gpiozero.OutputDevice(26)
+# GPIO.setup(13, GPIO.OUT)
+# SpeedPWMR = GPIO.PWM(13, 100)
 
-SpeedPWML.start(0)
-SpeedPWMR.start(0)
+# SpeedPWML.start(0)
+# SpeedPWMR.start(0)
 
 #Isaac
 # Left, Right
