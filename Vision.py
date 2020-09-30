@@ -46,9 +46,9 @@ Obstacle_list = []
 init = False
 
 #Video
-cap = cv2.VideoCapture(sys.argv[1])
+#cap = cv2.VideoCapture(sys.argv[1])
 #Camera
-#cap = cv2.VideoCapture(-1)
+cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
 
@@ -147,6 +147,11 @@ def bounds():
 	o_min_arr = np.array(o_min_)
 	global o_max_arr
 	o_max_arr = np.array(o_max_)
+
+	global l_min_arr
+	l_min_arr = np.array(l_min_)
+	global l_max_arr
+	l_max_arr = np.array(l_max_)
 
 
 def thresh(input_frame, type, total_img):
