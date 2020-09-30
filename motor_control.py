@@ -19,18 +19,18 @@ GPIO.setmode(GPIO.BCM)
 
 #Isaac
 # Left, Right
-dir1 = [] * 2
-dir2 = [] * 2
-pwm = [] * 2
+dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(26)]
+dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(19)]
+pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]
 
-dir1[0] = gpiozero.OutputDevice(23)
-dir1[1] = gpiozero.OutputDevice(26)
+# dir1[0] = gpiozero.OutputDevice(23)
+# dir1[1] = gpiozero.OutputDevice(26)
 
-dir2[0] = gpiozero.OutputDevice(18)
-dir2[1] = gpiozero.OutputDevice(19)
+# dir2[0] = gpiozero.OutputDevice(18)
+# dir2[1] = gpiozero.OutputDevice(19)
 
-pwm[0] = GPIO.PWM(24, 100)
-pwm[1] = GPIO.PWM(13, 100)
+# pwm[0] = GPIO.PWM(24, 100)
+# pwm[1] = GPIO.PWM(13, 100)
 
 def motor(motor, value):
   if (value > 0):
@@ -44,6 +44,11 @@ def motor(motor, value):
 def drive(magnitude, rotation, time):
   motor(0, magnitude - rotation)
   motor(1, magnitude - rotation)
+  time.sleep(t)
+  pwm[0].stop()
+  pwm[1].stop()
+
+drive(1,0,10)
 
 # def motor_control(speedR, speedL,  dirR, dirL, t):
 #   SpeedPWML.start(0)
