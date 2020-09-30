@@ -41,33 +41,33 @@ SpeedPWMR.start(0)
 
 #Isaac
 # Left, Right
-# dir1 = []   #Forward
-# dir2 = []   #Backward
-# pwm = []
+dir1 = []   #Forward
+dir2 = []   #Backward
+pwm = []
 
-# dir1(0) = gpiozero.OutputDevice(23)
-# dir1(1) = gpiozero.OutputDevice(26)
+dir1(0) = gpiozero.OutputDevice(23)
+dir1(1) = gpiozero.OutputDevice(26)
 
-# dir2(0) = gpiozero.OutputDevice(18)
-# dir2(1) = gpiozero.OutputDevice(19)
+dir2(0) = gpiozero.OutputDevice(18)
+dir2(1) = gpiozero.OutputDevice(19)
 
-# pwm(0) = GPIO.PWM(24, 100)
-# pwm(1) = GPIO.PWM(13, 100)
-
-
-# def motor(motor, value):
-#   if (value > 0):
-#     dir1(motor).on()
-# 	  dir2(motor).off()
-#   elif (value < 0):
-#     dir1(motor).off()
-# 	  dir2(motor).on()
-#   pwm(motor).ChangeDutyCycle(value)
+pwm(0) = GPIO.PWM(24, 100)
+pwm(1) = GPIO.PWM(13, 100)
 
 
-# def drive(magnitude, rotation, time):
-#   motor(0, magnitude - rotation)
-#   motor(1, magnitude - rotation)
+def motor(motor, value):
+  if (value > 0):
+    dir1(motor).on()
+	  dir2(motor).off()
+  elif (value < 0):
+    dir1(motor).off()
+	  dir2(motor).on()
+  pwm(motor).ChangeDutyCycle(value)
+
+
+def drive(magnitude, rotation, time):
+  motor(0, magnitude - rotation)
+  motor(1, magnitude - rotation)
 
 
 
@@ -105,4 +105,4 @@ def motor_control_r(speed, dir, t):
  time.sleep(t)
  SpeedPWMR.stop()
 #motor_control_r(10, "foward", 4)
-motor_control(10,10, "foward", "foward",  6)
+#motor_control(10,10, "foward", "foward",  6)
