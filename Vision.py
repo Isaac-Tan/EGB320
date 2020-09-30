@@ -13,6 +13,8 @@ SENSOR_WIDTH = 3.68 #mm
 OBST_HEIGHT = 150 #mm
 ROCK_HEIGHT = 70 #mm
 SAMPLE_HEIGHT = 40 #mm
+LANDER_HEIGHT = 40 #mm
+WALL_HEIGHT = 450 #mm
 HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
 
@@ -27,6 +29,8 @@ o_min_ = [int]*3
 o_max_ = [int]*3
 l_min_ = [int]*3
 l_max_ = [int]*3
+b_min_ = [int]*3
+b_max_ = [int]*3
 
 s_max_arr1 = []
 s_min_arr1 = []
@@ -38,6 +42,8 @@ o_max_arr = []
 o_min_arr = []
 l_max_arr = []
 l_min_arr = []
+b_max_arr = []
+b_min_arr = []
 
 Sample_list = []
 Rock_list = []
@@ -122,6 +128,12 @@ def bounds():
 		l_min_[i] = (int(f.readline()))
 		l_max_[i] = (int(f.readline()))
 	f.close()
+	#Wall
+	f = open("wall.txt","r")
+	for i in range(3):
+		b_min_[i] = (int(f.readline()))
+		b_max_[i] = (int(f.readline()))
+	f.close()
 
 	global s_min_arr1
 	global s_max_arr1
@@ -152,6 +164,11 @@ def bounds():
 	l_min_arr = np.array(l_min_)
 	global l_max_arr
 	l_max_arr = np.array(l_max_)
+
+	global b_min_arr
+	b_min_arr = np.array(b_min_)
+	global b_max_arr
+	b_max_arr = np.array(b_max_)
 
 
 def thresh(input_frame, type, total_img):
@@ -190,8 +207,11 @@ def thresh(input_frame, type, total_img):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
-			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
+		elif (type == 4):
+			dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+			cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
 		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)		#draws a circle at the centre of the contour
 		#Displays range and bearing on output img
@@ -224,6 +244,9 @@ def thresh(input_frame, type, total_img):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 3):	#if lander
 			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		elif (type == 4):	#if wall
+			cv2.putText(total_img, "Wall", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		i = i + 1	#add 1 to the ID of object class
 
@@ -279,7 +302,8 @@ def process(frame):
 	
 	r_mask = cv2.inRange(hsv, r_min_arr, r_max_arr)		#rock mask
 	o_mask = cv2.inRange(hsv, o_min_arr, o_max_arr)		#obstacle mask
-	l_mask = cv2.inRange(hsv, l_min_arr, l_max_arr)		#obstacle mask
+	l_mask = cv2.inRange(hsv, l_min_arr, l_max_arr)		#lander mask
+	b_mask = cv2.inRange(hsv, b_min_arr, b_max_arr)		#wall mask
 
 	blurred = cv2.GaussianBlur(frame, (5, 5), 0)		#blur the frame with a 5x5
 
@@ -292,6 +316,7 @@ def process(frame):
 	rock_img = cv2.bitwise_and(blurred, blurred, mask= r_mask)
 	obstacle_img = cv2.bitwise_and(blurred, blurred, mask= o_mask)
 	lander_img = cv2.bitwise_and(blurred, blurred, mask= l_mask)
+	wall_img = cv2.bitwise_and(blurred, blurred, mask= b_mask)
 
 	# total_img = sample_img + rock_img + obstacle_img
 	total_img = frame
@@ -313,11 +338,12 @@ def process(frame):
 	rock = thresh(rock_img, 1,total_img)
 	obstacle = thresh(obstacle_img, 2,total_img)
 	lander = thresh(lander_img, 3,total_img)
+	wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
 	cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
 
-	naviagtion()
+	#naviagtion()
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
