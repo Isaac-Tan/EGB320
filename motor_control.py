@@ -34,19 +34,19 @@ pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]
 # pwm[0] = GPIO.PWM(24, 100)
 # pwm[1] = GPIO.PWM(13, 100)
 
-def motor(motor, value):
+def motor(mot, value):
   if (value > 0):
-    dir1[motor].on()
-    dir2[motor].off()
+    dir1[mot].on()
+    dir2[mot].off()
   elif (value < 0):
-    dir1[motor].off()
-    dir2[motor].on()
-  pwm[motor].ChangeDutyCycle(value)
+    dir1[mot].off()
+    dir2[mot].on()
+  pwm[mot].ChangeDutyCycle(value)
 
-def drive(magnitude, rotation, time):
+def drive(magnitude, rotation, t):
   motor(0, magnitude - rotation)
   motor(1, magnitude - rotation)
-  time.sleep(time)
+  time.sleep(t)
   pwm[0].stop()
   pwm[1].stop()
 
