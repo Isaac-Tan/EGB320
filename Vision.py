@@ -5,7 +5,7 @@ import argparse
 import imutils
 import time
 
-FREQUENCY = 50 #Hz
+FREQUENCY = 20 #Hz
 INTERVAL = 1.0/FREQUENCY
 FOCAL_LEN = 3.04 #mm
 SENSOR_HEIGHT = 2.76 #mm
@@ -49,12 +49,14 @@ Sample_list = []
 Rock_list = []
 Obstacle_list = []
 
+max_index = 0
+
 init = False
 
 #Video
-#cap = cv2.VideoCapture(sys.argv[1])
+cap = cv2.VideoCapture(sys.argv[1])
 #Camera
-cap = cv2.VideoCapture(-1)
+#cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
 
@@ -275,24 +277,81 @@ def capture():
 	cap.release()
 	cleanUp()
 
-# def naviagtion():
-# 	neg_field = [0] * WIDTH
-# 	# peak = Sample_list(4)
-# 	peak = 100
-# 	neg_field[peak] = 1
-# 	for i in range(peak-1,0,-1):
-# 		neg_field[i] = 0.01 * i - 0.6
-# 	for i in range(peak + 1, WIDTH):
-# 		neg_field[i] = ((i - peak) * -0.01 )+ 1
-# 	for i in range(0, WIDTH):
-# 		if (neg_field[i] < 0):
-# 			neg_field[i] = 0
-# 	x = 1
+def naviagtion():
+	neg_field = [0] * WIDTH
+	M = 0.01
+	scal = 0.002
+	if len(Sample_list) > 0:
+		peak = Sample_list[0].cX
+		bdist = Sample_list[0].Dist
+	else:
+		peak = 0
+		bdist = 0
+
+	neg_field[peak] = 1
+	for i in range(peak-1,0,-1):
+		neg_field[i] = M * i - peak * M + 1
+	for i in range(peak + 1, WIDTH):
+		neg_field[i] = ((i - peak) * -1 * M ) + 1
+	for i in range(0, WIDTH):
+		if (neg_field[i] < 0):
+			neg_field[i] = 0
+	u = 0.5 * scal * bdist**2
+	uball = [0] * WIDTH
+	for i in range(0,len(neg_field)-1):
+		uball[i] = u * neg_field[i]
+	
+
+	pos_field = [0] * WIDTH
+	tot_pos = [0] * WIDTH
+
+	Q = 20
+	N = 0.1
+	scalar = 500
+
+	x1 = []
+	x2 = []
+	odist = []
+
+	for i in range(0, len(Obstacle_list)-1):
+		x1[i] = Obstacle_list[i].
+
+	if len(Obstacle_list) > 0:
+		peak = Sample_list[0].cX
+		bdist = Sample_list[0].Dist
+	else:
+		peak = 0
+		bdist = 0
+
+	x1 = [0, 0]
+	x2 = [0, 0]
+	odist = [1000,1000]
+	pos_field = [0] * WIDTH
+	for j in range(0,int(len(x1))):
+		for i in range(x1[j]-1, 0, -1):
+			pos_field[i] = N * i - x1[j]*N + 1
+		for i in range(x2[j] + 1, WIDTH - 1):
+			pos_field[i] = ((i - x2[j]) * -1 * N ) + 1
+		for i in range(x1[j],x2[j]):
+			pos_field[i] = 1
+		for i in range(0,WIDTH):
+			if (pos_field[i] < 0):
+				pos_field[i] = 0
+		tot_pos = [0] * WIDTH
+		for i in range(0,len(pos_field)-1):
+			pos_field[i] = pos_field[i] * 0.5 * scalar * ((1/odist[j])-(1/Q))**2
+			tot_pos[i] = tot_pos[i] + pos_field[i]
+	total = [0] * WIDTH
+	for i in range(0,WIDTH-1):
+			total[i] = uball[i] - tot_pos[i]	
+	global max_index
+	max_index = total.index(max(total))
+
 
 
 def process(frame):
 	now = time.time()	#start process time
-	frame = cv2.rotate(frame, cv2.ROTATE_180)		#rotate the frame 180'
+	#frame = cv2.rotate(frame, cv2.ROTATE_180)		#rotate the frame 180'
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)	#convert rgb to hsv
 
 	#sample has 2 mask because hue wraps from 179 around to 0
@@ -343,7 +402,8 @@ def process(frame):
 	# draw a line down the centre of the screen
 	cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
 
-	#naviagtion()
+	naviagtion()
+	cv2.line(total_img, ((int(max_index)),0), ((int(max_index)),int(HEIGHT)), (0, 0, 255))
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
