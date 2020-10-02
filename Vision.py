@@ -77,12 +77,12 @@ class Sample:
 class Rock:
 	#'Class for Rocks'
 	rockCount = 0
-	def __init__(self, ID, Dist, Bearing, cX, cY):
+	def __init__(self, ID, Dist, Bearing, x1, x2):
 		self.Dist = Dist
 		self.Bearing = Bearing
 		self.ID = ID
-		self.cX = cX
-		self.cY = cY
+		self.x1 = x1
+		self.x2 = x2
 		Rock.rockCount += 1
 	def __del__(self):
 		Rock.rockCount -= 1
@@ -90,12 +90,12 @@ class Rock:
 class Obstacle:
 	#'Class for Obstacles'
 	obstacleCount = 0
-	def __init__(self, ID, Dist, Bearing, cX, cY):
+	def __init__(self, ID, Dist, Bearing, x1, x2):
 		self.Dist = Dist
 		self.Bearing = Bearing
 		self.ID = ID
-		self.cX = cX
-		self.cY = cY
+		self.x1 = x1
+		self.x2 = x2
 		Obstacle.obstacleCount += 1
 	def __del__(self):
 		Obstacle.obstacleCount -= 1
@@ -178,9 +178,15 @@ def thresh(input_frame, type, total_img):
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
-	dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
-	erosion = cv2.erode(dilation,kernel,iterations = 4)		#erodes anything larger than the 5x5 matrix, 4 times
-	opened = cv2.dilate(erosion,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
+	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
+	if (type == 4):
+		erosion = cv2.erode(thresh,kernel,iterations = 10)
+	else:
+		erosion = cv2.erode(thresh,kernel,iterations = 2)		#erodes anything larger than the 5x5 matrix, 4 times
+	if (type == 4):
+		opened = cv2.dilate(erosion,kernel,iterations = 10)
+	else:
+		opened = cv2.dilate(erosion,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
 	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)	#applies gausian blur of 5x5
 	ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(ims, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
@@ -193,6 +199,10 @@ def thresh(input_frame, type, total_img):
 		M = cv2.moments(c)	#Moments
 		cX = int(M["m10"] / M["m00"])#Centre x-coord
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
+		extrleft = tuple(c[c[:,:,0].argmin()][0])#Left most x-coord
+		extrright = tuple(c[c[:,:,0].argmax()][0])#Right most x-coord
+		x1 = extrleft[0]
+		x2 = extrright[0]
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
 		# get height/width of contour
@@ -233,14 +243,14 @@ def thresh(input_frame, type, total_img):
 			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):	#if rock
-			rock = Rock(i,dist,bearing,cX,cY)
-			Rock_list.append(Rock(i,dist,bearing,cX,cY))
+			rock = Rock(i,dist,bearing,x1,x2)
+			Rock_list.append(Rock(i,dist,bearing,x1,x2))
 			del rock
 			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 2):	#if obstacle
-			obstacle = Obstacle(i,dist,bearing,cX,cY)
-			Obstacle_list.append(Obstacle(i,dist,bearing,cX,cY))
+			obstacle = Obstacle(i,dist,bearing,x1,x2)
+			Obstacle_list.append(Obstacle(i,dist,bearing,x1,x2))
 			del obstacle
 			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
@@ -253,6 +263,11 @@ def thresh(input_frame, type, total_img):
 		i = i + 1	#add 1 to the ID of object class
 
 	return total_img		#return output image
+
+def walls(input_frame, total_img):
+	#input frame, type (sample, rock, obst, etc), output frame
+	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
+	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 
 
 def capture():
@@ -287,6 +302,8 @@ def naviagtion():
 	else:
 		peak = 0
 		bdist = 0
+	peak = 160
+	bdist = 1
 
 	neg_field[peak] = 1
 	for i in range(peak-1,0,-1):
@@ -305,27 +322,29 @@ def naviagtion():
 	pos_field = [0] * WIDTH
 	tot_pos = [0] * WIDTH
 
-	Q = 20
+	Q = 50
 	N = 0.1
-	scalar = 500
+	scalar = 2000
 
 	x1 = []
 	x2 = []
 	odist = []
 
-	for i in range(0, len(Obstacle_list)-1):
-		x1[i] = Obstacle_list[i].
-
+	if len(Rock_list) > 0:
+		for i in range(0, len(Rock_list)-1):
+			x1.append(Rock_list[i].x1)
+			x2.append(Rock_list[i].x2)
+			odist.append(Rock_list[i].Dist)
 	if len(Obstacle_list) > 0:
-		peak = Sample_list[0].cX
-		bdist = Sample_list[0].Dist
+		for i in range(0, len(Obstacle_list)-1):
+			x1.append(Obstacle_list[i].x1)
+			x2.append(Obstacle_list[i].x2)
+			odist.append(Obstacle_list[i].Dist)
 	else:
-		peak = 0
-		bdist = 0
+		x1 = [0]
+		x2 = [0]
+		odist = [1000]
 
-	x1 = [0, 0]
-	x2 = [0, 0]
-	odist = [1000,1000]
 	pos_field = [0] * WIDTH
 	for j in range(0,int(len(x1))):
 		for i in range(x1[j]-1, 0, -1):
