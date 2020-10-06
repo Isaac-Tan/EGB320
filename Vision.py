@@ -14,7 +14,7 @@ OBST_HEIGHT = 150 #mm
 ROCK_HEIGHT = 70 #mm
 SAMPLE_HEIGHT = 40 #mm
 LANDER_HEIGHT = 200 #mm
-WALL_HEIGHT = 650 #mm
+WALL_HEIGHT = 450 #mm
 HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
 
@@ -201,16 +201,21 @@ def thresh(input_frame, type, total_img):
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
 		extrleft = tuple(c[c[:,:,0].argmin()][0])#Left most x-coord
 		extrright = tuple(c[c[:,:,0].argmax()][0])#Right most x-coord
+		extrtop = tuple(c[c[:, :, 1].argmin()][0])
+		extrbottom = tuple(c[c[:, :, 1].argmax()][0])
 		x1 = extrleft[0]
 		x2 = extrright[0]
+		y1 = extrtop[1]
+		y2 = extrbottom[1]
+		h = y2 - y1
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
 		# get height/width of contour
-		x,y,h,w = cv2.boundingRect(c)
+		#x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
 		if (type == 0):
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
-			dist = round(0.1*(FOCAL_LEN*SAMPLE_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
@@ -225,7 +230,7 @@ def thresh(input_frame, type, total_img):
 			dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
-		cv2.circle(total_img, (cX, cY), 7, (255, 0, 0), -1)		#draws a circle at the centre of the contour
+		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
 		#Displays range and bearing on output img
 		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
