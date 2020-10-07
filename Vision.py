@@ -4,6 +4,27 @@ import sys
 import argparse
 import imutils
 import time
+import gpiozero
+import RPi.GPIO as GPIO
+#setup pins
+GPIO.setmode(GPIO.BCM)
+#Set GPIO pins as outputs
+GPIO.setup(24, GPIO.OUT)
+GPIO.setup(13, GPIO.OUT)
+#Direction(Forward) = [left forward GPIO pin, right forward GPIO pin]
+dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
+#Direction(Backward) = [left backward GPIO pin, right backward GPIO pin]
+dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
+#PWM pins = [left pwm pin, right pwm pin]
+pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]  #PWM
+
+#Initialise pwm at 0
+pwm[0].start(0)
+pwm[1].start(0)
+#Multipliers for uneven motor power
+m1mult = 1.0 #Left motor multiplier
+m2mult = 0.9 #Right motor multiplier
+
 
 FREQUENCY = 20 #Hz
 INTERVAL = 1.0/FREQUENCY
@@ -171,6 +192,29 @@ def bounds():
 	b_min_arr = np.array(b_min_)
 	global b_max_arr
 	b_max_arr = np.array(b_max_)
+
+def motor(mot, value):
+	np.clip(value, -100, 100)
+  	#Drive motor(which motor, PWM intensity)
+	if (value > 0):
+    #if value is positive: drive forward
+		dir1[mot].on()
+		dir2[mot].off()
+	elif (value < 0):
+    #if value is negative: drive backward
+		dir1[mot].off()
+		dir2[mot].on()
+	#set the pwm pin at index mot to "value"
+	pwm[mot].ChangeDutyCycle(abs(value))
+
+def drive(magnitude, rotation):
+  motor(0, magnitude - rotation)  #set motor at index 0 (left motor) to (value-rotation)
+  motor(1, magnitude + rotation)  #set motor at index 1 (right motor) to (value+rotation)
+  #rotation is positive CCW from north
+
+def stop():
+	pwm[0].stop() #stop the pwm pin at index 0 (left motor)
+	pwm[1].stop() #stop the pwm pin at index 1 (right motor)
 
 
 def thresh(input_frame, type, total_img):
@@ -362,6 +406,8 @@ def naviagtion():
 			total[i] = uball[i] - tot_pos[i]	
 	global max_index
 	max_index = total.index(max(total))
+	rot = round(31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),3)
+	drive(10, rot)
 
 
 
@@ -437,6 +483,7 @@ def process(frame):
 def cleanUp():
 	# Closes all the frames
 	cv2.destroyAllWindows()
+	stop()
 
 def main():
 	capture()
