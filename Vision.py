@@ -469,8 +469,8 @@ def process(frame):
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
-	if (rate > FREQUENCY):				#only sleep if process rate is faster than desired freq
-		time.sleep(INTERVAL - elapsed)
+	# if (rate > FREQUENCY):				#only sleep if process rate is faster than desired freq
+	# 	time.sleep(INTERVAL - elapsed)
 	elapsed2 = time.time() - now
 	rate2 = round(1.0/elapsed2,0)
 	#Display Frequency in top left corner
