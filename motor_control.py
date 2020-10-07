@@ -41,8 +41,8 @@ def motor(mot, value):
   pwm[mot].ChangeDutyCycle(abs(value))
 
 def drive(magnitude, rotation, tsec):
-  motor(0, magnitude - rotation)  #set motor at index 0 (left motor) to (value-rotation)
-  motor(1, magnitude + rotation)  #set motor at index 1 (right motor) to (value+rotation)
+  motor(0, m1mult * (magnitude - rotation))  #set motor at index 0 (left motor) to (value-rotation)
+  motor(1, m2mult * (magnitude + rotation))  #set motor at index 1 (right motor) to (value+rotation)
   #rotation is positive CCW from north
   time.sleep(tsec) #drive the motors for time = tsec
   #then stop
