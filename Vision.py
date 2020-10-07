@@ -80,6 +80,9 @@ Lander_list = []
 
 max_index = 160
 
+going = 0
+captured = 0
+
 init = False
 
 #Video
@@ -369,8 +372,6 @@ def capture():
 
 def naviagtion():
 	global max_index
-	going = 0
-	captured = 0
 	neg_field = [0] * WIDTH
 	M = 0.01
 	scal = 0.002
@@ -459,10 +460,12 @@ def naviagtion():
 		max_val = 0
 		downServo()
 		if (going == 1):
+			global captured
 			captured = 1
 	#if it can see the ball
 	else:
 		upServo()
+		global going
 		going = 1
 		rot = round(0.15*bearing,2)
 		#if the ball is close and in centre of view
