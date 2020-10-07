@@ -22,9 +22,9 @@ pwm[1].start(0)
 m1mult = 1.0 #Left motor multiplier
 m2mult = 0.9 #Right motor multiplier
 
-magnitude = sys.argv[0]
-rotation = sys.argv[1]
-tsec = sys.argv[2]
+magnitude = sys.argv[1]
+rotation = sys.argv[2]
+tsec = sys.argv[3]
 
 def motor(mot, value):
   np.clip(value, -100, 100)
