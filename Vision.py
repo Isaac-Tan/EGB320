@@ -210,9 +210,15 @@ def thresh(input_frame, type, total_img):
 		extrbottom = tuple(c[c[:, :, 1].argmax()][0])
 		x1 = extrleft[0]
 		x2 = extrright[0]
+		x = x2 - x1
 		y1 = extrtop[1]
 		y2 = extrbottom[1]
+
 		h = y2 - y1
+		ratio = h/x
+		if (ratio < 1):
+			h = h / ratio
+
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
 		# get height/width of contour
@@ -368,10 +374,10 @@ def process(frame):
 	elapsed2 = time.time() - now
 	rate2 = round(1.0/elapsed2,0)
 	#Display Frequency in top left corner
-	cv2.putText(frame, "Frequency: " + str(rate2) + "Hz", (15, 20),
+	cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
-	cv2.imshow("Total", frame)		#display final output img
+	cv2.imshow("Total", total_img)		#display final output img
 
 
 def cleanUp():
