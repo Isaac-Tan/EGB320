@@ -194,7 +194,6 @@ def bounds():
 	b_max_arr = np.array(b_max_)
 
 def motor(mot, value):
-	np.clip(value, -100, 100)
   	#Drive motor(which motor, PWM intensity)
 	if (value > 0):
     #if value is positive: drive forward
@@ -205,6 +204,8 @@ def motor(mot, value):
 		dir1[mot].off()
 		dir2[mot].on()
 	#set the pwm pin at index mot to "value"
+	if (abs(value) > 100):
+		value = 100
 	pwm[mot].ChangeDutyCycle(abs(value))
 
 def drive(magnitude, rotation):
