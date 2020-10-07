@@ -223,8 +223,8 @@ def thresh(input_frame, type, total_img):
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
 	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
-	erosion = cv2.erode(thresh,kernel,iterations = 2)		#erodes anything larger than the 5x5 matrix, 4 times
-	opened = cv2.dilate(erosion,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
+	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
+	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
 	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)	#applies gausian blur of 5x5
 	ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(ims, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
@@ -261,12 +261,12 @@ def thresh(input_frame, type, total_img):
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			#cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
-		elif (type == 3):
-			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
-		elif (type == 4):
-			dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
+		# elif (type == 3):
+		# 	dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+		# 	cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
+		# elif (type == 4):
+		# 	dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
 		# cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
 		# #Displays range and bearing on output img
@@ -436,8 +436,8 @@ def process(frame):
 	sample_img = cv2.bitwise_and(blurred, blurred, mask= s_mask)
 	rock_img = cv2.bitwise_and(blurred, blurred, mask= r_mask)
 	obstacle_img = cv2.bitwise_and(blurred, blurred, mask= o_mask)
-	lander_img = cv2.bitwise_and(blurred, blurred, mask= l_mask)
-	wall_img = cv2.bitwise_and(blurred, blurred, mask= b_mask)
+	#lander_img = cv2.bitwise_and(blurred, blurred, mask= l_mask)
+	#wall_img = cv2.bitwise_and(blurred, blurred, mask= b_mask)
 
 	# total_img = sample_img + rock_img + obstacle_img
 	total_img = frame
@@ -458,8 +458,8 @@ def process(frame):
 	sample = thresh(sample_img, 0, total_img)
 	rock = thresh(rock_img, 1,total_img)
 	obstacle = thresh(obstacle_img, 2,total_img)
-	lander = thresh(lander_img, 3,total_img)
-	wall = thresh(wall_img, 4,total_img)
+	#lander = thresh(lander_img, 3,total_img)
+	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
 	#cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
