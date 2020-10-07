@@ -221,26 +221,26 @@ def thresh(input_frame, type, total_img):
 		if (type == 0):
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
+			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
+			cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
+			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		# elif (type == 4):
 		# 	dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
-		# cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
-		# #Displays range and bearing on output img
-		# cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
-		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		# cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
-		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
+		#Displays range and bearing on output img
+		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
 		global Sample_list		#Global needs to be called to store into a global variable
 		global Rock_list
@@ -251,26 +251,26 @@ def thresh(input_frame, type, total_img):
 			Sample_list.append(Sample(i,dist,bearing,cX,cY))	#adds this sample to the class of samples
 			del sample
 			#Displays "sample" in the centre of the contour
-			# cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
-			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):	#if rock
 			rock = Rock(i,dist,bearing,x1,x2)
 			Rock_list.append(Rock(i,dist,bearing,x1,x2))
 			del rock
-			# cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
-			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 2):	#if obstacle
 			obstacle = Obstacle(i,dist,bearing,x1,x2)
 			Obstacle_list.append(Obstacle(i,dist,bearing,x1,x2))
 			del obstacle
-			# cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
-			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 3):	#if lander
 			lander = Lander(i,dist,bearing,cX,cY)
 			Lander_list.append(Lander(i,dist,bearing,cX,cY))
 			del lander
-			# cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
-			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		# elif (type == 4):	#if wall
 			# cv2.putText(total_img, "Wall", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
