@@ -408,7 +408,7 @@ def naviagtion():
 			total[i] = uball[i] - tot_pos[i]
 	max_index = total.index(max(total))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
-	if (bdist < 0):
+	if (bdist == 0):
 		#If it cant see the ball turn on spot
 		rot = 15
 		max_val = 0
