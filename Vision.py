@@ -416,6 +416,7 @@ def naviagtion():
 		rot = round(0.15*bearing,2)
 	else:
 		rot = 5
+		max_val = 0
 	drive(max_val, -1*rot)
 	#drive(15,0)
 
