@@ -407,9 +407,13 @@ def naviagtion():
 	for i in range(0,WIDTH-1):
 			total[i] = uball[i] - tot_pos[i]
 	max_index = total.index(max(total))
-	max_val = 0.5 * bdist
-	if (max_index != 0 & max_index != 320):
-		rot = round(0.15*31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),2)
+	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
+	if (bdist > 30):
+		max_val = 0.5 * bdist
+	elif (bdist < 30 & bdist > 0 & bearing < 9 & bearing > -9):
+		max_val = 15
+	if (bdist > 0):
+		rot = round(0.15*bearing,2)
 	else:
 		rot = 5
 	drive(max_val, -1*rot)
