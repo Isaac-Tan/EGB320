@@ -330,7 +330,7 @@ def thresh(input_frame, type, total_img):
 			# cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 3):	#if lander
-			lander = Lander(i,dist,bearing,x1,x2)
+			lander = Lander(i,dist,bearing,cX,cY)
 			Lander_list.append(Lander(i,dist,bearing,cX,cY))
 			del lander
 			# cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
