@@ -407,7 +407,8 @@ def naviagtion():
 	global max_index
 	max_index = total.index(max(total))
 	rot = round(0.2*31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),2)
-	drive(15, -1*rot)
+	#drive(15, -1*rot)
+	drive(10,0)
 
 
 
