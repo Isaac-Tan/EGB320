@@ -245,18 +245,18 @@ def process(frame):
 	l_mask = cv2.inRange(hsv, l_min_arr, l_max_arr)		#lander mask
 	b_mask = cv2.inRange(hsv, b_min_arr, b_max_arr)		#wall mask
 
-	#blurred = cv2.GaussianBlur(frame, (5, 5), 0)		#blur the frame with a 5x5
+	blurred = cv2.GaussianBlur(frame, (5, 5), 0)		#blur the frame with a 5x5
 
 	# sample_img1 = cv2.bitwise_and(blurred, blurred, mask= s_mask1)
 	# sample_img2 = cv2.bitwise_and(blurred, blurred, mask= s_mask2)
 	# sample_img = sample_img1 + sample_img2
 
 	#overlay the mask on the blurred image for bitwise and
-	sample_img = cv2.bitwise_and(frame, frame, mask= s_mask)
-	rock_img = cv2.bitwise_and(frame, frame, mask= r_mask)
-	obstacle_img = cv2.bitwise_and(frame, frame, mask= o_mask)
-	lander_img = cv2.bitwise_and(frame, frame, mask= l_mask)
-	wall_img = cv2.bitwise_and(frame, frame, mask= b_mask)
+	sample_img = cv2.bitwise_and(blurred, blurred, mask= s_mask)
+	rock_img = cv2.bitwise_and(blurred, blurred, mask= r_mask)
+	obstacle_img = cv2.bitwise_and(blurred, blurred, mask= o_mask)
+	lander_img = cv2.bitwise_and(blurred, blurred, mask= l_mask)
+	wall_img = cv2.bitwise_and(blurred, blurred, mask= b_mask)
 
 	# total_img = sample_img + rock_img + obstacle_img
 	total_img = frame
@@ -274,7 +274,7 @@ def process(frame):
 	wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
-	cv2.line(frame, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
+	#cv2.line(frame, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
