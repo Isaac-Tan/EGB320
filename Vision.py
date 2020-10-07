@@ -275,9 +275,9 @@ def thresh(input_frame, type, total_img):
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			#cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
-		# elif (type == 3):
-		# 	dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-		# 	cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
+		elif (type == 3):
+			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+			#cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		# elif (type == 4):
 		# 	dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
@@ -470,7 +470,7 @@ def process(frame):
 	sample_img = cv2.bitwise_and(blurred, blurred, mask= s_mask)
 	rock_img = cv2.bitwise_and(blurred, blurred, mask= r_mask)
 	obstacle_img = cv2.bitwise_and(blurred, blurred, mask= o_mask)
-	#lander_img = cv2.bitwise_and(blurred, blurred, mask= l_mask)
+	lander_img = cv2.bitwise_and(blurred, blurred, mask= l_mask)
 	#wall_img = cv2.bitwise_and(blurred, blurred, mask= b_mask)
 
 	# total_img = sample_img + rock_img + obstacle_img
@@ -492,7 +492,7 @@ def process(frame):
 	sample = thresh(sample_img, 0, total_img)
 	rock = thresh(rock_img, 1,total_img)
 	obstacle = thresh(obstacle_img, 2,total_img)
-	#lander = thresh(lander_img, 3,total_img)
+	lander = thresh(lander_img, 3,total_img)
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
