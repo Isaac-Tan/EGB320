@@ -388,7 +388,7 @@ def naviagtion():
 	else:
 		if len(Lander_list) > 0:
 			peak = Lander_list[0].cX
-			bdist = Lander_list[0].Dist
+			bdist = 0.5 * Lander_list[0].Dist
 		else:
 			peak = max_index
 			bdist = 0.0
@@ -473,6 +473,7 @@ def naviagtion():
 			max_val = 15
 		#if not close drive to
 		else:
+
 			max_val = 0.5 * bdist
 
 	drive(max_val, -1*rot)
