@@ -226,11 +226,9 @@ def stop():
 
 def upServo():
 	p.ChangeDutyCycle(4)
-	time.sleep(0.5)
 
 def downServo():
 	p.ChangeDutyCycle(7)
-	time.sleep(0.5)
 
 
 def thresh(input_frame, type, total_img):
