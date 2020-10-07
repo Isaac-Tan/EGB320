@@ -227,16 +227,16 @@ def thresh(input_frame, type, total_img):
 		if (type == 0):
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
+			#cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
+			#cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+			#cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
+			#cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		# elif (type == 4):
 		# 	dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
