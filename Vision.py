@@ -410,7 +410,7 @@ def naviagtion():
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 	if (bdist > 50.0):
 		max_val = 0.5 * bdist
-	elif (bdist < 50.0 & bdist > 0.0 & bearing < 10.0 & bearing > -10.0):
+	elif (bdist < 50.0 and bdist > 0.0 and bearing < 10.0 and bearing > -10.0):
 		max_val = 15
 	if (bdist > 0.0):
 		rot = round(0.15*bearing,2)
