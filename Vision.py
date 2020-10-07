@@ -406,7 +406,7 @@ def naviagtion():
 			total[i] = uball[i] - tot_pos[i]	
 	global max_index
 	max_index = total.index(max(total))
-	rot = round(0.5*31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),3)
+	rot = int(0.25*31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)))
 	drive(15, -1*rot)
 
 
