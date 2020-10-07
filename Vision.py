@@ -407,7 +407,7 @@ def naviagtion():
 			total[i] = uball[i] - tot_pos[i]
 	max_index = total.index(max(total))
 	rot = round(0.25*31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),2)
-	drive(20, -1*rot)
+	#drive(20, -1*rot)
 	#drive(15,0)
 
 
@@ -463,10 +463,10 @@ def process(frame):
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
-	#cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
+	cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
 
 	naviagtion()
-	#cv2.line(total_img, ((int(max_index)),0), ((int(max_index)),int(HEIGHT)), (0, 0, 255))
+	cv2.line(total_img, ((int(max_index)),0), ((int(max_index)),int(HEIGHT)), (0, 0, 255))
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
@@ -478,7 +478,7 @@ def process(frame):
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
-	# cv2.imshow("Total", total_img)		#display final output img
+	cv2.imshow("Total", total_img)		#display final output img
 
 
 def cleanUp():
