@@ -4,34 +4,6 @@ import sys
 import argparse
 import imutils
 import time
-import gpiozero
-import RPi.GPIO as GPIO
-
-servoPIN = 27
-#setup pins
-GPIO.setmode(GPIO.BCM)
-#Set GPIO pins as outputs
-GPIO.setup(24, GPIO.OUT) #Left motor
-GPIO.setup(13, GPIO.OUT) #Right motor
-GPIO.setup(servoPIN, GPIO.OUT) #Servo
-#Direction(Forward) = [left forward GPIO pin, right forward GPIO pin]
-dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
-#Direction(Backward) = [left backward GPIO pin, right backward GPIO pin]
-dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
-#PWM pins = [left pwm pin, right pwm pin]
-pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]  #PWM
-p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
-
-
-#Initialise pwm at 0
-pwm[0].start(0)
-pwm[1].start(0)
-#Initialise motor at 2.5
-p.start(2.5)
-#Multipliers for uneven motor power
-m1mult = 1.0 #Left motor multiplier
-m2mult = 1.0 #Right motor multiplier
-
 
 FREQUENCY = 20 #Hz
 INTERVAL = 1.0/FREQUENCY
@@ -77,11 +49,6 @@ Sample_list = []
 Rock_list = []
 Obstacle_list = []
 Lander_list = []
-
-max_index = 160
-
-going = 0
-captured = 0
 
 init = False
 
@@ -217,37 +184,6 @@ def bounds():
 	global b_max_arr
 	b_max_arr = np.array(b_max_)
 
-def motor(mot, value):
-  	#Drive motor(which motor, PWM intensity)
-	if (value > 0):
-    #if value is positive: drive forward
-		dir1[mot].on()
-		dir2[mot].off()
-	elif (value < 0):
-    #if value is negative: drive backward
-		dir1[mot].off()
-		dir2[mot].on()
-	#set the pwm pin at index mot to "value"
-	if (abs(value) > 100):
-		value = 100
-	pwm[mot].ChangeDutyCycle(abs(value))
-
-def drive(magnitude, rotation):
-  motor(0, m1mult * (magnitude - rotation))  #set motor at index 0 (left motor) to (value-rotation)
-  motor(1, m2mult * (magnitude + rotation))  #set motor at index 1 (right motor) to (value+rotation)
-  #rotation is positive CCW from north
-
-def stop():
-	pwm[0].stop() #stop the pwm pin at index 0 (left motor)
-	pwm[1].stop() #stop the pwm pin at index 1 (right motor)
-
-def upServo():
-	p.ChangeDutyCycle(4)
-
-def downServo():
-	p.ChangeDutyCycle(7)
-
-
 def thresh(input_frame, type, total_img):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
@@ -370,116 +306,6 @@ def capture():
 	cap.release()
 	cleanUp()
 
-def naviagtion():
-	global max_index
-	global captured
-	global going
-	neg_field = [0] * WIDTH
-	M = 0.01
-	scal = 0.002
-
-	if (captured == 0):
-		if len(Sample_list) > 0:
-			peak = Sample_list[0].cX
-			bdist = Sample_list[0].Dist
-		else:
-			peak = max_index
-			bdist = 0.0
-	else:
-		if len(Lander_list) > 0:
-			peak = Lander_list[0].cX
-			bdist = Lander_list[0].Dist
-		else:
-			peak = max_index
-			bdist = 0.0
-
-	neg_field[peak] = 1
-	for i in range(peak-1,0,-1):
-		neg_field[i] = M * i - peak * M + 1
-	for i in range(peak + 1, WIDTH):
-		neg_field[i] = ((i - peak) * -1 * M ) + 1
-	for i in range(0, WIDTH):
-		if (neg_field[i] < 0):
-			neg_field[i] = 0
-	u = 0.5 * scal * bdist**2
-	uball = [0] * WIDTH
-	for i in range(0,len(neg_field)-1):
-		uball[i] = u * neg_field[i]
-	
-
-	pos_field = [0] * WIDTH
-	tot_pos = [0] * WIDTH
-
-	Q = 50
-	N = 0.1
-	scalar = 2000
-
-	x1 = []
-	x2 = []
-	odist = []
-
-	if len(Rock_list) > 0:
-		for i in range(0, len(Rock_list)-1):
-			x1.append(Rock_list[i].x1)
-			x2.append(Rock_list[i].x2)
-			odist.append(Rock_list[i].Dist)
-	if len(Obstacle_list) > 0:
-		for i in range(0, len(Obstacle_list)-1):
-			x1.append(Obstacle_list[i].x1)
-			x2.append(Obstacle_list[i].x2)
-			odist.append(Obstacle_list[i].Dist)
-	else:
-		x1 = [0]
-		x2 = [0]
-		odist = [1000]
-
-	pos_field = [0] * WIDTH
-	for j in range(0,int(len(x1))):
-		for i in range(x1[j]-1, 0, -1):
-			pos_field[i] = N * i - x1[j]*N + 1
-		for i in range(x2[j] + 1, WIDTH - 1):
-			pos_field[i] = ((i - x2[j]) * -1 * N ) + 1
-		for i in range(x1[j],x2[j]):
-			pos_field[i] = 1
-		for i in range(0,WIDTH):
-			if (pos_field[i] < 0):
-				pos_field[i] = 0
-		tot_pos = [0] * WIDTH
-		for i in range(0,len(pos_field)-1):
-			pos_field[i] = pos_field[i] * 0.5 * scalar * ((1/odist[j])-(1/Q))**2
-			tot_pos[i] = tot_pos[i] + pos_field[i]
-	total = [0] * WIDTH
-	for i in range(0,WIDTH-1):
-			total[i] = uball[i] - tot_pos[i]
-	max_index = total.index(max(total))
-	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
-	if (bdist == 0):
-		#If it cant see the ball turn on spot
-		if (max_index < 160):
-			rot = 15
-		else:
-			rot = -15
-		max_val = 0
-		downServo()
-		if (going == 1):
-			captured = 1
-	#if it can see the ball
-	else:
-		upServo()
-		going = 1
-		rot = round(0.15*bearing,2)
-		#if the ball is close and in centre of view
-		if (bdist < 60 and bearing < 10.0 and bearing > -10.0):
-			max_val = 15
-		#if not close drive to
-		else:
-			max_val = 0.5 * bdist
-
-	drive(max_val, -1*rot)
-	#drive(15,0)
-
-
-
 def process(frame):
 	now = time.time()	#start process time
 	frame = cv2.rotate(frame, cv2.ROTATE_180)		#rotate the frame 180'
@@ -509,7 +335,6 @@ def process(frame):
 	#wall_img = cv2.bitwise_and(blurred, blurred, mask= b_mask)
 
 	# total_img = sample_img + rock_img + obstacle_img
-	total_img = frame
 
 
 	#cv2.imshow("Sample",sample_img)
@@ -526,17 +351,14 @@ def process(frame):
 	Lander_list = []
 
 	#object frame = thresh(input img, obj type, output img)
-	sample = thresh(sample_img, 0, total_img)
-	rock = thresh(rock_img, 1,total_img)
-	obstacle = thresh(obstacle_img, 2,total_img)
-	lander = thresh(lander_img, 3,total_img)
+	sample = thresh(sample_img, 0, frame)
+	rock = thresh(rock_img, 1, frame)
+	obstacle = thresh(obstacle_img, 2, frame)
+	lander = thresh(lander_img, 3, frame)
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
-	cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
-
-	naviagtion()
-	cv2.line(total_img, ((int(max_index)),0), ((int(max_index)),int(HEIGHT)), (0, 0, 255))
+	cv2.line(frame, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
@@ -548,13 +370,12 @@ def process(frame):
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
-	cv2.imshow("Total", total_img)		#display final output img
+	cv2.imshow("Total", frame)		#display final output img
 
 
 def cleanUp():
 	# Closes all the frames
 	cv2.destroyAllWindows()
-	stop()
 
 def main():
 	capture()
