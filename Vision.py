@@ -297,10 +297,10 @@ def thresh(input_frame, type, total_img):
 			del obstacle
 			# cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		elif (type == 3):	#if lander
+		# elif (type == 3):	#if lander
 			# cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		elif (type == 4):	#if wall
+		# elif (type == 4):	#if wall
 			# cv2.putText(total_img, "Wall", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		i = i + 1	#add 1 to the ID of object class
