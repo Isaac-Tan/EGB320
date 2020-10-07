@@ -411,9 +411,9 @@ def naviagtion():
 	if (bdist == 0):
 		#If it cant see the ball turn on spot
 		if (max_index < 160):
-			rot = 20
+			rot = 15
 		else:
-			rot = -20
+			rot = -15
 		max_val = 0
 	#if it can see the ball
 	else:
