@@ -44,5 +44,5 @@ def drive(magnitude, rotation, tsec):
   pwm[0].stop() #stop the pwm pin at index 0 (left motor)
   pwm[1].stop() #stop the pwm pin at index 1 (right motor)
 
-drive(50,0,7)
+drive(sys.argv[1], sys.argv[2], sys.argv[3])
 #Drives at magnitude of 40/100, with 0 rotation, for 5 seconds
