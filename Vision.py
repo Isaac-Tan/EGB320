@@ -134,7 +134,7 @@ def thresh(input_frame, type, total_img):
 	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
 	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
 	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
-	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)	#applies gausian blur of 5x5
+	blurred_thresh = cv2.GaussianBlur(opened, (3, 3), 0)	#applies gausian blur of 5x5
 	#ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(blurred_thresh, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
 	cnts = imutils.grab_contours(cnts)		#grabs contours from cnts
