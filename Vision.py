@@ -346,7 +346,7 @@ def naviagtion():
 		bdist = Sample_list[0].Dist
 	else:
 		peak = max_index
-		bdist = 0
+		bdist = 0.0
 
 	neg_field[peak] = 1
 	for i in range(peak-1,0,-1):
@@ -408,11 +408,11 @@ def naviagtion():
 			total[i] = uball[i] - tot_pos[i]
 	max_index = total.index(max(total))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
-	if (bdist > 50):
+	if (bdist > 50.0):
 		max_val = 0.5 * bdist
-	elif (bdist < 50 & bdist > 0 & bearing < 10 & bearing > -10):
+	elif (bdist < 50.0 & bdist > 0.0 & bearing < 10.0 & bearing > -10.0):
 		max_val = 15
-	if (bdist > 0):
+	if (bdist > 0.0):
 		rot = round(0.15*bearing,2)
 	else:
 		rot = 5
