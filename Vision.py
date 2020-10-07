@@ -343,7 +343,7 @@ def naviagtion():
 		peak = Sample_list[0].cX
 		bdist = Sample_list[0].Dist
 	else:
-		peak = 0
+		peak = 160
 		bdist = 0
 
 	neg_field[peak] = 1
@@ -407,7 +407,7 @@ def naviagtion():
 	global max_index
 	max_index = total.index(max(total))
 	rot = round(31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),3)
-	drive(30, rot)
+	drive(30, -1*rot)
 
 
 
