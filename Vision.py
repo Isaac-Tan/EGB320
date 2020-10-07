@@ -70,7 +70,7 @@ Sample_list = []
 Rock_list = []
 Obstacle_list = []
 
-max_index = 0
+max_index = 160
 
 init = False
 
@@ -343,7 +343,7 @@ def naviagtion():
 		peak = Sample_list[0].cX
 		bdist = Sample_list[0].Dist
 	else:
-		peak = 160
+		peak = max_index
 		bdist = 0
 
 	neg_field[peak] = 1
@@ -406,7 +406,7 @@ def naviagtion():
 			total[i] = uball[i] - tot_pos[i]	
 	global max_index
 	max_index = total.index(max(total))
-	rot = round(0.2*31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),2)
+	rot = round(0.25*31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),2)
 	drive(20, -1*rot)
 	#drive(15,0)
 
