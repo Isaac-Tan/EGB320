@@ -416,7 +416,7 @@ def naviagtion():
 	else:
 		rot = round(0.15*bearing,2)
 		#if the ball is close and in centre of view
-		if (bdist < 50 and bearing < 10.0 and bearing > -10.0):
+		if (bdist < 60 and bearing < 10.0 and bearing > -10.0):
 			max_val = 15
 		#if not close drive to
 		else:
