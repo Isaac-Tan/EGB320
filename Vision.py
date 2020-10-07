@@ -336,6 +336,7 @@ def capture():
 	cleanUp()
 
 def naviagtion():
+	global max_index
 	neg_field = [0] * WIDTH
 	M = 0.01
 	scal = 0.002
@@ -403,8 +404,7 @@ def naviagtion():
 			tot_pos[i] = tot_pos[i] + pos_field[i]
 	total = [0] * WIDTH
 	for i in range(0,WIDTH-1):
-			total[i] = uball[i] - tot_pos[i]	
-	global max_index
+			total[i] = uball[i] - tot_pos[i]
 	max_index = total.index(max(total))
 	rot = round(0.25*31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0)),2)
 	drive(20, -1*rot)
