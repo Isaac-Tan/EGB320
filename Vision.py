@@ -54,9 +54,9 @@ max_index = 0
 init = False
 
 #Video
-cap = cv2.VideoCapture(sys.argv[1])
+#cap = cv2.VideoCapture(sys.argv[1])
 #Camera
-#cap = cv2.VideoCapture(-1)
+cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
 
