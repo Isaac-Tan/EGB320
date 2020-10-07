@@ -8,9 +8,9 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(24, GPIO.OUT)
 GPIO.setup(13, GPIO.OUT)
 #Direction(Forward) = [left forward GPIO pin, right forward GPIO pin]
-dir1 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Forward
+dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
 #Direction(Backward) = [left backward GPIO pin, right backward GPIO pin]
-dir2 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Backward
+dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
 #PWM pins = [left pwm pin, right pwm pin]
 pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]  #PWM
 
