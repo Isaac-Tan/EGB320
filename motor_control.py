@@ -2,6 +2,7 @@ import gpiozero
 import time
 import RPi.GPIO as GPIO
 import numpy as np
+import sys
 #setup pins
 GPIO.setmode(GPIO.BCM)
 #Set GPIO pins as outputs
@@ -20,6 +21,10 @@ pwm[1].start(0)
 #Multipliers for uneven motor power
 m1mult = 1.0 #Left motor multiplier
 m2mult = 0.9 #Right motor multiplier
+
+magnitude = sys.argv[0]
+rotation = sys.argv[1]
+tsec = sys.argv[2]
 
 def motor(mot, value):
   np.clip(value, -100, 100)
@@ -44,5 +49,5 @@ def drive(magnitude, rotation, tsec):
   pwm[0].stop() #stop the pwm pin at index 0 (left motor)
   pwm[1].stop() #stop the pwm pin at index 1 (right motor)
 
-drive(sys.argv[1], sys.argv[2], sys.argv[3])
+drive(magnitude, rotation, tsec)
 #Drives at magnitude of 40/100, with 0 rotation, for 5 seconds
