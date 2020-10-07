@@ -102,7 +102,6 @@ class Sample:
 		self.cX = cX	#x-coord of the centre of the object
 		self.cY = cY	#y-coord of the centre of the object
 		Sample.sampleCount += 1
-
 	def __del__(self):
 		Sample.sampleCount -= 1
 
@@ -233,9 +232,9 @@ def motor(mot, value):
 	pwm[mot].ChangeDutyCycle(abs(value))
 
 def drive(magnitude, rotation):
-  motor(0, m1mult * (magnitude - rotation))  #set motor at index 0 (left motor) to (value-rotation)
-  motor(1, m2mult * (magnitude + rotation))  #set motor at index 1 (right motor) to (value+rotation)
-  #rotation is positive CCW from north
+	motor(0, m1mult * (magnitude - rotation))  #set motor at index 0 (left motor) to (value-rotation)
+	motor(1, m2mult * (magnitude + rotation))  #set motor at index 1 (right motor) to (value+rotation)
+	#rotation is positive CCW from north
 
 def stop():
 	pwm[0].stop() #stop the pwm pin at index 0 (left motor)

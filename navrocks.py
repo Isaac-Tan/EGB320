@@ -11,17 +11,16 @@ servoPIN = 27
 #setup pins
 GPIO.setmode(GPIO.BCM)
 #Set GPIO pins as outputs
-GPIO.setup(24, GPIO.OUT) #Left motor
-GPIO.setup(13, GPIO.OUT) #Right motor
-GPIO.setup(servoPIN, GPIO.OUT) #Servo
+GPIO.setup(24, GPIO.OUT)	#Left motor
+GPIO.setup(13, GPIO.OUT)	#Right motor
+GPIO.setup(servoPIN, GPIO.OUT)	#Servo
 #Direction(Forward) = [left forward GPIO pin, right forward GPIO pin]
-dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
+dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)]	#Forward
 #Direction(Backward) = [left backward GPIO pin, right backward GPIO pin]
-dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
+dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)]	#Backward
 #PWM pins = [left pwm pin, right pwm pin]
-pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]  #PWM
-p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
-
+pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]	#PWM
+p = GPIO.PWM(servoPIN, 50)	# GPIO 17 for PWM with 50Hz
 
 #Initialise pwm at 0
 pwm[0].start(0)
@@ -29,22 +28,21 @@ pwm[1].start(0)
 #Initialise motor at 2.5
 p.start(2.5)
 #Multipliers for uneven motor power
-m1mult = 1.0 #Left motor multiplier
-m2mult = 1.0 #Right motor multiplier
+m1mult = 1.0	#Left motor multiplier
+m2mult = 1.0	#Right motor multiplier
 
-
-FREQUENCY = 20 #Hz
+FREQUENCY = 20	#Hz
 INTERVAL = 1.0/FREQUENCY
-FOCAL_LEN = 3.04 #mm
-SENSOR_HEIGHT = 2.76 #mm
-SENSOR_WIDTH = 3.68 #mm
-OBST_HEIGHT = 150 #mm
-ROCK_HEIGHT = 70 #mm
-SAMPLE_HEIGHT = 40 #mm
-LANDER_HEIGHT = 200 #mm
-WALL_HEIGHT = 450 #mm
-HEIGHT = 240 #screen height
-WIDTH = 320 #screen width
+FOCAL_LEN = 3.04	#mm
+SENSOR_HEIGHT = 2.76	#mm
+SENSOR_WIDTH = 3.68	#mm
+OBST_HEIGHT = 150	#mm
+ROCK_HEIGHT = 70	#mm
+SAMPLE_HEIGHT = 40	#mm
+LANDER_HEIGHT = 200	#mm
+WALL_HEIGHT = 450	#mm
+HEIGHT = 240	#screen height
+WIDTH = 320		#screen width
 
 #HSV Value arrays
 s_min_1 = [int]*3
@@ -80,9 +78,6 @@ Lander_list = []
 
 max_index = 160
 
-going = 0
-captured = 0
-
 init = False
 
 #Video
@@ -102,18 +97,16 @@ class Sample:
 		self.cX = cX	#x-coord of the centre of the object
 		self.cY = cY	#y-coord of the centre of the object
 		Sample.sampleCount += 1
-
 	def __del__(self):
 		Sample.sampleCount -= 1
 
 class Rock:
 	#'Class for Rocks'
 	rockCount = 0
-	def __init__(self, ID, Dist, Bearing,cX, x1, x2):
+	def __init__(self, ID, Dist, Bearing, x1, x2):
 		self.Dist = Dist
 		self.Bearing = Bearing
 		self.ID = ID
-        self.cX = cX
 		self.x1 = x1
 		self.x2 = x2
 		Rock.rockCount += 1
@@ -234,20 +227,19 @@ def motor(mot, value):
 	pwm[mot].ChangeDutyCycle(abs(value))
 
 def drive(magnitude, rotation):
-  motor(0, m1mult * (magnitude - rotation))  #set motor at index 0 (left motor) to (value-rotation)
-  motor(1, m2mult * (magnitude + rotation))  #set motor at index 1 (right motor) to (value+rotation)
-  #rotation is positive CCW from north
+    motor(0, m1mult * (magnitude - rotation))	#set motor at index 0 (left motor) to (value-rotation)
+    motor(1, m2mult * (magnitude + rotation))	#set motor at index 1 (right motor) to (value+rotation)
+    #rotation is positive CCW from north
 
 def stop():
-	pwm[0].stop() #stop the pwm pin at index 0 (left motor)
-	pwm[1].stop() #stop the pwm pin at index 1 (right motor)
+	pwm[0].stop()	#stop the pwm pin at index 0 (left motor)
+	pwm[1].stop()	#stop the pwm pin at index 1 (right motor)
 
 def upServo():
 	p.ChangeDutyCycle(4)
 
 def downServo():
 	p.ChangeDutyCycle(7)
-
 
 def thresh(input_frame, type, total_img):
 	#input frame, type (sample, rock, obst, etc), output frame
@@ -319,8 +311,8 @@ def thresh(input_frame, type, total_img):
 			# cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):	#if rock
-			rock = Rock(i,dist,bearing,cX,x1,x2)
-			Rock_list.append(Rock(i,dist,bearing,cX,x1,x2))
+			rock = Rock(i,dist,bearing,x1,x2)
+			Rock_list.append(Rock(i,dist,bearing,x1,x2))
 			del rock
 			# cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
@@ -340,19 +332,12 @@ def thresh(input_frame, type, total_img):
 			# cv2.putText(total_img, "Wall", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		i = i + 1	#add 1 to the ID of object class
-
 	return total_img		#return output image
-
-def walls(input_frame, total_img):
-	#input frame, type (sample, rock, obst, etc), output frame
-	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
-	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
-
 
 def capture():
 	# Check if camera opened successfully
 	if (cap.isOpened()== False): 
-	  print("Error opening video stream or file")
+	    print("Error opening video stream or file")
 
 	while(cap.isOpened()): 
 	# Capture frame-by-frame
@@ -360,11 +345,9 @@ def capture():
 		if ret == True:
 			process(frame)
 			k = cv2.waitKey(1) & 0xFF
-
 			# exit if q or esc are pressed
 			if (k == ord('q') or k == 27):
 				break
-
 		else:
 			break
 	# When everything done, release the video capture object
@@ -372,27 +355,16 @@ def capture():
 	cleanUp()
 
 def naviagtion():
-	global max_index
-	global captured
-	global going
-	neg_field = [0] * WIDTH
-	M = 0.01
+    global max_index
+    neg_field = [0] * WIDTH
+    M = 0.01
 	scal = 0.002
-
-	if (captured == 0):
-		if len(Rock_list) > 0:
-			peak = Rock_list[0].cX
-			bdist = Rock_list[0].Dist
-		else:
-			peak = max_index
-			bdist = 0.0
-	else:
-		if len(Lander_list) > 0:
-			peak = Lander_list[0].cX
-			bdist = 0.5 * Lander_list[0].Dist
-		else:
-			peak = max_index
-			bdist = 0.0
+    if (len(Rock_list) > 0):
+        peak = Rock_list[0].x1
+        bdist = Rock_list[0].Dist
+    else:
+        peak = max_index
+        bdist = 0.0
 
 	neg_field[peak] = 1
 	for i in range(peak-1,0,-1):
@@ -407,7 +379,6 @@ def naviagtion():
 	for i in range(0,len(neg_field)-1):
 		uball[i] = u * neg_field[i]
 	
-
 	pos_field = [0] * WIDTH
 	tot_pos = [0] * WIDTH
 
@@ -458,10 +429,10 @@ def naviagtion():
 		max_val = 0
 	#if it can see the rock
 	else:
-		rot = round(0.15*bearing,2)
+        rot = round(0.15*bearing,2)
 		#if the rock is close and in centre of view
 		if (bdist < 30 and bearing < 10.0 and bearing > -10.0):
-			upServo()
+            upServo()
             time.sleep(0.5)
             downServo()
 		#if not close drive to
@@ -504,7 +475,6 @@ def process(frame):
 	# total_img = sample_img + rock_img + obstacle_img
 	total_img = frame
 
-
 	#cv2.imshow("Sample",sample_img)
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
@@ -540,9 +510,7 @@ def process(frame):
 	#Display Frequency in top left corner
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-
 	cv2.imshow("Total", total_img)		#display final output img
-
 
 def cleanUp():
 	# Closes all the frames
