@@ -335,6 +335,7 @@ def process(frame):
 	#wall_img = cv2.bitwise_and(blurred, blurred, mask= b_mask)
 
 	# total_img = sample_img + rock_img + obstacle_img
+	total_img = frame
 
 
 	#cv2.imshow("Sample",sample_img)
@@ -351,10 +352,10 @@ def process(frame):
 	Lander_list = []
 
 	#object frame = thresh(input img, obj type, output img)
-	sample = thresh(sample_img, 0, frame)
-	rock = thresh(rock_img, 1, frame)
-	obstacle = thresh(obstacle_img, 2, frame)
-	lander = thresh(lander_img, 3, frame)
+	sample = thresh(sample_img, 0, total_img)
+	rock = thresh(rock_img, 1, total_img)
+	obstacle = thresh(obstacle_img, 2, total_img)
+	lander = thresh(lander_img, 3, total_img)
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
@@ -367,8 +368,8 @@ def process(frame):
 	elapsed2 = time.time() - now
 	rate2 = round(1.0/elapsed2,0)
 	#Display Frequency in top left corner
-	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
-	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+	cv2.putText(frame, "Frequency: " + str(rate2) + "Hz", (15, 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
 	cv2.imshow("Total", frame)		#display final output img
 
