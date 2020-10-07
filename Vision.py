@@ -410,7 +410,7 @@ def naviagtion():
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 	if (bdist < 0):
 		#If it cant see the ball turn on spot
-		rot = 5
+		rot = 15
 		max_val = 0
 	#if it can see the ball
 	else:
