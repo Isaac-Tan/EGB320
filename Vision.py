@@ -138,7 +138,6 @@ def thresh(input_frame, type, total_img):
 	#ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(blurred_thresh, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
 	cnts = imutils.grab_contours(cnts)		#grabs contours from cnts
-	i = 0	#used for library ID
 
 	# loop over the contours
 	for c in cnts:
@@ -167,19 +166,30 @@ def thresh(input_frame, type, total_img):
 		#x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
 		if (type == 0):
+			#Displays "sample" in the centre of the contour
+			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
+			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 2):
+			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
+			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		elif (type == 4):
+			cv2.putText(total_img, "Wall", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
@@ -189,24 +199,6 @@ def thresh(input_frame, type, total_img):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-
-		if (type == 0):		#if sample
-			#Displays "sample" in the centre of the contour
-			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		elif (type == 1):	#if rock
-			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		elif (type == 2):	#if obstacle
-			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		elif (type == 3):	#if lander
-			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		elif (type == 4):	#if wall
-			cv2.putText(total_img, "Wall", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		i = i + 1	#add 1 to the ID of object class
 
 	return total_img		#return output image
 
