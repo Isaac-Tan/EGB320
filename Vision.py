@@ -301,8 +301,6 @@ def naviagtion():
 	else:
 		peak = 0
 		bdist = 0
-	peak = 160
-	bdist = 1
 
 	neg_field[peak] = 1
 	for i in range(peak-1,0,-1):
