@@ -237,9 +237,9 @@ def thresh(input_frame, type, total_img):
 		elif (type == 3):
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
-		# elif (type == 4):
-		# 	dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
+		elif (type == 4):
+			dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
+			cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
 		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
 		#Displays range and bearing on output img
