@@ -6,21 +6,28 @@ import imutils
 import time
 import gpiozero
 import RPi.GPIO as GPIO
+
+servoPIN = 27
 #setup pins
 GPIO.setmode(GPIO.BCM)
 #Set GPIO pins as outputs
-GPIO.setup(24, GPIO.OUT)
-GPIO.setup(13, GPIO.OUT)
+GPIO.setup(24, GPIO.OUT) #Left motor
+GPIO.setup(13, GPIO.OUT) #Right motor
+GPIO.setup(servoPIN, GPIO.OUT) #Servo
 #Direction(Forward) = [left forward GPIO pin, right forward GPIO pin]
 dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
 #Direction(Backward) = [left backward GPIO pin, right backward GPIO pin]
 dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
 #PWM pins = [left pwm pin, right pwm pin]
 pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]  #PWM
+p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
+
 
 #Initialise pwm at 0
 pwm[0].start(0)
 pwm[1].start(0)
+#Initialise motor at 2.5
+p.start(2.5)
 #Multipliers for uneven motor power
 m1mult = 1.0 #Left motor multiplier
 m2mult = 1.0 #Right motor multiplier
@@ -216,6 +223,14 @@ def drive(magnitude, rotation):
 def stop():
 	pwm[0].stop() #stop the pwm pin at index 0 (left motor)
 	pwm[1].stop() #stop the pwm pin at index 1 (right motor)
+
+def upServo():
+	p.ChangeDutyCycle(4)
+	time.sleep(0.5)
+
+def downServo():
+	p.ChangeDutyCycle(7)
+	time.sleep(0.5)
 
 
 def thresh(input_frame, type, total_img):
@@ -415,8 +430,10 @@ def naviagtion():
 		else:
 			rot = -15
 		max_val = 0
+		downServo()
 	#if it can see the ball
 	else:
+		upServo()
 		rot = round(0.15*bearing,2)
 		#if the ball is close and in centre of view
 		if (bdist < 60 and bearing < 10.0 and bearing > -10.0):
@@ -424,8 +441,6 @@ def naviagtion():
 		#if not close drive to
 		else:
 			max_val = 0.5 * bdist
-
-
 
 	drive(max_val, -1*rot)
 	#drive(15,0)
