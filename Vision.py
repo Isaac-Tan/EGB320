@@ -45,11 +45,6 @@ l_min_arr = []
 b_max_arr = []
 b_min_arr = []
 
-Sample_list = []
-Rock_list = []
-Obstacle_list = []
-Lander_list = []
-
 init = False
 
 #Video
@@ -58,59 +53,6 @@ init = False
 cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
-
-class Sample:
-	#'Class for Samples'
-	sampleCount = 0
-	def __init__(self, ID, Dist, Bearing, cX, cY):
-		self.Dist = Dist	#Distance from camera to object
-		self.Bearing = Bearing		#Angle from centre of POV to object
-		self.ID = ID	#ID of object
-		self.cX = cX	#x-coord of the centre of the object
-		self.cY = cY	#y-coord of the centre of the object
-		Sample.sampleCount += 1
-
-	def __del__(self):
-		Sample.sampleCount -= 1
-
-class Rock:
-	#'Class for Rocks'
-	rockCount = 0
-	def __init__(self, ID, Dist, Bearing, x1, x2):
-		self.Dist = Dist
-		self.Bearing = Bearing
-		self.ID = ID
-		self.x1 = x1
-		self.x2 = x2
-		Rock.rockCount += 1
-	def __del__(self):
-		Rock.rockCount -= 1
-
-class Obstacle:
-	#'Class for Obstacles'
-	obstacleCount = 0
-	def __init__(self, ID, Dist, Bearing, x1, x2):
-		self.Dist = Dist
-		self.Bearing = Bearing
-		self.ID = ID
-		self.x1 = x1
-		self.x2 = x2
-		Obstacle.obstacleCount += 1
-	def __del__(self):
-		Obstacle.obstacleCount -= 1
-
-class Lander:
-	#'Class for Lander'
-	landerCount = 0
-	def __init__(self, ID, Dist, Bearing, cX, cY):
-		self.Dist = Dist
-		self.Bearing = Bearing
-		self.ID = ID
-		self.cX = cX
-		self.cY = cY
-		Lander.landerCount += 1
-	def __del__(self):
-		Lander.landerCount -= 1
 
 def bounds():
 	##Gets the HSV values from the .txt files
@@ -188,7 +130,7 @@ def thresh(input_frame, type, total_img):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
-	kernel = np.ones((3,3),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
+	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
 	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
 	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
 	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
@@ -248,33 +190,17 @@ def thresh(input_frame, type, total_img):
 		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
-		global Sample_list		#Global needs to be called to store into a global variable
-		global Rock_list
-		global Obstacle_list
-		global Lander_list
 		if (type == 0):		#if sample
-			sample = Sample(i,dist,bearing,cX,cY)
-			Sample_list.append(Sample(i,dist,bearing,cX,cY))	#adds this sample to the class of samples
-			del sample
 			#Displays "sample" in the centre of the contour
 			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):	#if rock
-			rock = Rock(i,dist,bearing,x1,x2)
-			Rock_list.append(Rock(i,dist,bearing,x1,x2))
-			del rock
 			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 2):	#if obstacle
-			obstacle = Obstacle(i,dist,bearing,x1,x2)
-			Obstacle_list.append(Obstacle(i,dist,bearing,x1,x2))
-			del obstacle
 			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 3):	#if lander
-			lander = Lander(i,dist,bearing,cX,cY)
-			Lander_list.append(Lander(i,dist,bearing,cX,cY))
-			del lander
 			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 4):	#if wall
@@ -347,15 +273,6 @@ def process(frame):
 	#cv2.imshow("Sample",sample_img)
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
-
-	global Sample_list		#Global needs to be called to store into a global variable
-	Sample_list = []
-	global Rock_list
-	Rock_list = []
-	global Obstacle_list
-	Obstacle_list = []
-	global Lander_list
-	Lander_list = []
 
 	#object frame = thresh(input img, obj type, output img)
 	sample = thresh(sample_img, 0, total_img)
