@@ -414,6 +414,7 @@ def naviagtion():
 		max_val = 15
 	if (bdist > 0.0):
 		rot = round(0.15*bearing,2)
+		max_val = 0.5 * bdist
 	else:
 		rot = 5
 		max_val = 0
