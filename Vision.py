@@ -179,14 +179,8 @@ def thresh(input_frame, type, total_img):
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
 	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
-	if (type == 4):
-		erosion = cv2.erode(thresh,kernel,iterations = 10)
-	else:
-		erosion = cv2.erode(thresh,kernel,iterations = 2)		#erodes anything larger than the 5x5 matrix, 4 times
-	if (type == 4):
-		opened = cv2.dilate(erosion,kernel,iterations = 10)
-	else:
-		opened = cv2.dilate(erosion,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
+	erosion = cv2.erode(thresh,kernel,iterations = 2)		#erodes anything larger than the 5x5 matrix, 4 times
+	opened = cv2.dilate(erosion,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
 	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)	#applies gausian blur of 5x5
 	ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(ims, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
