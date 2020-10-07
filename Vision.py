@@ -188,7 +188,7 @@ def thresh(input_frame, type, total_img):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
-	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
+	kernel = np.ones((3,3),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
 	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
 	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
 	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
