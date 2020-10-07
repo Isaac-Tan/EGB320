@@ -76,6 +76,7 @@ b_min_arr = []
 Sample_list = []
 Rock_list = []
 Obstacle_list = []
+Lander_list = []
 
 max_index = 160
 
@@ -127,6 +128,19 @@ class Obstacle:
 		Obstacle.obstacleCount += 1
 	def __del__(self):
 		Obstacle.obstacleCount -= 1
+
+class Lander:
+	#'Class for Lander'
+	landerCount = 0
+	def __init__(self, ID, Dist, Bearing, cX, cY):
+		self.Dist = Dist
+		self.Bearing = Bearing
+		self.ID = ID
+		self.cX = cX
+		self.cY = cY
+		Lander.landerCount += 1
+	def __del__(self):
+		Lander.landerCount -= 1
 
 def bounds():
 	##Gets the HSV values from the .txt files
@@ -292,6 +306,7 @@ def thresh(input_frame, type, total_img):
 		global Sample_list		#Global needs to be called to store into a global variable
 		global Rock_list
 		global Obstacle_list
+		global Lander_list
 		if (type == 0):		#if sample
 			sample = Sample(i,dist,bearing,cX,cY)
 			Sample_list.append(Sample(i,dist,bearing,cX,cY))	#adds this sample to the class of samples
@@ -311,7 +326,10 @@ def thresh(input_frame, type, total_img):
 			del obstacle
 			# cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		# elif (type == 3):	#if lander
+		elif (type == 3):	#if lander
+			lander = Lander(i,dist,bearing,x1,x2)
+			Lander_list.append(Lander(i,dist,bearing,cX,cY))
+			del lander
 			# cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		# elif (type == 4):	#if wall
@@ -351,15 +369,26 @@ def capture():
 
 def naviagtion():
 	global max_index
+	going = 0
+	captured = 0
 	neg_field = [0] * WIDTH
 	M = 0.01
 	scal = 0.002
-	if len(Sample_list) > 0:
-		peak = Sample_list[0].cX
-		bdist = Sample_list[0].Dist
+
+	if (captured == 0):
+		if len(Sample_list) > 0:
+			peak = Sample_list[0].cX
+			bdist = Sample_list[0].Dist
+		else:
+			peak = max_index
+			bdist = 0.0
 	else:
-		peak = max_index
-		bdist = 0.0
+		if len(Lander_list) > 0:
+			peak = Lander_list[0].cX
+			bdist = Lander_list[0].Dist
+		else:
+			peak = max_index
+			bdist = 0.0
 
 	neg_field[peak] = 1
 	for i in range(peak-1,0,-1):
@@ -429,9 +458,12 @@ def naviagtion():
 			rot = -15
 		max_val = 0
 		downServo()
+		if (going == 1):
+			captured = 1
 	#if it can see the ball
 	else:
 		upServo()
+		going = 1
 		rot = round(0.15*bearing,2)
 		#if the ball is close and in centre of view
 		if (bdist < 60 and bearing < 10.0 and bearing > -10.0):
@@ -487,6 +519,8 @@ def process(frame):
 	Rock_list = []
 	global Obstacle_list
 	Obstacle_list = []
+	global Lander_list
+	Lander_list = []
 
 	#object frame = thresh(input img, obj type, output img)
 	sample = thresh(sample_img, 0, total_img)
