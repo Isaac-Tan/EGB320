@@ -375,7 +375,7 @@ def naviagtion():
 
 def process(frame):
 	now = time.time()	#start process time
-	#frame = cv2.rotate(frame, cv2.ROTATE_180)		#rotate the frame 180'
+	frame = cv2.rotate(frame, cv2.ROTATE_180)		#rotate the frame 180'
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)	#convert rgb to hsv
 
 	#sample has 2 mask because hue wraps from 179 around to 0
