@@ -54,7 +54,7 @@ cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
 cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)		# Set auto exposure to manual
-cap.set(cv2.CAP_PROP_EXPOSURE, -13)			# Set exposure to 0.01
+cap.set(cv2.CAP_PROP_EXPOSURE, 0.01)			# Set exposure to 0.01
 
 def bounds():
 	##Gets the HSV values from the .txt files
