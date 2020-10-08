@@ -53,8 +53,8 @@ init = False
 cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
-cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)		# Set auto exposure to manual
-cap.set(15, -13)			# Set exposure to 0.01
+cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.75)		# Set auto exposure to manual
+#cap.set(15, -13)			# Set exposure to 0.01
 
 def bounds():
 	##Gets the HSV values from the .txt files
@@ -284,11 +284,13 @@ def process(frame):
 	# 	time.sleep(INTERVAL - elapsed)
 	elapsed2 = time.time() - now
 	rate2 = round(1.0/elapsed2,0)
+	exp = (cap.get(cv2.CAP_PROP_EXPOSURE))
 	#Display Frequency in top left corner
-	cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
+	cv2.putText(total_img, "Frequency: " + str(exp) + "Hz", (15, 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
 	cv2.imshow("Total", total_img)		#display final output img
+	
 
 
 def cleanUp():
