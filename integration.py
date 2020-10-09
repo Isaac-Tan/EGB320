@@ -462,7 +462,8 @@ def naviagtion():
 	total = [0] * WIDTH
 	for i in range(0,WIDTH-1):
 			total[i] = uball[i] - tot_pos[i]
-	max_index = total.index(max(total))
+	if max(total) > 0:
+		max_index = total.index(max(total))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 	if (bdist == 0):
 		#If it cant see the ball turn on spot
@@ -489,8 +490,8 @@ def naviagtion():
 		#if not close drive to
 		elif (bdist >= 40):
 			max_val = 0.4 * bdist
-	print(peak)
-	print(max_index)
+	print("peak", peak)
+	print("ind", max_index)
 	drive(max_val, -1*rot)
 	#drive(15,0)
 
