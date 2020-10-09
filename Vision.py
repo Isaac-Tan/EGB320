@@ -285,9 +285,8 @@ def process(frame):
 		time.sleep(INTERVAL - elapsed)
 	elapsed2 = time.time() - now
 	rate2 = round(1.0/elapsed2,0)
-	exp = (cap.get(cv2.CAP_PROP_EXPOSURE))
 	#Display Frequency in top left corner
-	cv2.putText(total_img, "Frequency: " + str(exp) + "Hz", (15, 20),
+	cv2.putText(total_img, "Frequency: " + str(rate) + "Hz", (15, 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
 	cv2.imshow("Total", total_img)		#display final output img
