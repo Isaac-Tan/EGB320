@@ -422,7 +422,7 @@ def naviagtion():
 	tot_pos = [0] * WIDTH
 
 	Q = 50
-	N = 0.1
+	N = 0.05
 	scalar = 2000
 
 	x1 = []
