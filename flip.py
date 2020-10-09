@@ -10,7 +10,7 @@ p.start(2.5) # Initialization
 
 p.ChangeDutyCycle(7)
 time.sleep(0.5)
-p.ChangeDutyCycle(2.5)
+p.ChangeDutyCycle(4)
 time.sleep(0.5)
 p.ChangeDutyCycle(7)
 time.sleep(0.5)
