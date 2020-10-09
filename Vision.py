@@ -272,10 +272,10 @@ def process(frame):
 
 	#object frame = thresh(input img, obj type, output img)
 	sample = thresh(sample_img, 0, total_img)
-	# rock = thresh(rock_img, 1, total_img)
-	# obstacle = thresh(obstacle_img, 2, total_img)
-	# lander = thresh(lander_img, 3, total_img)
-	# wall = thresh(wall_img, 4,total_img)
+	rock = thresh(rock_img, 1, total_img)
+	obstacle = thresh(obstacle_img, 2, total_img)
+	lander = thresh(lander_img, 3, total_img)
+	wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
 	#cv2.line(frame, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
