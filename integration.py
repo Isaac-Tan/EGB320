@@ -259,7 +259,7 @@ def laser():
     return reading
 
 
-def thresh(input_frame, type, total_img):
+def thresh(input_frame, type):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
@@ -351,12 +351,12 @@ def thresh(input_frame, type, total_img):
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		i = i + 1	#add 1 to the ID of object class
 
-	return total_img		#return output image
+	#return total_img		#return output image
 
-def walls(input_frame, total_img):
-	#input frame, type (sample, rock, obst, etc), output frame
-	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
-	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
+# def walls(input_frame, total_img):
+# 	#input frame, type (sample, rock, obst, etc), output frame
+# 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
+# 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 
 
 def capture():
@@ -539,17 +539,17 @@ def process(frame):
 	Lander_list = []
 
 	#object frame = thresh(input img, obj type, output img)
-	sample = thresh(sample_img, 0, total_img)
-	rock = thresh(rock_img, 1,total_img)
-	obstacle = thresh(obstacle_img, 2,total_img)
-	lander = thresh(lander_img, 3,total_img)
+	sample = thresh(sample_img, 0)
+	rock = thresh(rock_img, 1)
+	obstacle = thresh(obstacle_img, 2)
+	lander = thresh(lander_img, 3)
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
-	cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
+	#cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
 
 	naviagtion()
-	cv2.line(total_img, ((int(max_index)),0), ((int(max_index)),int(HEIGHT)), (0, 0, 255))
+	#cv2.line(total_img, ((int(max_index)),0), ((int(max_index)),int(HEIGHT)), (0, 0, 255))
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
@@ -561,7 +561,7 @@ def process(frame):
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
-	cv2.imshow("Total", total_img)		#display final output img
+	#cv2.imshow("Total", total_img)		#display final output img
 
 
 def cleanUp():
