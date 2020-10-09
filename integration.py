@@ -467,9 +467,9 @@ def naviagtion():
 	if (bdist == 0):
 		#If it cant see the ball turn on spot
 		if (max_index < 160):
-			rot = 20
+			rot = 16
 		else:
-			rot = -20
+			rot = -16
 		max_val = 0
 		downServo()
 		if (laser() > LASERTHRESH):
@@ -485,8 +485,8 @@ def naviagtion():
 			max_val = 15
 		#if not close drive to
 		else:
-
 			max_val = 0.4 * bdist
+			print("0.4 x bdist")
 
 	drive(max_val, -1*rot)
 	#drive(15,0)
