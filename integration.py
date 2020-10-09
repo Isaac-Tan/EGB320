@@ -467,11 +467,11 @@ def naviagtion():
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 	if (bdist == 0):
 		#If it cant see the ball turn on spot
+		max_val = 0
 		if (max_index < 160):
 			rot = 16
 		else:
 			rot = -16
-		max_val = 0
 		downServo()
 		if (laser() > LASERTHRESH):
 			captured = 1
@@ -481,6 +481,7 @@ def naviagtion():
 	else:
 		upServo()
 		rot = round(0.15*bearing,2)
+		max_val = 30
 		if (captured == 0):
 			if (bdist < 30):
 				max_val = 15
@@ -491,8 +492,6 @@ def naviagtion():
 			if (bearing > -5 and bearing < 5):
 				max_val = 18
 				rot = 0
-		else:
-			max_val = 30
 
 	print("peak", peak)
 	print("ind", max_index)
