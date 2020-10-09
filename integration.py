@@ -489,6 +489,7 @@ def naviagtion():
 		#if not close drive to
 		elif (bdist >= 40):
 			max_val = 0.4 * bdist
+	print(peak)
 	print(max_index)
 	drive(max_val, -1*rot)
 	#drive(15,0)
