@@ -7,7 +7,10 @@ import time
 import gpiozero
 import RPi.GPIO as GPIO
 
-servoPIN = 27
+servoPIN = 27	#Servo Pin
+PHOTOCELL = 17	#Photoresistor pin
+LASERTHRESH	 = 600	#Photoresistor reads above this, laser is tripped
+
 #setup pins
 GPIO.setmode(GPIO.BCM)
 #Set GPIO pins as outputs
@@ -219,11 +222,11 @@ def bounds():
 def motor(mot, value):
   	#Drive motor(which motor, PWM intensity)
 	if (value > 0):
-    #if value is positive: drive forward
+	#if value is positive: drive forward
 		dir1[mot].on()
 		dir2[mot].off()
 	elif (value < 0):
-    #if value is negative: drive backward
+	#if value is negative: drive backward
 		dir1[mot].off()
 		dir2[mot].on()
 	#set the pwm pin at index mot to "value"
@@ -245,6 +248,16 @@ def upServo():
 
 def downServo():
 	p.ChangeDutyCycle(7)
+
+def laser():  
+    reading = 0  
+    GPIO.setup(PHOTOCELL, GPIO.OUT)  
+    GPIO.output(PHOTOCELL, GPIO.LOW)
+    time.sleep(0.1)  
+    GPIO.setup(PHOTOCELL, GPIO.IN)  
+    while (GPIO.input(PHOTOCELL) == GPIO.LOW):  
+        reading += 1  
+    return reading
 
 
 def thresh(input_frame, type, total_img):
@@ -460,7 +473,7 @@ def naviagtion():
 			rot = -15
 		max_val = 0
 		downServo()
-		if (going == 1):
+		if (laser() > LASERTHRESH):
 			captured = 1
 	#if it can see the ball
 	else:
