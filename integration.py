@@ -23,14 +23,14 @@ dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
 dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
 #PWM pins = [left pwm pin, right pwm pin]
 pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]  #PWM
-p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
+servo = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
 
 
 #Initialise pwm at 0
 pwm[0].start(0)
 pwm[1].start(0)
 #Initialise motor at 2.5
-p.start(2.5)
+servo.start(4)
 #Multipliers for uneven motor power
 m1mult = 1.0 #Left motor multiplier
 m2mult = 1.0 #Right motor multiplier
@@ -243,10 +243,10 @@ def stop():
 	pwm[1].stop() #stop the pwm pin at index 1 (right motor)
 
 def upServo():
-	p.ChangeDutyCycle(4)
+	servo.ChangeDutyCycle(4)
 
 def downServo():
-	p.ChangeDutyCycle(7)
+	servo.ChangeDutyCycle(7)
 
 def laser():  
     reading = 0  
@@ -465,36 +465,53 @@ def naviagtion():
 	if max(total) > 0:
 		max_index = total.index(max(total))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
+	#if it cant see the target
 	if (bdist == 0):
-		#If it cant see the ball turn on spot
+		print("Target search")
+		#dont go forward
 		max_val = 0
+		#if last seen on the left
 		if (max_index < 160):
+			#turn left
 			rot = 16
+		#if last seen on the right
 		else:
+			#turn right
 			rot = -16
+		#put the servo down
 		downServo()
+
+		#if the ball is in the tripwire
 		if (laser() > LASERTHRESH):
+			#captured = true
 			captured = 1
 		else:
+			#captured = false
 			captured = 0
+
 	#if it can see the ball
 	else:
 		upServo()
 		rot = round(0.15*bearing,2)
-		max_val = 30
 		if (captured == 0):
+			deb = ': ball'
 			if (bdist < 30):
+				dis = ' - <30'
 				max_val = 15
 			#if not close drive to
 			else:
+				dis = ' - >30'
 				max_val = 0.4 * bdist
 			#if the ball is close and in centre of view
 			if (bearing > -5 and bearing < 5):
 				max_val = 18
 				rot = 0
+		else:
+			max_val = 30
+			deb = ': lander'
+			dis = ' - go'
+		print("Sees target", deb, dis)
 
-	print("peak", peak)
-	print("ind", max_index)
 	drive(max_val, -1*rot)
 	#drive(15,0)
 
