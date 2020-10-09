@@ -482,7 +482,7 @@ def naviagtion():
 		rot = round(0.15*bearing,2)
 		#if the ball is close and in centre of view
 		if (bdist < 60):
-			max_val = 10
+			max_val = 15
 		#if not close drive to
 		else:
 
