@@ -56,7 +56,7 @@ cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
 # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.75)		# Set auto exposure to manual
 # cap.set(cv2.CAP_PROP_EXPOSURE, 0.05)		# Set auto exposure to manual			# Set exposure to 0.05
-picamera.EXPOSURE_MODE = 'night'
+picamera.EXPOSURE_MODE = 'sport'
 
 def bounds():
 	##Gets the HSV values from the .txt files
