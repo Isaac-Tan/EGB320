@@ -481,7 +481,7 @@ def naviagtion():
 		upServo()
 		rot = round(0.15*bearing,2)
 		#if the ball is close and in centre of view
-		if (bdist < 60 and bearing < 12.0 and bearing > -12.0):
+		if (bdist < 60):
 			max_val = 10
 		#if not close drive to
 		else:
