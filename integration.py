@@ -481,15 +481,19 @@ def naviagtion():
 	else:
 		upServo()
 		rot = round(0.15*bearing,2)
-		#if the ball is close and in centre of view
-		if (bdist < 20 and bearing > -10 and bearing < 10):
-			max_val = 10
-			rot = 0
-		elif (bdist < 40):
-			max_val = 15
-		#if not close drive to
-		elif (bdist >= 40):
-			max_val = 0.4 * bdist
+		if (captured == 0):
+			if (bdist < 30):
+				max_val = 15
+			#if not close drive to
+			elif (bdist >= 40):
+				max_val = 0.4 * bdist
+			#if the ball is close and in centre of view
+			if (bearing > -5 and bearing < 5):
+				max_val = 18
+				rot = 0
+		else:
+			max_val = 30
+
 	print("peak", peak)
 	print("ind", max_index)
 	drive(max_val, -1*rot)
