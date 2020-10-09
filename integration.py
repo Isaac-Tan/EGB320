@@ -9,7 +9,7 @@ import RPi.GPIO as GPIO
 
 servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
-LASERTHRESH	 = 600	#Photoresistor reads above this, laser is tripped
+LASERTHRESH	 = 900	#Photoresistor reads above this, laser is tripped
 
 #setup pins
 GPIO.setmode(GPIO.BCM)
@@ -83,7 +83,6 @@ Lander_list = []
 
 max_index = 160
 
-going = 0
 captured = 0
 
 init = False
@@ -400,7 +399,7 @@ def naviagtion():
 	else:
 		if len(Lander_list) > 0:
 			peak = Lander_list[0].cX
-			bdist = 0.5 * Lander_list[0].Dist
+			bdist = 0.4 * Lander_list[0].Dist
 		else:
 			peak = max_index
 			bdist = 0.0
@@ -475,10 +474,11 @@ def naviagtion():
 		downServo()
 		if (laser() > LASERTHRESH):
 			captured = 1
+		else:
+			captured = 0
 	#if it can see the ball
 	else:
 		upServo()
-		going = 1
 		rot = round(0.15*bearing,2)
 		#if the ball is close and in centre of view
 		if (bdist < 60 and bearing < 10.0 and bearing > -10.0):
