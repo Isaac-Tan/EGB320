@@ -485,7 +485,7 @@ def naviagtion():
 			if (bdist < 30):
 				max_val = 15
 			#if not close drive to
-			elif (bdist >= 40):
+			else:
 				max_val = 0.4 * bdist
 			#if the ball is close and in centre of view
 			if (bearing > -5 and bearing < 5):
