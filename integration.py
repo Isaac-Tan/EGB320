@@ -18,9 +18,9 @@ GPIO.setup(24, GPIO.OUT) #Left motor
 GPIO.setup(13, GPIO.OUT) #Right motor
 GPIO.setup(servoPIN, GPIO.OUT) #Servo
 #Direction(Forward) = [left forward GPIO pin, right forward GPIO pin]
-dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
+dir2 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
 #Direction(Backward) = [left backward GPIO pin, right backward GPIO pin]
-dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
+dir1 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
 #PWM pins = [left pwm pin, right pwm pin]
 pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]  #PWM
 servo = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
@@ -494,22 +494,23 @@ def naviagtion():
 		upServo()
 		rot = round(0.15*bearing,2)
 		if (captured == 0):
-			deb = ': ball'
+			deb = ": ball"
 			if (bdist < 30):
-				dis = ' - <30'
+				dis = " - <30"
 				max_val = 15
 			#if not close drive to
 			else:
-				dis = ' - >30'
+				dis = " - >30"
 				max_val = 0.4 * bdist
-			#if the ball is close and in centre of view
-			if (bearing > -5 and bearing < 5):
-				max_val = 18
-				rot = 0
+				#if the ball is close and in centre of view
+				if (bearing > -5 and bearing < 5):
+					dis = "centred"
+					max_val = 18
+					rot = 0
 		else:
 			max_val = 30
-			deb = ': lander'
-			dis = ' - go'
+			deb = ": lander"
+			dis = " - go"
 		print("Sees target", deb, dis)
 
 	drive(max_val, -1*rot)
