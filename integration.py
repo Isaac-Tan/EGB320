@@ -508,7 +508,7 @@ def naviagtion():
 					max_val = 25
 					rot = 0
 		else:
-			max_val = 30
+			max_val = 35
 			deb = ": lander"
 			dis = " - go"
 		print("Sees target", deb, dis)
