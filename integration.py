@@ -18,9 +18,9 @@ GPIO.setup(24, GPIO.OUT) #Left motor
 GPIO.setup(13, GPIO.OUT) #Right motor
 GPIO.setup(servoPIN, GPIO.OUT) #Servo
 #Direction(Forward) = [left forward GPIO pin, right forward GPIO pin]
-dir2 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
+dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
 #Direction(Backward) = [left backward GPIO pin, right backward GPIO pin]
-dir1 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
+dir2 = [gpiozero.OutputDevice(18), gpiozero.OutputDevice(26)] #Backward
 #PWM pins = [left pwm pin, right pwm pin]
 pwm = [GPIO.PWM(24, 100), GPIO.PWM(13, 100)]  #PWM
 servo = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
