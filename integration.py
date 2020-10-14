@@ -9,7 +9,7 @@ import RPi.GPIO as GPIO
 
 servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
-LASERTHRESH	 = 500	#Photoresistor reads above this, laser is tripped
+LASERTHRESH	 = 2600	#Photoresistor reads above this, laser is tripped
 
 #setup pins
 GPIO.setmode(GPIO.BCM)
@@ -511,8 +511,8 @@ def naviagtion():
 				#if the ball is close and in centre of view
 				if (bearing > -5 and bearing < 5):
 					dis = "centred"
-					max_val = 25
-					rot = 0
+					drive(25, 0)
+					time.sleep(1.5)
 
 			#if not close drive to
 			else:
