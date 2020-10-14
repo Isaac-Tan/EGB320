@@ -160,13 +160,10 @@ def thresh(input_frame, type, total_img):
 		y2 = extrbottom[1]
 
 		h = float(y2 - y1)
-		ratio = h / x
-		print("h1: ", h)
-				
+		ratio = h / x				
 				
 		if (y2 > 235 and ratio < 0.9 and ratio != 0.0):
 			h = h / ratio
-			print("h2: ", h)
 
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
@@ -179,6 +176,7 @@ def thresh(input_frame, type, total_img):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
+			print("Sample dist: ", dist)
 			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
