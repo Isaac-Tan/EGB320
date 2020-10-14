@@ -9,7 +9,7 @@ import RPi.GPIO as GPIO
 
 servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
-LASERTHRESH	 = 2600	#Photoresistor reads above this, laser is tripped
+LASERTHRESH	 = 2000	#Photoresistor reads above this, laser is tripped
 
 #setup pins
 GPIO.setmode(GPIO.BCM)
@@ -93,6 +93,8 @@ init = False
 cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
+cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
+cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.5)
 
 class Sample:
 	#'Class for Samples'
