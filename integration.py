@@ -513,13 +513,14 @@ def naviagtion():
 				#if the ball is close and in centre of view
 				if (bearing > -5 and bearing < 5):
 					dis = "centred"
-					drive(25, 0)
-					time.sleep(1.5)
+					max_val = 25
+					rot = 0
+					time.sleep(2)
 
 			#if not close drive to
 			else:
 				dis = " - >30"
-				max_val = 0.4 * bdist
+				max_val = 0.4 * bdist + 10
 		else:
 			max_val = 35
 			deb = ": lander"
