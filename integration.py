@@ -508,14 +508,16 @@ def naviagtion():
 			deb = ": ball"
 			if (bdist < 30):
 				dis = " - <30"
-				max_val = 23
+				max_val = 21
 				
 				#if the ball is close and in centre of view
 				if (bearing > -5 and bearing < 5):
 					dis = "centred"
 					max_val = 25
 					rot = 0
+					print("Start Pause")
 					time.sleep(2)
+					print("End Pause")
 
 			#if not close drive to
 			else:
