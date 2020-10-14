@@ -57,6 +57,8 @@ cap.set(4, 240)									# Set the frame HEIGHT
 # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.75)		# Set auto exposure to manual
 # cap.set(cv2.CAP_PROP_EXPOSURE, 0.05)		# Set auto exposure to manual			# Set exposure to 0.05
 #picamera.exposure_mode = 'night'
+cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
+cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.5)
 
 def bounds():
 	##Gets the HSV values from the .txt files
@@ -176,7 +178,6 @@ def thresh(input_frame, type, total_img):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
-			print("Sample dist: ", dist)
 			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
