@@ -165,6 +165,7 @@ def thresh(input_frame, type, total_img):
 				
 		if (y2 == 0 and ratio < 0.9 and ratio != 0):
 			h = h / ratio
+			print(h)
 
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
