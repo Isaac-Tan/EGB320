@@ -160,8 +160,10 @@ def thresh(input_frame, type, total_img):
 		y2 = extrbottom[1]
 
 		h = y2 - y1
-		ratio = h/x
-		if (y2 == 0 and ratio < 1):
+		if (x != 0):
+			ratio = h/x
+				
+		if (y2 == 0 and ratio < 0.9 and ratio != 0):
 			h = h / ratio
 
 		# compute bearing of the contour
