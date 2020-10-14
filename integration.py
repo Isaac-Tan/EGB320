@@ -494,7 +494,7 @@ def naviagtion():
 			rot = -16
 		#put the servo down
 		downServo()
-
+		print("laser", laser())
 		#if the ball is in the tripwire
 		if (laser() > LASERTHRESH):
 			#captured = true
