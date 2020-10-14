@@ -498,7 +498,7 @@ def naviagtion():
 			#captured = false
 			captured = 0
 
-	#if it can see the ball
+	#if it can see the target
 	else:
 		upServo()
 		rot = round(0.15*bearing,2)
@@ -507,15 +507,17 @@ def naviagtion():
 			if (bdist < 30):
 				dis = " - <30"
 				max_val = 23
-			#if not close drive to
-			else:
-				dis = " - >30"
-				max_val = 0.4 * bdist
+				
 				#if the ball is close and in centre of view
 				if (bearing > -5 and bearing < 5):
 					dis = "centred"
 					max_val = 25
 					rot = 0
+
+			#if not close drive to
+			else:
+				dis = " - >30"
+				max_val = 0.4 * bdist
 		else:
 			max_val = 35
 			deb = ": lander"
