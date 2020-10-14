@@ -9,7 +9,7 @@ import RPi.GPIO as GPIO
 
 servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
-LASERTHRESH	 = 300	#Photoresistor reads above this, laser is tripped
+LASERTHRESH	 = 500	#Photoresistor reads above this, laser is tripped
 
 #setup pins
 GPIO.setmode(GPIO.BCM)
@@ -281,13 +281,22 @@ def thresh(input_frame, type):
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
 		extrleft = tuple(c[c[:,:,0].argmin()][0])#Left most x-coord
 		extrright = tuple(c[c[:,:,0].argmax()][0])#Right most x-coord
-		extrtop = tuple(c[c[:, :, 1].argmin()][0])
-		extrbottom = tuple(c[c[:, :, 1].argmax()][0])
-		x1 = extrleft[0]
-		x2 = extrright[0]
-		y1 = extrtop[1]
-		y2 = extrbottom[1]
-		h = y2 - y1
+		extrtop = tuple(c[c[:, :, 1].argmin()][0])#Top most y-coord
+		extrbottom = tuple(c[c[:, :, 1].argmax()][0])#Bottom most y-coord
+		x1 = extrleft[0]#Left
+		x2 = extrright[0]#Right
+		y1 = extrtop[1]#Top
+		y2 = extrbottom[1]#Bottom
+		w = float(x2 - x1)#Width of object (px)
+		h = float(y2 - y1)#Height of object (px)
+
+		#When part of the object is at the lower bounds of the screen
+		ratio = h / w	#Calculate the ratio of height to width			
+		#if the object exceeds the lower bounds of the screen region
+		if (y2 > 235 and ratio < 0.9 and ratio != 0.0):
+			#Divide it by the ratio of height to width
+			h = h / ratio
+		
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
 		# get height/width of contour
