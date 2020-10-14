@@ -162,10 +162,9 @@ def thresh(input_frame, type, total_img):
 		h = float(y2 - y1)
 		ratio = h / x
 		print("h1: ", h)
-		print("y2: ", y2)
 				
 				
-		if (y2 < 10 and ratio < 0.9 and ratio != 0.0):
+		if (y2 > 235 and ratio < 0.9 and ratio != 0.0):
 			h = h / ratio
 			print("h2: ", h)
 
