@@ -9,7 +9,7 @@ import RPi.GPIO as GPIO
 
 servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
-LASERTHRESH	 = 3000	#Photoresistor reads above this, laser is tripped
+LASERTHRESH	 = 2000	#Photoresistor reads above this, laser is tripped
 
 #setup pins
 GPIO.setmode(GPIO.BCM)
