@@ -524,7 +524,7 @@ def naviagtion():
 				dis = " - >30"
 				max_val = 0.4 * bdist + 10
 		else:
-			max_val = 35
+			max_val = 37
 			deb = ": lander"
 			dis = " - go"
 		print("Sees target", deb, dis)
