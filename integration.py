@@ -247,6 +247,9 @@ def stop():
 def upServo():
 	servo.ChangeDutyCycle(4)
 
+def midServo():
+	servo.ChangeDutyCycle(6.5)
+
 def downServo():
 	servo.ChangeDutyCycle(7)
 
@@ -502,7 +505,10 @@ def naviagtion():
 
 	#if it can see the target
 	else:
-		upServo()
+		if (captured == 1):
+			midServo()
+		else:
+			upServo()
 		rot = round(0.15*bearing,2)
 		if (captured == 0):
 			deb = ": ball"
