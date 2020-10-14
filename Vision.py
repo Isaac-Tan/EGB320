@@ -155,12 +155,12 @@ def thresh(input_frame, type, total_img):
 		extrbottom = tuple(c[c[:, :, 1].argmax()][0])
 		x1 = extrleft[0]
 		x2 = extrright[0]
-		x = x2 - x1
+		x = float(x2 - x1)
 		y1 = extrtop[1]
 		y2 = extrbottom[1]
 
-		h = y2 - y1
-		ratio = float(h / x)
+		h = float(y2 - y1)
+		ratio = h / x
 		print("y2: ", y2)
 		print("y1: ", y1)
 		print("x2: ", x2)
