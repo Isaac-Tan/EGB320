@@ -160,7 +160,7 @@ def thresh(input_frame, type, total_img):
 		y2 = extrbottom[1]
 
 		h = y2 - y1
-		ratio = h/x
+		ratio = float(h / x)
 		print("h: ", h)
 		print("x: ", x)
 		print("Ratio: ", ratio)
