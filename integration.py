@@ -9,7 +9,6 @@ import RPi.GPIO as GPIO
 
 servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
-LASERTHRESH	 = 2000	#Photoresistor reads above this, laser is tripped
 
 #setup pins
 GPIO.setmode(GPIO.BCM)
@@ -48,6 +47,13 @@ LANDER_HEIGHT = 200 #mm
 WALL_HEIGHT = 450 #mm
 HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
+ROT_SCALE = 0.15 #Rotation Scaler
+VEL_SCALE = 0.4 #Velocity Scaler
+VEL_ADD = 10 #Velocity min value
+LASERTHRESH	 = 0 #Initialise threshold at 0
+laserArr = []
+lasertol = 0.2 #Laser tolerance
+
 
 #HSV Value arrays
 s_min_1 = [int]*3
@@ -220,6 +226,13 @@ def bounds():
 	global b_max_arr
 	b_max_arr = np.array(b_max_)
 
+def laserSetup():
+	while (len(laserArr) < 30):
+		laserArr.append(RCtime())
+	LASERTHRESH = int(sum(laserArr) / len(laserArr))
+	tolerance = lasertol * LASERTHRESH
+	LASERTHRESH = LASERTHRESH + tolerance
+
 def motor(mot, value):
   	#Drive motor(which motor, PWM intensity)
 	if (value > 0):
@@ -245,7 +258,7 @@ def stop():
 	pwm[1].stop() #stop the pwm pin at index 1 (right motor)
 
 def upServo():
-	servo.ChangeDutyCycle(4)
+	servo.ChangeDutyCycle(3.5)
 
 def midServo():
 	servo.ChangeDutyCycle(6.5)
@@ -458,6 +471,12 @@ def naviagtion():
 		x2 = [0]
 		odist = [1000]
 
+	for i in range(0, len(odist)):
+		if (odist[i] < 20 ):
+			drive(0, 20)
+			print("Avoid Obstacle")
+			time.sleep(1.5)
+
 	pos_field = [0] * WIDTH
 	for j in range(0,int(len(x1))):
 		for i in range(x1[j]-1, 0, -1):
@@ -496,7 +515,7 @@ def naviagtion():
 		downServo()
 		print("laser", laser())
 		#if the ball is in the tripwire
-		if (laser() > LASERTHRESH):
+		if (laser() >= LASERTHRESH):
 			#captured = true
 			captured = 1
 		else:
@@ -509,7 +528,7 @@ def naviagtion():
 			midServo()
 		else:
 			upServo()
-		rot = round(0.15*bearing,2)
+		rot = round(ROT_SCALE*bearing,2)
 		if (captured == 0):
 			deb = ": ball"
 			if (bdist < 30):
@@ -521,14 +540,11 @@ def naviagtion():
 					dis = "centred"
 					max_val = 25
 					rot = 0
-					print("Start Pause")
-					time.sleep(2)
-					print("End Pause")
 
 			#if not close drive to
 			else:
 				dis = " - >30"
-				max_val = 0.4 * bdist + 10
+				max_val = VEL_SCALE * bdist + VEL_ADD
 		else:
 			max_val = 37
 			deb = ": lander"
@@ -576,7 +592,7 @@ def process(frame):
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
 
-	global Sample_list		#Global needs to be called to store into a global variable
+	global Sample_list		#Global needs to be called to store into a global variable	
 	Sample_list = []
 	global Rock_list
 	Rock_list = []
@@ -600,10 +616,11 @@ def process(frame):
 	
 	elapsed = time.time() - now			#end process time
 	rate = round(1.0/elapsed,0)			#process rate
-	# if (rate > FREQUENCY):				#only sleep if process rate is faster than desired freq
-	# 	time.sleep(INTERVAL - elapsed)
+	if (rate > FREQUENCY):				#only sleep if process rate is faster than desired freq
+		time.sleep(INTERVAL - elapsed)
 	elapsed2 = time.time() - now
 	rate2 = round(1.0/elapsed2,0)
+	print("Rate: ", rate2)
 	#Display Frequency in top left corner
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
@@ -622,5 +639,6 @@ def main():
 if __name__ == '__main__':
 	if (init == False):
 		bounds()
+		laserSetup()
 		init = True
 	main()
