@@ -18,11 +18,11 @@ def RCtime():
         reading += 1
     return reading 
 
-if (len(avg) < 20):
-    avg.append(RCtime())
-else:
-    thresh = float(sum(avg) / len(avg))
 
 while True:
+    if (len(avg) < 20):
+        avg.append(RCtime())
+    else:
+        thresh = float(sum(avg) / len(avg))
     print("Thresh: ", thresh)
     print(RCtime())
