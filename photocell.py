@@ -20,7 +20,7 @@ def RCtime():
 
 
 while True:
-    if (len(avg) < 20):
+    if (len(avg) < 30):
         avg.append(RCtime())
     else:
         thresh = float(sum(avg) / len(avg))
