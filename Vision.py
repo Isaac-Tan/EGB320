@@ -191,7 +191,7 @@ def thresh(input_frame, type, total_img):
 			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
 			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		elif (type == 4):
@@ -203,9 +203,9 @@ def thresh(input_frame, type, total_img):
 		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
 		#Displays range and bearing on output img
 		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
 		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
 
 	return total_img		#return output image
 
