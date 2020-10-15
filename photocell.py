@@ -1,14 +1,12 @@
 #!/usr/bin/python  
-import time  
+import time
 import RPi.GPIO as GPIO
-
 PHOTOCELL = 17
-
-GPIO.setmode(GPIO.BCM)  
-  
-def RCtime():  
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(PHOTOCELL, GPIO.IN)
+def RCtime():
     reading = GPIO.input(PHOTOCELL)
-    return reading  
-  
+    return reading
+
 while True:                                       
-    print RCtime()  
+    print RCtime()
