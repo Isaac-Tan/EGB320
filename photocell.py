@@ -7,6 +7,7 @@ PHOTOCELL = 17
 GPIO.setmode(GPIO.BCM)  
 avg = []
 thresh = 0
+scale = 0.2
   
 def RCtime():  
     reading = 0  
@@ -24,5 +25,7 @@ while True:
         avg.append(RCtime())
     else:
         thresh = float(sum(avg) / len(avg))
+        tolerance = scale * thresh
+        thresh = thresh + tolerance
     print("Thresh: ", thresh)
     print(RCtime())
