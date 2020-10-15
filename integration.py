@@ -49,7 +49,7 @@ HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
 ROT_SCALE = 0.2 #Rotation Scaler
 VEL_SCALE = 0.4 #Velocity Scaler
-VEL_ADD = 10 #Velocity min value
+VEL_MIN = 8 #Velocity min value
 LASERTHRESH	 = 0 #Initialise threshold at 0
 laserArr = []
 lasertol = 0.2 #Laser tolerance
@@ -283,11 +283,11 @@ def thresh(input_frame, type):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
-	#kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
-	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
-	#erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
-	#opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
-	blurred_thresh = cv2.GaussianBlur(thresh, (5, 5), 0)	#applies gausian blur of 5x5
+	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
+	dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
+	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
+	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
+	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)	#applies gausian blur of 5x5
 	#ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(blurred_thresh, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
 	cnts = imutils.grab_contours(cnts)		#grabs contours from cnts
@@ -475,9 +475,9 @@ def naviagtion():
 
 	for i in range(0, len(odist)):
 		if (odist[i] < 20 ):
-			drive(0, 20)
+			#drive(0, 20)
 			print("Avoid Obstacle")
-			time.sleep(1.5)
+			#time.sleep(1.5)
 
 	pos_field = [0] * WIDTH
 	for j in range(0,int(len(x1))):
@@ -532,15 +532,15 @@ def naviagtion():
 			deb = ": ball"
 
 			#if close to the ball
-			if (bdist < 15):
-				dis = " - <30"
+			if (bdist < 12):
+				dis = " - <12"
 				max_val = 0
 				rot = round(ROT_SCALE*2*bearing,2)
 
 			#if not close drive to
 			else:
-				dis = " - >30"
-				max_val = VEL_SCALE * bdist + VEL_ADD
+				dis = " - >12"
+				max_val = VEL_SCALE * bdist + VEL_MIN
 		else:
 			deb = ": lander"
 
@@ -551,7 +551,7 @@ def naviagtion():
 			#if not close drive to
 			else:
 				dis = " - >30"
-				max_val = VEL_SCALE * bdist + VEL_ADD
+				max_val = VEL_SCALE * bdist + VEL_MIN
 		print("Sees target", deb, dis)
 
 	drive(max_val, -1*rot)
