@@ -229,7 +229,7 @@ def bounds():
 def laserSetup():
 	while (len(laserArr) < 30):
 		laserArr.append(laser())
-	LASERTHRESH = int(sum(laserArr) / len(laserArr))
+	LASERTHRESH = float(sum(laserArr) / len(laserArr))
 	tolerance = lasertol * LASERTHRESH
 	LASERTHRESH = LASERTHRESH + tolerance
 
