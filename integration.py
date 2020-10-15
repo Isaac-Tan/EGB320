@@ -43,13 +43,13 @@ SENSOR_WIDTH = 3.68 #mm
 OBST_HEIGHT = 150 #mm
 ROCK_HEIGHT = 70 #mm
 SAMPLE_HEIGHT = 40 #mm
-LANDER_HEIGHT = 200 #mm
+LANDER_HEIGHT = 70 #mm
 WALL_HEIGHT = 450 #mm
 HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
 ROT_SCALE = 0.15 #Rotation Scaler
 VEL_SCALE = 0.4 #Velocity Scaler
-VEL_ADD = 10 #Velocity min value
+VEL_ADD = 0 #Velocity min value
 LASERTHRESH	 = 0 #Initialise threshold at 0
 laserArr = []
 lasertol = 0.2 #Laser tolerance
@@ -90,6 +90,7 @@ Lander_list = []
 max_index = 160
 
 captured = 0
+flipped = 0
 
 init = False
 
@@ -539,9 +540,16 @@ def naviagtion():
 				dis = " - >30"
 				max_val = VEL_SCALE * bdist + VEL_ADD
 		else:
-			max_val = 37
 			deb = ": lander"
-			dis = " - go"
+
+			#if close to the lander
+			if (bdist < 15):
+				dis = " - <15"
+				max_val = 0
+			#if not close drive to
+			else:
+				dis = " - >30"
+				max_val = VEL_SCALE * bdist + VEL_ADD
 		print("Sees target", deb, dis)
 
 	drive(max_val, -1*rot)
