@@ -12,10 +12,8 @@ def RCtime():
     GPIO.output(PHOTOCELL, GPIO.LOW)
     time.sleep(0.1)  
     GPIO.setup(PHOTOCELL, GPIO.IN)  
-    if(GPIO.input(PHOTOCELL) == GPIO.LOW):  
-        reading = 1
-    else:
-        reading = 0
+    while (GPIO.input(PHOTOCELL) == GPIO.LOW):  
+        reading += 1
     return reading  
   
 while True:                                       
