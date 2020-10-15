@@ -535,6 +535,8 @@ def naviagtion():
 			if (bdist < 15):
 				dis = " - <30"
 				max_val = 0
+				rot = round(ROT_SCALE*1.5*bearing,2)
+
 			#if not close drive to
 			else:
 				dis = " - >30"
