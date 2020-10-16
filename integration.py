@@ -527,21 +527,21 @@ def naviagtion():
 
 	print("laser", laser())
 	print("thresh: ", LASERTHRESH)
-	#if the ball is in the tripwire
-	if (laser() >= LASERTHRESH):
-		#captured = true
-		captured = 1
-		LED(1)
-	else:
-		#captured = false
-		captured = 0
-		LED(2)
 
 	#if it cant see the target
 	if (bdist == 0):
 		print("Target search")
 		#put the servo down
 		downServo()
+		#if the ball is in the tripwire
+		if (laser() >= LASERTHRESH):
+			#captured = true
+			captured = 1
+			LED(1)
+		else:
+			#captured = false
+			captured = 0
+			LED(2)
 		#dont go forward
 		max_val = 0
 		#if last seen on the left
