@@ -574,7 +574,6 @@ def naviagtion():
 					time.sleep(3)
 					downServo()
 					time.sleep(15)
-					return
 
 			#if not close drive to
 			else:
