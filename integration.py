@@ -571,7 +571,7 @@ def naviagtion():
 				else:
 					upServo()
 					drive(15, 0)
-					time.sleep(1)
+					time.sleep(2)
 					downServo()
 
 			#if not close drive to
@@ -585,8 +585,17 @@ def naviagtion():
 			if (bdist < 15):
 				dis = " - <15"
 				max_val = 0
-				CLOSE_ROT = (15.0/bearing) + 2.5
-				rot = round(CLOSE_ROT * bearing,2)
+				if (abs(bearing) > 5):
+					if bearing > 0:
+						rot = 10
+					else:
+						rot = -10
+				else:
+					midServo()
+					drive(30, 0)
+					time.sleep(3)
+					drive(-30, 0)
+					time.sleep(3)
 			#if not close drive to
 			else:
 				dis = " - >30"
