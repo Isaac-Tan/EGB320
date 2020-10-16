@@ -19,6 +19,9 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(24, GPIO.OUT) #Left motor
 GPIO.setup(13, GPIO.OUT) #Right motor
 GPIO.setup(servoPIN, GPIO.OUT) #Servo
+GPIO.setup(GREEN, GPIO.OUT) #Green LED
+GPIO.setup(YELLOW, GPIO.OUT) #Yellow LED
+GPIO.setup(RED, GPIO.OUT) #Red LED
 #Direction(Forward) = [left forward GPIO pin, right forward GPIO pin]
 dir1 = [gpiozero.OutputDevice(23), gpiozero.OutputDevice(19)] #Forward
 #Direction(Backward) = [left backward GPIO pin, right backward GPIO pin]
