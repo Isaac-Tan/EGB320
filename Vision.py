@@ -224,7 +224,7 @@ def capture():
 	# Capture frame-by-frame
 		ret, frame = cap.read()
 		if ret == True:
-			# cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
+			cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
 			process(frame)
 			k = cv2.waitKey(1) & 0xFF
 
