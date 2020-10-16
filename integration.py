@@ -498,19 +498,22 @@ def naviagtion():
 		LED(2)
 		rot = round(ROT_SCALE*bearing,2)
 		if (flipped == 0):
+			#if close:
 			if (bdist < 12):
 				max_val = 0
+				#if not centred, centre
 				if (abs(bearing) > 5):
 					if bearing > 0:
 						rot = 10
 					else:
 						rot = -10
+				#flip the rock
 				else:
 					drive(20, 0)
-					time.sleep(2)
+					time.sleep(1)
+					drive(0, 0)
 					upServo()
 					flipped = 1
-					drive(0, 0)
 					downServo()
 					time.sleep(5)
 			#if not close drive to
