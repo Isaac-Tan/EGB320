@@ -58,7 +58,7 @@ VEL_SCALE = 0.25 #Velocity Scaler
 VEL_MIN = 8 #Velocity min value
 LASERTHRESH	 = 0 #Initialise threshold at 0
 laserArr = []
-lasertol = 0.4 #Laser tolerance
+lasertol = 0.8 #Laser tolerance
 
 
 #HSV Value arrays
@@ -570,8 +570,8 @@ def naviagtion():
 						rot = -10
 				else:
 					upServo()
-					drive(15, 0)
-					time.sleep(2)
+					drive(20, 0)
+					time.sleep(3)
 					downServo()
 
 			#if not close drive to
@@ -592,10 +592,10 @@ def naviagtion():
 						rot = -10
 				else:
 					midServo()
-					drive(30, 0)
-					time.sleep(3)
-					drive(-30, 0)
-					time.sleep(3)
+					drive(38, 0)
+					time.sleep(4)
+					drive(-38, 0)
+					time.sleep(4)
 			#if not close drive to
 			else:
 				dis = " - >30"
