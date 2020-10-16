@@ -452,7 +452,7 @@ def naviagtion():
 	else:
 		if len(Lander_list) > 0:
 			peak = Lander_list[0].cX
-			bdist = 0.4 * Lander_list[0].Dist
+			bdist = Lander_list[0].Dist
 		else:
 			peak = max_index
 			bdist = 0.0
@@ -574,8 +574,9 @@ def naviagtion():
 					time.sleep(3)
 					downServo()
 					captured = 1
+					LED(1)
 					drive(0, 0)
-					time.sleep(15)
+					time.sleep(10)
 
 			#if not close drive to
 			else:
