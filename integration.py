@@ -58,7 +58,7 @@ VEL_SCALE = 0.25 #Velocity Scaler
 VEL_MIN = 8 #Velocity min value
 LASERTHRESH	 = 0 #Initialise threshold at 0
 laserArr = []
-lasertol = 0.5 #Laser tolerance
+lasertol = 0.4 #Laser tolerance
 
 
 #HSV Value arrays
@@ -568,6 +568,11 @@ def naviagtion():
 						rot = 10
 					else:
 						rot = -10
+				else:
+					upServo()
+					drive(15, 0)
+					time.sleep(1)
+					downServo()
 
 			#if not close drive to
 			else:
@@ -647,8 +652,6 @@ def process(frame):
 
 	# draw a line down the centre of the screen
 	#cv2.line(total_img, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
-
-	naviagtion()
 	#cv2.line(total_img, ((int(max_index)),0), ((int(max_index)),int(HEIGHT)), (0, 0, 255))
 	
 	elapsed = time.time() - now			#end process time
@@ -661,7 +664,7 @@ def process(frame):
 	#Display Frequency in top left corner
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-
+	naviagtion()
 	#cv2.imshow("Total", total_img)		#display final output img
 
 
