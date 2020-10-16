@@ -308,7 +308,7 @@ def thresh(input_frame, type):
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
-	dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
+	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
 	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
 	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
 	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)	#applies gausian blur of 5x5
@@ -337,9 +337,10 @@ def thresh(input_frame, type):
 		#When part of the object is at the lower bounds of the screen
 		ratio = h / w	#Calculate the ratio of height to width			
 		#if the object exceeds the lower bounds of the screen region
-		if (y2 > 235 and ratio < 0.9 and ratio != 0.0):
-			#Divide it by the ratio of height to width
-			h = h / ratio
+		if (type != 3):
+			if (y2 > 235 and ratio < 0.9 and ratio != 0.0):
+				#Divide it by the ratio of height to width
+				h = h / ratio		
 		
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
@@ -349,26 +350,26 @@ def thresh(input_frame, type):
 		if (type == 0):
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
+			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
+			cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			#cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
+			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		# elif (type == 4):
 		# 	dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
-		# cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
-		# #Displays range and bearing on output img
-		# cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
-		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		# cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
-		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
+		#Displays range and bearing on output img
+		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
 		global Sample_list		#Global needs to be called to store into a global variable
 		global Rock_list
@@ -379,37 +380,32 @@ def thresh(input_frame, type):
 			Sample_list.append(Sample(i,dist,bearing,cX,cY))	#adds this sample to the class of samples
 			del sample
 			#Displays "sample" in the centre of the contour
-			# cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
-			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):	#if rock
 			rock = Rock(i,dist,bearing,x1,x2)
 			Rock_list.append(Rock(i,dist,bearing,x1,x2))
 			del rock
-			# cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
-			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 2):	#if obstacle
 			obstacle = Obstacle(i,dist,bearing,x1,x2)
 			Obstacle_list.append(Obstacle(i,dist,bearing,x1,x2))
 			del obstacle
-			# cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
-			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 3):	#if lander
 			lander = Lander(i,dist,bearing,cX,cY)
 			Lander_list.append(Lander(i,dist,bearing,cX,cY))
 			del lander
-			# cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
-			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		# elif (type == 4):	#if wall
 			# cv2.putText(total_img, "Wall", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		i = i + 1	#add 1 to the ID of object class
 
-	#return total_img		#return output image
-
-# def walls(input_frame, total_img):
-# 	#input frame, type (sample, rock, obst, etc), output frame
-# 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
-# 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
+	return total_img		#return output image
 
 
 def capture():
@@ -680,7 +676,7 @@ def process(frame):
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	naviagtion()
-	#cv2.imshow("Total", total_img)		#display final output img
+	cv2.imshow("Total", total_img)		#display final output img
 
 
 def cleanUp():
