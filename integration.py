@@ -453,9 +453,11 @@ def naviagtion():
 		if len(Lander_list) > 0:
 			peak = Lander_list[0].cX
 			bdist = Lander_list[0].Dist
+			print("lander list > 1")
 		else:
 			peak = max_index
 			bdist = 0.0
+			print("lander list < 1")
 
 	neg_field[peak] = 1
 	for i in range(peak-1,0,-1):
@@ -497,32 +499,32 @@ def naviagtion():
 		x2 = [0]
 		odist = [1000]
 
-	for i in range(0, len(odist)):
-		if (odist[i] < 20 ):
-			#drive(0, 20)
-			print("Avoid Obstacle")
-			#time.sleep(1.5)
+	# for i in range(0, len(odist)):
+	# 	if (odist[i] < 20 ):
+	# 		#drive(0, 20)
+	# 		print("Avoid Obstacle")
+	# 		#time.sleep(1.5)
 
-	pos_field = [0] * WIDTH
-	for j in range(0,int(len(x1))):
-		for i in range(x1[j]-1, 0, -1):
-			pos_field[i] = N * i - x1[j]*N + 1
-		for i in range(x2[j] + 1, WIDTH - 1):
-			pos_field[i] = ((i - x2[j]) * -1 * N ) + 1
-		for i in range(x1[j],x2[j]):
-			pos_field[i] = 1
-		for i in range(0,WIDTH):
-			if (pos_field[i] < 0):
-				pos_field[i] = 0
-		tot_pos = [0] * WIDTH
-		for i in range(0,len(pos_field)-1):
-			pos_field[i] = pos_field[i] * 0.5 * scalar * ((1/odist[j])-(1/Q))**2
-			tot_pos[i] = tot_pos[i] + pos_field[i]
-	total = [0] * WIDTH
-	for i in range(0,WIDTH-1):
-			total[i] = uball[i] - tot_pos[i]
-	if max(total) > 0:
-		max_index = total.index(max(total))
+	# pos_field = [0] * WIDTH
+	# for j in range(0,int(len(x1))):
+	# 	for i in range(x1[j]-1, 0, -1):
+	# 		pos_field[i] = N * i - x1[j]*N + 1
+	# 	for i in range(x2[j] + 1, WIDTH - 1):
+	# 		pos_field[i] = ((i - x2[j]) * -1 * N ) + 1
+	# 	for i in range(x1[j],x2[j]):
+	# 		pos_field[i] = 1
+	# 	for i in range(0,WIDTH):
+	# 		if (pos_field[i] < 0):
+	# 			pos_field[i] = 0
+	# 	tot_pos = [0] * WIDTH
+	# 	for i in range(0,len(pos_field)-1):
+	# 		pos_field[i] = pos_field[i] * 0.5 * scalar * ((1/odist[j])-(1/Q))**2
+	# 		tot_pos[i] = tot_pos[i] + pos_field[i]
+	# total = [0] * WIDTH
+	# for i in range(0,WIDTH-1):
+	# 		total[i] = uball[i] - tot_pos[i]
+	if max(uball) > 0:
+		max_index = total.index(max(uball))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 
 	print("laser", laser())
