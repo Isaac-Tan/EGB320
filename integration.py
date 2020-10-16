@@ -534,14 +534,14 @@ def naviagtion():
 		#put the servo down
 		downServo()
 		#if the ball is in the tripwire
-		if (laser() >= LASERTHRESH):
-			#captured = true
-			captured = 1
-			LED(1)
-		else:
-			#captured = false
-			captured = 0
-			LED(2)
+		# if (laser() >= LASERTHRESH):
+		# 	#captured = true
+		# 	captured = 1
+		# 	LED(1)
+		# else:
+		# 	#captured = false
+		# 	captured = 0
+		# 	LED(2)
 		#dont go forward
 		max_val = 0
 		#if last seen on the left
@@ -573,6 +573,7 @@ def naviagtion():
 					drive(20, 0)
 					time.sleep(3)
 					downServo()
+					captured = 1
 					drive(0, 0)
 					time.sleep(15)
 
