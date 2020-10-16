@@ -511,6 +511,7 @@ def naviagtion():
 					upServo()
 					flipped = 1
 					drive(0, 0)
+					downServo()
 					time.sleep(5)
 			#if not close drive to
 			else:
