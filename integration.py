@@ -558,9 +558,9 @@ def naviagtion():
 							rot = -10
 					else:
 						midServo()
-						drive(40, 0)
+						drive(50, 0)
 						time.sleep(3)
-						drive(-38, 0)
+						drive(-20, 0)
 						time.sleep(2)
 						drive(0, 0)
 						captured = 0
