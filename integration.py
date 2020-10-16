@@ -524,7 +524,7 @@ def naviagtion():
 	# for i in range(0,WIDTH-1):
 	# 		total[i] = uball[i] - tot_pos[i]
 	if max(uball) > 0:
-		max_index = total.index(max(uball))
+		max_index = uball.index(max(uball))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 
 	print("laser", laser())
