@@ -58,7 +58,7 @@ VEL_SCALE = 0.25 #Velocity Scaler
 VEL_MIN = 8 #Velocity min value
 LASERTHRESH	 = 0 #Initialise threshold at 0
 laserArr = []
-lasertol = 0.2 #Laser tolerance
+lasertol = 0.5 #Laser tolerance
 
 
 #HSV Value arrays
