@@ -573,6 +573,7 @@ def naviagtion():
 					drive(20, 0)
 					time.sleep(3)
 					downServo()
+					drive(0, 0)
 					time.sleep(15)
 
 			#if not close drive to
