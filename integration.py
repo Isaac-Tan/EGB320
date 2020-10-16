@@ -267,12 +267,15 @@ def stop():
 
 def upServo():
 	servo.ChangeDutyCycle(3.5)
+	time.sleep(0.5)
 
 def midServo():
 	servo.ChangeDutyCycle(6.5)
+	time.sleep(0.5)
 
 def downServo():
 	servo.ChangeDutyCycle(7)
+	time.sleep(0.5)
 
 def laser():  
     reading = 0  
@@ -434,7 +437,6 @@ def capture():
 def naviagtion():
 	global max_index
 	global captured
-	global flipped
 	neg_field = [0] * WIDTH
 	M = 0.01
 	scal = 0.002
@@ -510,12 +512,13 @@ def naviagtion():
 				#flip the rock
 				else:
 					drive(20, 0)
-					time.sleep(1)
+					time.sleep(1.5)
 					drive(0, 0)
 					upServo()
+					global flipped
 					flipped = 1
 					downServo()
-					time.sleep(5)
+					time.sleep(3)
 			#if not close drive to
 			else:
 				max_val = VEL_SCALE * bdist + VEL_MIN
@@ -531,6 +534,7 @@ def naviagtion():
 							rot = -10
 					else:
 						upServo()
+						time.sleep(0)
 						drive(20, 0)
 						time.sleep(3)
 						downServo()
