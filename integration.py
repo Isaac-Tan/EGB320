@@ -303,7 +303,7 @@ def LED(colour):
 
 
 
-def thresh(input_frame, type):
+def thresh(input_frame, type, total_img):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
@@ -655,10 +655,10 @@ def process(frame):
 	Lander_list = []
 
 	#object frame = thresh(input img, obj type, output img)
-	sample = thresh(sample_img, 0)
-	rock = thresh(rock_img, 1)
-	obstacle = thresh(obstacle_img, 2)
-	lander = thresh(lander_img, 3)
+	sample = thresh(sample_img, 0, total_img)
+	rock = thresh(rock_img, 1, total_img)
+	obstacle = thresh(obstacle_img, 2, total_img)
+	lander = thresh(lander_img, 3, total_img)
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
