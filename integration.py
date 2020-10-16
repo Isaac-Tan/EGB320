@@ -54,7 +54,7 @@ WALL_HEIGHT = 450 #mm
 HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
 ROT_SCALE = 0.15 #Rotation Scaler
-VEL_SCALE = 0.2 #Velocity Scaler
+VEL_SCALE = 0.3 #Velocity Scaler
 VEL_MIN = 8 #Velocity min value
 LASERTHRESH	 = 0 #Initialise threshold at 0
 laserArr = []
@@ -497,7 +497,8 @@ def naviagtion():
 
 	#if it can see the target
 	else:
-		LED(2)
+		if captured == 0:
+			LED(2)
 		rot = round(ROT_SCALE*bearing,2)
 		if (flipped == 0):
 			#if close:
@@ -557,10 +558,10 @@ def naviagtion():
 							rot = -10
 					else:
 						midServo()
-						drive(38, 0)
-						time.sleep(4)
+						drive(40, 0)
+						time.sleep(3)
 						drive(-38, 0)
-						time.sleep(4)
+						time.sleep(2)
 						drive(0, 0)
 						captured = 0
 				#if not close drive to
