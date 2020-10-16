@@ -125,12 +125,12 @@ class Sample:
 class Rock:
 	#'Class for Rocks'
 	rockCount = 0
-	def __init__(self, ID, Dist, Bearing, x1, x2):
+	def __init__(self, ID, Dist, Bearing, cX, cY):
 		self.Dist = Dist
 		self.Bearing = Bearing
 		self.ID = ID
-		self.x1 = x1
-		self.x2 = x2
+		self.cX = cX
+		self.cY = cY
 		Rock.rockCount += 1
 	def __del__(self):
 		Rock.rockCount -= 1
@@ -383,8 +383,8 @@ def thresh(input_frame, type):
 			# cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):	#if rock
-			rock = Rock(i,dist,bearing,x1,x2)
-			Rock_list.append(Rock(i,dist,bearing,x1,x2))
+			rock = Rock(i,dist,bearing,cX,cY)
+			Rock_list.append(Rock(i,dist,bearing,cX,cY))
 			del rock
 			# cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
@@ -434,27 +434,32 @@ def capture():
 def naviagtion():
 	global max_index
 	global captured
-	global going
+	global flipped
 	neg_field = [0] * WIDTH
 	M = 0.01
 	scal = 0.002
-
-	if (captured == 0):
-		if len(Sample_list) > 0:
-			peak = Sample_list[0].cX
-			bdist = Sample_list[0].Dist
+	if (flipped == 0):
+		if len(Rock_list) > 0:
+			peak = Rock_list[0].cX
+			bdist = Rock_list[0].Dist
 		else:
 			peak = max_index
 			bdist = 0.0
 	else:
-		if len(Lander_list) > 0:
-			peak = Lander_list[0].cX
-			bdist = Lander_list[0].Dist
-			print("lander list > 1")
+		if (captured == 0):
+			if len(Sample_list) > 0:
+				peak = Sample_list[0].cX
+				bdist = Sample_list[0].Dist
+			else:
+				peak = max_index
+				bdist = 0.0
 		else:
-			peak = max_index
-			bdist = 0.0
-			print("lander list < 1")
+			if len(Lander_list) > 0:
+				peak = Lander_list[0].cX
+				bdist = Lander_list[0].Dist
+			else:
+				peak = max_index
+				bdist = 0.0
 
 	neg_field[peak] = 1
 	for i in range(peak-1,0,-1):
@@ -469,79 +474,15 @@ def naviagtion():
 	for i in range(0,len(neg_field)-1):
 		uball[i] = u * neg_field[i]
 	
-
-	pos_field = [0] * WIDTH
-	tot_pos = [0] * WIDTH
-
-	Q = 50
-	N = 0.05
-	scalar = 2000
-
-	x1 = []
-	x2 = []
-	odist = []
-
-	if len(Rock_list) > 0:
-		for i in range(0, len(Rock_list)-1):
-			x1.append(Rock_list[i].x1)
-			x2.append(Rock_list[i].x2)
-			odist.append(Rock_list[i].Dist)
-	if len(Obstacle_list) > 0:
-		for i in range(0, len(Obstacle_list)-1):
-			x1.append(Obstacle_list[i].x1)
-			x2.append(Obstacle_list[i].x2)
-			odist.append(Obstacle_list[i].Dist)
-	else:
-		x1 = [0]
-		x2 = [0]
-		odist = [1000]
-
-	# for i in range(0, len(odist)):
-	# 	if (odist[i] < 20 ):
-	# 		#drive(0, 20)
-	# 		print("Avoid Obstacle")
-	# 		#time.sleep(1.5)
-
-	# pos_field = [0] * WIDTH
-	# for j in range(0,int(len(x1))):
-	# 	for i in range(x1[j]-1, 0, -1):
-	# 		pos_field[i] = N * i - x1[j]*N + 1
-	# 	for i in range(x2[j] + 1, WIDTH - 1):
-	# 		pos_field[i] = ((i - x2[j]) * -1 * N ) + 1
-	# 	for i in range(x1[j],x2[j]):
-	# 		pos_field[i] = 1
-	# 	for i in range(0,WIDTH):
-	# 		if (pos_field[i] < 0):
-	# 			pos_field[i] = 0
-	# 	tot_pos = [0] * WIDTH
-	# 	for i in range(0,len(pos_field)-1):
-	# 		pos_field[i] = pos_field[i] * 0.5 * scalar * ((1/odist[j])-(1/Q))**2
-	# 		tot_pos[i] = tot_pos[i] + pos_field[i]
-	# total = [0] * WIDTH
-	# for i in range(0,WIDTH-1):
-	# 		total[i] = uball[i] - tot_pos[i]
 	if max(uball) > 0:
 		max_index = uball.index(max(uball))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 
-	print("laser", laser())
-	print("thresh: ", LASERTHRESH)
-
 	#if it cant see the target
 	if (bdist == 0):
-		print("Target search")
+		LED(3)
 		#put the servo down
 		downServo()
-		#if the ball is in the tripwire
-		# if (laser() >= LASERTHRESH):
-		# 	#captured = true
-		# 	captured = 1
-		# 	LED(1)
-		# else:
-		# 	#captured = false
-		# 	captured = 0
-		# 	LED(2)
-		#dont go forward
 		max_val = 0
 		#if last seen on the left
 		if (max_index < 160):
@@ -554,9 +495,9 @@ def naviagtion():
 
 	#if it can see the target
 	else:
+		LED(2)
 		rot = round(ROT_SCALE*bearing,2)
-		if (captured == 0):
-			#if close to the ball
+		if (flipped == 0):
 			if (bdist < 12):
 				max_val = 0
 				if (abs(bearing) > 5):
@@ -565,38 +506,58 @@ def naviagtion():
 					else:
 						rot = -10
 				else:
-					upServo()
 					drive(20, 0)
-					time.sleep(3)
-					downServo()
-					captured = 1
-					LED(1)
+					time.sleep(2)
+					upServo()
+					flipped = 1
 					drive(0, 0)
 					time.sleep(5)
-
 			#if not close drive to
 			else:
 				max_val = VEL_SCALE * bdist + VEL_MIN
 		else:
-			#if close to the lander
-			if (bdist < 15):
-				max_val = 0
-				if (abs(bearing) > 5):
-					if bearing > 0:
-						rot = 10
+			if (captured == 0):
+				#if close to the ball
+				if (bdist < 12):
+					max_val = 0
+					if (abs(bearing) > 5):
+						if bearing > 0:
+							rot = 10
+						else:
+							rot = -10
 					else:
-						rot = -10
+						upServo()
+						drive(20, 0)
+						time.sleep(3)
+						downServo()
+						captured = 1
+						LED(1)
+						drive(0, 0)
+						time.sleep(5)
+
+				#if not close drive to
 				else:
-					midServo()
-					drive(38, 0)
-					time.sleep(4)
-					drive(-38, 0)
-					time.sleep(4)
-					drive(0, 0)
-					captured = 0
-			#if not close drive to
+					max_val = VEL_SCALE * bdist + VEL_MIN
 			else:
-				max_val = VEL_SCALE * bdist + VEL_MIN
+				#if close to the lander
+				if (bdist < 15):
+					max_val = 0
+					if (abs(bearing) > 5):
+						if bearing > 0:
+							rot = 10
+						else:
+							rot = -10
+					else:
+						midServo()
+						drive(38, 0)
+						time.sleep(4)
+						drive(-38, 0)
+						time.sleep(4)
+						drive(0, 0)
+						captured = 0
+				#if not close drive to
+				else:
+					max_val = VEL_SCALE * bdist + VEL_MIN
 
 	drive(max_val, -1*rot)
 	#drive(15,0)
