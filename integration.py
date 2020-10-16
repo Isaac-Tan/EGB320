@@ -500,9 +500,22 @@ def naviagtion():
 	if max(total) > 0:
 		max_index = total.index(max(total))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
+
+	print("laser", laser())
+	print("thresh: ", LASERTHRESH)
+	#if the ball is in the tripwire
+	if (laser() >= LASERTHRESH):
+		#captured = true
+		captured = 1
+	else:
+		#captured = false
+		captured = 0
+
 	#if it cant see the target
 	if (bdist == 0):
 		print("Target search")
+		#put the servo down
+		downServo()
 		#dont go forward
 		max_val = 0
 		#if last seen on the left
@@ -513,17 +526,6 @@ def naviagtion():
 		else:
 			#turn right
 			rot = -16
-		#put the servo down
-		downServo()
-		print("laser", laser())
-		print("thresh: ", LASERTHRESH)
-		#if the ball is in the tripwire
-		if (laser() >= LASERTHRESH):
-			#captured = true
-			captured = 1
-		else:
-			#captured = false
-			captured = 0
 
 	#if it can see the target
 	else:
@@ -535,8 +537,11 @@ def naviagtion():
 			if (bdist < 12):
 				dis = " - <12"
 				max_val = 0
-				CLOSE_ROT = (15.0/bearing) + 2.5
-				rot = round(CLOSE_ROT * bearing,2)
+				if bearing != 0:
+					if bearing > 0:
+						rot = 10
+					else:
+						rot = -10
 
 			#if not close drive to
 			else:
