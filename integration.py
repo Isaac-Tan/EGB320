@@ -9,6 +9,9 @@ import RPi.GPIO as GPIO
 
 servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
+RED = 21 #Red LED
+YELLOW = 20 #Yellow LED
+GREEN = 16 #Green LED
 
 #setup pins
 GPIO.setmode(GPIO.BCM)
@@ -278,6 +281,24 @@ def laser():
         reading += 1  
     return reading
 
+def LED(colour):
+	if (colour == 1):
+		#Green
+		GPIO.output(GREEN,GPIO.HIGH)
+		GPIO.output(YELLOW,GPIO.LOW)
+		GPIO.output(RED,GPIO.LOW)
+	elif (colour == 2):
+		#Yellow
+		GPIO.output(GREEN,GPIO.LOW)
+		GPIO.output(YELLOW,GPIO.HIGH)
+		GPIO.output(RED,GPIO.LOW)
+	elif (colour == 3):
+		#Red
+		GPIO.output(GREEN,GPIO.LOW)
+		GPIO.output(YELLOW,GPIO.LOW)
+		GPIO.output(RED,GPIO.HIGH)
+
+
 
 def thresh(input_frame, type):
 	#input frame, type (sample, rock, obst, etc), output frame
@@ -507,9 +528,11 @@ def naviagtion():
 	if (laser() >= LASERTHRESH):
 		#captured = true
 		captured = 1
+		LED(1)
 	else:
 		#captured = false
 		captured = 0
+		LED(2)
 
 	#if it cant see the target
 	if (bdist == 0):
@@ -537,7 +560,7 @@ def naviagtion():
 			if (bdist < 12):
 				dis = " - <12"
 				max_val = 0
-				if bearing != 0:
+				if (abs(bearing) > 5):
 					if bearing > 0:
 						rot = 10
 					else:
