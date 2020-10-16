@@ -303,7 +303,7 @@ def LED(colour):
 
 
 
-def thresh(input_frame, type, total_img):
+def thresh(input_frame, type):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
@@ -350,26 +350,26 @@ def thresh(input_frame, type, total_img):
 		if (type == 0):
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
+			# cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
+			# cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+			# cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
+			# cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		# elif (type == 4):
 		# 	dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
-		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
+		# cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
 		#Displays range and bearing on output img
-		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		# cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
+		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		# cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
+		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
 		global Sample_list		#Global needs to be called to store into a global variable
 		global Rock_list
@@ -380,32 +380,32 @@ def thresh(input_frame, type, total_img):
 			Sample_list.append(Sample(i,dist,bearing,cX,cY))	#adds this sample to the class of samples
 			del sample
 			#Displays "sample" in the centre of the contour
-			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			# cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
+			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 1):	#if rock
 			rock = Rock(i,dist,bearing,x1,x2)
 			Rock_list.append(Rock(i,dist,bearing,x1,x2))
 			del rock
-			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			# cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
+			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 2):	#if obstacle
 			obstacle = Obstacle(i,dist,bearing,x1,x2)
 			Obstacle_list.append(Obstacle(i,dist,bearing,x1,x2))
 			del obstacle
-			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			# cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
+			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 3):	#if lander
 			lander = Lander(i,dist,bearing,cX,cY)
 			Lander_list.append(Lander(i,dist,bearing,cX,cY))
 			del lander
-			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+			# cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
+			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		# elif (type == 4):	#if wall
 			# cv2.putText(total_img, "Wall", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		i = i + 1	#add 1 to the ID of object class
 
-	return total_img		#return output image
+	# return total_img		#return output image
 
 
 def capture():
@@ -417,6 +417,7 @@ def capture():
 	# Capture frame-by-frame
 		ret, frame = cap.read()
 		if ret == True:
+			cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
 			process(frame)
 			k = cv2.waitKey(1) & 0xFF
 
@@ -555,11 +556,8 @@ def naviagtion():
 	else:
 		rot = round(ROT_SCALE*bearing,2)
 		if (captured == 0):
-			deb = ": ball"
-
 			#if close to the ball
 			if (bdist < 12):
-				dis = " - <12"
 				max_val = 0
 				if (abs(bearing) > 5):
 					if bearing > 0:
@@ -574,18 +572,14 @@ def naviagtion():
 					captured = 1
 					LED(1)
 					drive(0, 0)
-					time.sleep(10)
+					time.sleep(5)
 
 			#if not close drive to
 			else:
-				dis = " - >12"
 				max_val = VEL_SCALE * bdist + VEL_MIN
 		else:
-			deb = ": lander"
-
 			#if close to the lander
 			if (bdist < 15):
-				dis = " - <15"
 				max_val = 0
 				if (abs(bearing) > 5):
 					if bearing > 0:
@@ -598,11 +592,11 @@ def naviagtion():
 					time.sleep(4)
 					drive(-38, 0)
 					time.sleep(4)
+					drive(0, 0)
+					captured = 0
 			#if not close drive to
 			else:
-				dis = " - >30"
 				max_val = VEL_SCALE * bdist + VEL_MIN
-		print("Sees target", deb, dis)
 
 	drive(max_val, -1*rot)
 	#drive(15,0)
@@ -655,10 +649,10 @@ def process(frame):
 	Lander_list = []
 
 	#object frame = thresh(input img, obj type, output img)
-	sample = thresh(sample_img, 0, total_img)
-	rock = thresh(rock_img, 1, total_img)
-	obstacle = thresh(obstacle_img, 2, total_img)
-	lander = thresh(lander_img, 3, total_img)
+	sample = thresh(sample_img, 0)
+	rock = thresh(rock_img, 1)
+	obstacle = thresh(obstacle_img, 2)
+	lander = thresh(lander_img, 3)
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
@@ -676,7 +670,7 @@ def process(frame):
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	naviagtion()
-	cv2.imshow("Total", total_img)		#display final output img
+	# cv2.imshow("Total", total_img)		#display final output img
 
 
 def cleanUp():
