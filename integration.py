@@ -512,18 +512,19 @@ def naviagtion():
 				#flip the rock
 				else:
 					downServo()
-					drive(30, 0)
-					time.sleep(1.5)
+					drive(25, 0)
+					time.sleep(2)
 					drive(0, 0)
+					time.sleep(0.5)
 					upServo()
-					global flipped
-					flipped = 1
 					drive(20, 0)
 					time.sleep(1)
 					drive(-20,0)
 					time.sleep(2)
 					downServo()
-					time.sleep(3)
+					global flipped
+					flipped = 1
+					time.sleep(2)
 			#if not close drive to
 			else:
 				max_val = VEL_SCALE * bdist + VEL_MIN
