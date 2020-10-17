@@ -285,6 +285,50 @@ def downServo():
 	servo.ChangeDutyCycle(7)
 	time.sleep(0.5)
 
+def flipRock():
+	downServo()
+	drive(23, 0)
+	time.sleep(2)
+	drive(0, 0)
+	time.sleep(2)
+	upServo()
+	time.sleep(1)
+	drive(-15,0)
+	time.sleep(1)
+	drive(0,0)
+	pushingServo()
+	drive(23, 0)
+	time.sleep(1.5)
+	drive(0,0)
+	time.sleep(0.5)
+	downServo()
+	drive(-20,0)
+	time.sleep(2)
+	drive(0,0)
+	global flipped
+	flipped = 1
+
+def captureBall():
+	upServo()
+	time.sleep(0)
+	drive(20, 0)
+	time.sleep(3)
+	downServo()
+	global captured
+	captured = 1
+	drive(0, 0)
+	time.sleep(5)
+
+def returnBall():
+	midServo()
+	drive(50, 0)
+	time.sleep(2)
+	upServo()
+	drive(-20, 0)
+	time.sleep(2)
+	drive(0, 0)
+	midServo()
+
 def laser():  
     reading = 0  
     GPIO.setup(PHOTOCELL, GPIO.OUT)  
@@ -488,10 +532,9 @@ def naviagtion():
 		max_index = uball.index(max(uball))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 
+
 	#if it cant see the target
 	if (bdist == 0):
-		if (captured == 0):
-			LED(3)
 		max_val = 0
 		#if last seen on the left
 		if (max_index < 160):
@@ -504,97 +547,32 @@ def naviagtion():
 
 	#if it can see the target
 	else:
-		if captured == 0:
-			LED(2)
-		rot = round(ROT_SCALE*bearing,2)
-		if (flipped == 0):
-			#if close:
-			if (bdist < 12):
-				max_val = 0
-				#if not centred, centre
-				if (abs(bearing) > 5):
-					if bearing > 0:
-						rot = 10
-					else:
-						rot = -10
-				#flip the rock
+		if (bdist < 15):
+			#if not centred, centre
+			if (abs(bearing) > 5):
+				if bearing > 0:
+					rot = 12
 				else:
-					downServo()
-					drive(23, 0)
-					time.sleep(2)
-					drive(0, 0)
-					time.sleep(2)
-					upServo()
+					rot = -12
+			#if centred
+			else:
+				#what is targ
+				if flipped == 0:	#If Rock is tagret
+					flipRock()
 					time.sleep(1)
-					drive(-15,0)
-					time.sleep(1)
-					drive(0,0)
-					pushingServo()
-					drive(23, 0)
-					time.sleep(1.5)
-					drive(0,0)
-					time.sleep(0.5)
-					downServo()
-					drive(-20,0)
-					time.sleep(2)
-					drive(0,0)
-					global flipped
-					flipped = 1
-					time.sleep(2)
 					if (laser() > LASERTHRESH):
 						captured = 1
-			#if not close drive to
-			else:
-				max_val = VEL_SCALE * bdist + VEL_MIN
-		else:
-			if (captured == 0):
-				#if close to the ball
-				if (bdist < 12):
-					max_val = 0
-					if (abs(bearing) > 5):
-						if bearing > 0:
-							rot = 10
-						else:
-							rot = -10
-					else:
-						upServo()
-						time.sleep(0)
-						drive(20, 0)
-						time.sleep(3)
-						downServo()
-						captured = 1
-						LED(1)
-						drive(0, 0)
-						time.sleep(5)
-
-				#if not close drive to
-				else:
-					max_val = VEL_SCALE * bdist + VEL_MIN
-			else:
-				#if close to the lander
-				if (bdist < 15):
-					max_val = 0
-					if (abs(bearing) > 5):
-						if bearing > 0:
-							rot = 10
-						else:
-							rot = -10
-					else:
-						midServo()
-						drive(50, 0)
-						time.sleep(2)
-						upServo()
-						drive(-20, 0)
-						time.sleep(2)
-						drive(0, 0)
-						midServo()
+				else:	#Once rock has been flipped
+					if (captured == 0):	#If it doesn't have the ball
+						captureBall()
+						time.sleep(1)
+					else:	#If it has the ball
+						returnBall()
 						if (laser() < LASERTHRESH):
 							captured = 0
-							LED(3)
-				#if not close drive to
-				else:
-					max_val = VEL_SCALE * bdist + VEL_MIN
-
+		else:
+			max_val = VEL_SCALE * bdist + VEL_MIN
+			rot = round(ROT_SCALE*bearing,2)
 	drive(max_val, -1*rot)
 	#drive(15,0)
 
