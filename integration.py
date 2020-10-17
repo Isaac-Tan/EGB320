@@ -517,6 +517,7 @@ def naviagtion():
 					drive(0, 0)
 					time.sleep(2)
 					upServo()
+					midServo()
 					drive(23, 0)
 					time.sleep(1.5)
 					drive(0,0)
