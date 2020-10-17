@@ -513,7 +513,7 @@ def naviagtion():
 				#flip the rock
 				else:
 					drive(20, 0)
-					time.sleep(1.5)
+					time.sleep(2)
 					drive(0, 0)
 					upServo()
 					global flipped
@@ -559,11 +559,13 @@ def naviagtion():
 					else:
 						midServo()
 						drive(50, 0)
-						time.sleep(3)
+						time.sleep(2)
 						drive(-20, 0)
 						time.sleep(2)
 						drive(0, 0)
-						captured = 0
+						if (laser() < LASERTHRESH):
+							captured = 0
+							LED(3)
 				#if not close drive to
 				else:
 					max_val = VEL_SCALE * bdist + VEL_MIN
