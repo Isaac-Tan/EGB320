@@ -535,6 +535,7 @@ def naviagtion():
 
 	#if it cant see the target
 	if (bdist == 0):
+		print("cant see")
 		max_val = 0
 		#if last seen on the left
 		if (max_index < 160):
@@ -544,7 +545,6 @@ def naviagtion():
 		else:
 			#turn right
 			rot = -16
-
 	#if it can see the target
 	else:
 		if (bdist < 15):
