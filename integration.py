@@ -518,7 +518,7 @@ def naviagtion():
 					upServo()
 					global flipped
 					flipped = 1
-					drive(-20, 0)
+					drive(20, 0)
 					time.sleep(1)
 					drive(-10,0)
 					time.sleep(2)
