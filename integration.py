@@ -513,13 +513,13 @@ def naviagtion():
 				else:
 					downServo()
 					drive(20, 0)
-					time.sleep(1.5)
+					time.sleep(20)
 					drive(0, 0)
 					time.sleep(0.5)
 					upServo()
-					drive(10, 0)
-					time.sleep(1)
-					drive(-15,0)
+					drive(20, 0)
+					time.sleep(1.5)
+					drive(-20,0)
 					time.sleep(2)
 					downServo()
 					global flipped
