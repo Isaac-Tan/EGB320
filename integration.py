@@ -523,7 +523,7 @@ def naviagtion():
 					upServo()
 					time.sleep(1)
 					drive(-15,0)
-					sleep(1)
+					time.sleep(1)
 					drive(0,0)
 					pushingServo()
 					drive(23, 0)
