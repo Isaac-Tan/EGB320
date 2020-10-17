@@ -520,7 +520,7 @@ def naviagtion():
 					time.sleep(2)
 					drive(0, 0)
 					time.sleep(2)
-					pushingServo()
+					upServo()
 					time.sleep(1)
 					drive(-15,0)
 					time.sleep(1)
