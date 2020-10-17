@@ -511,12 +511,15 @@ def naviagtion():
 						rot = -10
 				#flip the rock
 				else:
+					downServo()
 					drive(20, 0)
 					time.sleep(2)
 					drive(0, 0)
 					upServo()
 					global flipped
 					flipped = 1
+					drive(-10,0)
+					time.sleep(2)
 					downServo()
 					time.sleep(3)
 			#if not close drive to
