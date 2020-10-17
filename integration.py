@@ -269,6 +269,10 @@ def upServo():
 	servo.ChangeDutyCycle(3.5)
 	time.sleep(0.5)
 
+def pushingServo():
+	servo.ChangeDutyCycle(5)
+	time.sleep(0.5)
+
 def midServo():
 	servo.ChangeDutyCycle(6.5)
 	time.sleep(0.5)
@@ -517,7 +521,8 @@ def naviagtion():
 					drive(0, 0)
 					time.sleep(2)
 					upServo()
-					midServo()
+					time.sleep(1)
+					pushingServo()
 					drive(23, 0)
 					time.sleep(1.5)
 					drive(0,0)
