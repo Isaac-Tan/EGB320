@@ -576,7 +576,7 @@ def naviagtion():
 	if (captured == 1):
 		LED(1)
 	else:
-		if(bdist != 0)
+		if(bdist != 0):
 			LED(2)
 		else:
 			LED(3)
