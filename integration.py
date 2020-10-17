@@ -35,7 +35,7 @@ servo = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
 pwm[0].start(0)
 pwm[1].start(0)
 #Initialise motor at 2.5
-servo.start(7)
+servo.start(6.5)
 #Multipliers for uneven motor power
 m1mult = 1.0 #Left motor multiplier
 m2mult = 1.0 #Right motor multiplier
