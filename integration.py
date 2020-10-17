@@ -533,6 +533,7 @@ def naviagtion():
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 
 	max_val = 0
+	rot = 0
 	#if it cant see the target
 	if (bdist == 0):
 		print("cant see")
