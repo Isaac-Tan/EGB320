@@ -512,14 +512,14 @@ def naviagtion():
 				#flip the rock
 				else:
 					downServo()
-					drive(25, 0)
-					time.sleep(2)
+					drive(20, 0)
+					time.sleep(1.5)
 					drive(0, 0)
 					time.sleep(0.5)
 					upServo()
-					drive(20, 0)
+					drive(10, 0)
 					time.sleep(1)
-					drive(-20,0)
+					drive(-15,0)
 					time.sleep(2)
 					downServo()
 					global flipped
