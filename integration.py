@@ -530,10 +530,11 @@ def naviagtion():
 					time.sleep(1.5)
 					drive(0,0)
 					time.sleep(0.5)
+					downServo()
 					drive(-20,0)
 					time.sleep(2)
 					drive(0,0)
-					downServo()
+					
 					global flipped
 					flipped = 1
 					time.sleep(2)
