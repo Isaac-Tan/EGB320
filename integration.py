@@ -482,9 +482,8 @@ def naviagtion():
 
 	#if it cant see the target
 	if (bdist == 0):
-		LED(3)
-		#put the servo down
-		downServo()
+		if (captured == 0):
+			LED(3)
 		max_val = 0
 		#if last seen on the left
 		if (max_index < 160):
