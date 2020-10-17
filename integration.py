@@ -532,11 +532,10 @@ def naviagtion():
 		max_index = uball.index(max(uball))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
 
-
+	max_val = 0
 	#if it cant see the target
 	if (bdist == 0):
 		print("cant see")
-		max_val = 0
 		#if last seen on the left
 		if (max_index < 160):
 			#turn left
@@ -574,6 +573,13 @@ def naviagtion():
 			max_val = VEL_SCALE * bdist + VEL_MIN
 			rot = round(ROT_SCALE*bearing,2)
 	drive(max_val, -1*rot)
+	if (captured == 1):
+		LED(1)
+	else:
+		if(bdist != 0)
+			LED(2)
+		else:
+			LED(3)
 	#drive(15,0)
 
 
