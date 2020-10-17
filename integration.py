@@ -241,6 +241,10 @@ def laserSetup():
 	tolerance = lasertol * LASERTHRESH
 	LASERTHRESH = LASERTHRESH + tolerance
 
+def offLander():
+	drive(-20,0)
+	time.sleep(3)
+
 def motor(mot, value):
   	#Drive motor(which motor, PWM intensity)
 	if (value > 0):
@@ -678,5 +682,6 @@ if __name__ == '__main__':
 	if (init == False):
 		bounds()
 		laserSetup()
+		offLander()
 		init = True
 	main()
