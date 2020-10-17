@@ -562,9 +562,11 @@ def naviagtion():
 						midServo()
 						drive(50, 0)
 						time.sleep(2)
+						upServo()
 						drive(-20, 0)
 						time.sleep(2)
 						drive(0, 0)
+						midServo()
 						if (laser() < LASERTHRESH):
 							captured = 0
 							LED(3)
