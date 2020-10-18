@@ -312,11 +312,13 @@ def flipRock():
 	drive(0,0)
 	global flipped
 	flipped = 1
+	global captured
+	captured = 1
 
 def captureBall():
 	upServo()
 	time.sleep(1)
-	drive(23, 2)
+	drive(23, -3)
 	time.sleep(3)
 	midServo()
 	global captured
@@ -567,7 +569,6 @@ def naviagtion():
 				if flipped == 0:	#If Rock is tagret
 					flipRock()
 					time.sleep(1)
-					captured = 1
 				else:	#Once rock has been flipped
 					if (captured == 0):	#If it doesn't have the ball
 						captureBall()
@@ -582,10 +583,16 @@ def naviagtion():
 	obstaclePeak = []
 	obstacleDist = []
 	start = datetime.now()
+	if (flipped == 1):
+		if (len(Rock_list) > 0):
+			for i in range(0, len(Rock_list)):
+				obstaclePeak.append(Rock_list[i].cX)
+				obstacleDist.append(Rock_list[i].Dist)
 	if (len(Obstacle_list) > 0):
 		for i in range(0, len(Obstacle_list)):
 			obstaclePeak.append(Obstacle_list[i].cX)
 			obstacleDist.append(Obstacle_list[i].Dist)
+	if (len(obstaclePeak) > 0):
 		for j in range(0, len(obstaclePeak)):
 			if obstacleDist[j] < 28:
 				print("stop")
@@ -617,16 +624,15 @@ def naviagtion():
 		# if (obstacleArray[minvalIndex[0]] < 30):
 		# 	print("Avoid!!!!")
 			
-	if (captured == 1):
-		LED(1)
-		#print("Go lander")
-	else:
+	if (captured == 0):
 		if(targDist != 0):
 			LED(2)
 			#print("sees targ")
 		else:
 			LED(3)
 			#print("looking for targ")
+	else:
+		LED(1)
 
 	drive(max_val, -1*rot)
 
