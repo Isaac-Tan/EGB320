@@ -529,6 +529,7 @@ def naviagtion():
 		uball[i] = u * neg_field[i]
 
 	obstaclePeak = []
+	obstacleDist = []
 	if (len(Obstacle_list) > 0):
 		for i in range(0, len(Obstacle_list)-1):
 			obstaclePeak.append(Obstacle_list[i].cX)
