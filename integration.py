@@ -590,11 +590,13 @@ def naviagtion():
 					print("turn right")
 					time.sleep(2)
 					drive(0, 0)
+					time.sleep(1)
 				else:
 					drive(0, 15)
 					print("turn left")
 					time.sleep(2)
 					drive(0,0)
+					time.sleep(1)
 				max_val = 0
 				rot = 0
 		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
