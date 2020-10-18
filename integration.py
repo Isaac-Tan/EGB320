@@ -306,7 +306,7 @@ def flipRock():
 	drive(-10,0)
 	time.sleep(0.5)
 	drive(0,0)
-	downServo()
+	midServo()
 	drive(-20,0)
 	time.sleep(2)
 	drive(0,0)
@@ -318,7 +318,7 @@ def captureBall():
 	time.sleep(1)
 	drive(23, 2)
 	time.sleep(3)
-	downServo()
+	midServo()
 	global captured
 	captured = 1
 	drive(0, 0)
@@ -326,9 +326,11 @@ def captureBall():
 
 def returnBall():
 	midServo()
-	drive(50, 0)
+	drive(55, 0)
 	time.sleep(1.8)
 	upServo()
+	drive(0,0)
+	time.sleep(1)
 	drive(-20, 0)
 	time.sleep(2)
 	drive(0, 0)
