@@ -313,7 +313,7 @@ def flipRock():
 def captureBall():
 	upServo()
 	time.sleep(0)
-	drive(20, 0)
+	drive(20, 2)
 	time.sleep(3)
 	downServo()
 	global captured
@@ -594,14 +594,14 @@ def naviagtion():
 					if obstaclePeak[j] < 160:
 						print("turn right")
 						max_index = 319
-						drive(0, 15)
+						drive(0, -15)
 						time.sleep(1)
 						drive(0,0)
 						time.sleep(1)
 						break
 					else:
 						print("turn left")
-						drive(-15, 0)
+						drive(15, 0)
 						max_index = 1
 						drive(0, -15)
 						time.sleep(1)
