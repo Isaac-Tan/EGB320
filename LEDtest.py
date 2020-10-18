@@ -12,13 +12,14 @@ GPIO.setup(RED, GPIO.OUT) #Red LED
 counter = 0
 
 try: 
-    while (counter < 1000000):
+    while (counter < 10000000000):
         GPIO.output(GREEN, GPIO.HIGH)
-        # GPIO.output(YELLOW, GPIO.HIGH)
-        # GPIO.output(RED, GPIO.HIGH)
+        GPIO.output(YELLOW, GPIO.HIGH)
+        GPIO.output(RED, GPIO.HIGH)
         counter += 1
 except:
     print("/n", counter)
 finally:
+    print("clean")
     GPIO.cleanup() # this ensures a clean exit  
     
