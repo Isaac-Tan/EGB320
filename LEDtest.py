@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
 
-RED = 21 #Red LED
+RED = 16 #Red LED
 YELLOW = 20 #Yellow LED
-GREEN = 16 #Green LED
+GREEN = 21 #Green LED
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(GREEN, GPIO.OUT) #Green LED
