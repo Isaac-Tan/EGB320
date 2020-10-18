@@ -543,8 +543,8 @@ def naviagtion():
 			print("set obstacleArray")
 			obstacleArray[obstaclePeak[j]] = obstacleDist[j]
 		minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
-		print("minval", minvalIndex)
-		if (obstacleArray[minvalIndex] < 30):
+		print("minval", minvalIndex[0])
+		if (obstacleArray[minvalIndex[0]] < 30):
 			print("Avoid!!!!")
 			# if minval < 160:
 			# 	drive(10 -15)
