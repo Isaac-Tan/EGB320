@@ -543,11 +543,11 @@ def naviagtion():
 		#if last seen on the left
 		if (max_index < 160):
 			#turn left
-			rot = 16
+			rot = 18
 		#if last seen on the right
 		else:
 			#turn right
-			rot = -16
+			rot = -18
 	#if it can see the target
 	else:
 		if (targDist < 15):
