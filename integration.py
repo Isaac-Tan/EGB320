@@ -533,19 +533,19 @@ def naviagtion():
 		for i in range(0, len(Obstacle_list)-1):
 			obstaclePeak.append(Obstacle_list[i].cX)
 			obstacleDist.append(Obstacle_list[i].Dist)
-	obstacleArray = np.empty((WIDTH))
-	obstacleArray[:] = np.NaN
-	for j in range(0, len(obstaclePeak)):
-		obstacleArray[obstaclePeak[i]] = obstacleDist[i]
-	minval = np.min(obstacleArray[np.nonzero(obstacleArray)])
-	if obstacleArray[minval] < 30:
-		print("Avoid!!!!")
-		# if minval < 160:
-		# 	drive(10 -15)
-		# 	time.sleep(1)
-		# else:
-		# 	drive(10, 15)
-		# 	time.sleep(1)
+		obstacleArray = np.empty((WIDTH))
+		obstacleArray[:] = np.NaN
+		for j in range(0, len(obstaclePeak)):
+			obstacleArray[obstaclePeak[i]] = obstacleDist[i]
+		minval = np.min(obstacleArray[np.nonzero(obstacleArray)])
+		if (obstacleArray[minval]) < 30:
+			print("Avoid!!!!")
+			# if minval < 160:
+			# 	drive(10 -15)
+			# 	time.sleep(1)
+			# else:
+			# 	drive(10, 15)
+			# 	time.sleep(1)
 
 
 
