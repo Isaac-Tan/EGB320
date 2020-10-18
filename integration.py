@@ -499,6 +499,7 @@ def naviagtion():
 		else:
 			peak = max_index
 			targDist = 0.0
+		# for j in range(0, int(len()))
 	else:
 		if (captured == 0):
 			if len(Sample_list) > 0:
@@ -582,7 +583,6 @@ def naviagtion():
 		else:
 			LED(3)
 			print("looking for targ")
-	LED(2)
 	drive(max_val, -1*rot)
 
 	#drive(15,0)
