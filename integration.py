@@ -537,7 +537,7 @@ def naviagtion():
 			obstacleDist.append(Obstacle_list[i].Dist)
 		obstacleArray = np.empty((WIDTH))
 		obstacleArray[:] = np.NaN
-		for j in range(0, len(obstaclePeak)):
+		for j in range(0, len(obstaclePeak)-1):
 			obstacleArray[obstaclePeak[j]] = obstacleDist[j]
 		minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
 		print("minval", minvalIndex)
@@ -695,6 +695,6 @@ if __name__ == '__main__':
 	if (init == False):
 		bounds()
 		laserSetup()
-		offLander()
+		#offLander()
 		init = True
 	main()
