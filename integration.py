@@ -316,7 +316,8 @@ def captureBall():
 	time.sleep(3)
 	downServo()
 	global captured
-	captured = 1
+	if (laser() > LASERTHRESH):
+		captured = 1
 	drive(0, 0)
 	time.sleep(2)
 
@@ -578,18 +579,18 @@ def naviagtion():
 	obstaclePeak = []
 	obstacleDist = []
 	if (len(Obstacle_list) > 0):
-		print("There is at least 1 obstacle")
 		for i in range(0, len(Obstacle_list)):
-			print("setting peaks")
 			obstaclePeak.append(Obstacle_list[i].cX)
 			obstacleDist.append(Obstacle_list[i].Dist)
-		print("init NaN")
-		obstacleArray = np.empty((WIDTH))
-		obstacleArray[:] = np.NaN
 		for j in range(0, len(obstaclePeak)):
-			print("set obstacleArray")
-			if obstacleDist[j] < 35:
+			if obstacleDist[j] < 32:
 				print("stop")
+				if obstaclePeak[j] < 160:
+					drive(0, -15)
+					time.sleep(2)
+				else:
+					drive(0, 15)
+					time.sleep(2)
 				max_val = 0
 				rot = 0
 		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
@@ -597,12 +598,7 @@ def naviagtion():
 		# print("minval", minvalIndex[0])
 		# if (obstacleArray[minvalIndex[0]] < 30):
 		# 	print("Avoid!!!!")
-			# if minval < 160:
-			# 	drive(10 -15)
-			# 	time.sleep(1)
-			# else:
-			# 	drive(10, 15)
-			# 	time.sleep(1)
+			
 	if (captured == 1):
 		LED(1)
 		#print("Go lander")
