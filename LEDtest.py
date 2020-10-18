@@ -11,5 +11,5 @@ GPIO.setup(RED, GPIO.OUT) #Red LED
 
 while (1):
     GPIO.output(GREEN, GPIO.HIGH)
-    GPIO.output(YELLOW, GPIO.HIGH)
-    GPIO.output(RED, GPIO.HIGH)
+    # GPIO.output(YELLOW, GPIO.HIGH)
+    # GPIO.output(RED, GPIO.HIGH)
