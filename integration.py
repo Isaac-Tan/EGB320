@@ -583,7 +583,7 @@ def naviagtion():
 	# 	else:
 	# 		LED(3)
 	# 		print("looking for targ")
-	LED(1)
+	LED(2)
 	drive(max_val, -1*rot)
 
 	#drive(15,0)
