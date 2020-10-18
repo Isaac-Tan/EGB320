@@ -323,7 +323,7 @@ def captureBall():
 def returnBall():
 	midServo()
 	drive(50, 0)
-	time.sleep(2)
+	time.sleep(1.8)
 	upServo()
 	drive(-20, 0)
 	time.sleep(2)
@@ -529,38 +529,7 @@ def naviagtion():
 	for i in range(0,len(neg_field)-1):
 		uball[i] = u * neg_field[i]
 
-	obstaclePeak = []
-	obstacleDist = []
-	if (len(Obstacle_list) > 0):
-		print("There is at least 1 obstacle")
-		for i in range(0, len(Obstacle_list)-1):
-			print("setting peaks")
-			obstaclePeak.append(Obstacle_list[i].cX)
-			obstacleDist.append(Obstacle_list[i].Dist)
-		print("init NaN")
-		obstacleArray = np.empty((WIDTH))
-		obstacleArray[:] = np.NaN
-		for j in range(0, len(obstaclePeak)-1):
-			print("set obstacleArray")
-			if obstacleDist[j] < 30:
-				print("stop")
-				drive(0,0)
-				time.sleep(5)
-		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
-		# minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
-		# print("minval", minvalIndex[0])
-		# if (obstacleArray[minvalIndex[0]] < 30):
-		# 	print("Avoid!!!!")
-			# if minval < 160:
-			# 	drive(10 -15)
-			# 	time.sleep(1)
-			# else:
-			# 	drive(10, 15)
-			# 	time.sleep(1)
 
-
-
-	
 	if max(uball) > 0:
 		max_index = uball.index(max(uball))
 	bearing = 31.1 * ((max_index - (WIDTH/2.0))/(WIDTH/2.0))
@@ -605,6 +574,35 @@ def naviagtion():
 		else:
 			max_val = VEL_SCALE * targDist + VEL_MIN
 			rot = round(ROT_SCALE*bearing,2)
+
+	obstaclePeak = []
+	obstacleDist = []
+	if (len(Obstacle_list) > 0):
+		print("There is at least 1 obstacle")
+		for i in range(0, len(Obstacle_list)-1):
+			print("setting peaks")
+			obstaclePeak.append(Obstacle_list[i].cX)
+			obstacleDist.append(Obstacle_list[i].Dist)
+		print("init NaN")
+		obstacleArray = np.empty((WIDTH))
+		obstacleArray[:] = np.NaN
+		for j in range(0, len(obstaclePeak)-1):
+			print("set obstacleArray")
+			if obstacleDist[j] < 30:
+				print("stop")
+				max_val = 0
+				rot = 0
+		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
+		# minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
+		# print("minval", minvalIndex[0])
+		# if (obstacleArray[minvalIndex[0]] < 30):
+		# 	print("Avoid!!!!")
+			# if minval < 160:
+			# 	drive(10 -15)
+			# 	time.sleep(1)
+			# else:
+			# 	drive(10, 15)
+			# 	time.sleep(1)
 	if (captured == 1):
 		LED(1)
 		#print("Go lander")
@@ -615,8 +613,8 @@ def naviagtion():
 		else:
 			LED(3)
 			#print("looking for targ")
+			
 	drive(max_val, -1*rot)
-	LED(1)
 
 	#drive(15,0)
 
