@@ -590,7 +590,7 @@ def naviagtion():
 				max_val = 0
 				rot = 0
 				currentTime = datetime.now()
-				if ((currentTime - start) < 2):
+				if ((currentTime.second + (currentTime.microsecond / 1000000) - start.second + (start.microsecond / 1000000)) < 2):
 					if obstaclePeak[j] < 160:
 						drive(-15, 0)
 						print("turn right")
