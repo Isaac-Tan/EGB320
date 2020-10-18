@@ -303,6 +303,9 @@ def flipRock():
 	time.sleep(1.5)
 	drive(0,0)
 	time.sleep(0.5)
+	drive(-10,0)
+	time.sleep(0.5)
+	drive(0,0)
 	downServo()
 	drive(-20,0)
 	time.sleep(2)
@@ -312,8 +315,8 @@ def flipRock():
 
 def captureBall():
 	upServo()
-	time.sleep(0)
-	drive(20, 2)
+	time.sleep(1)
+	drive(23, 2)
 	time.sleep(3)
 	downServo()
 	global captured
@@ -542,11 +545,11 @@ def naviagtion():
 		#if last seen on the left
 		if (max_index < 160):
 			#turn left
-			rot = 20
+			rot = 19
 		#if last seen on the right
 		else:
 			#turn right
-			rot = -20
+			rot = -19
 	#if it can see the target
 	else:
 		if (targDist < 15):
