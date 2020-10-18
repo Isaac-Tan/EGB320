@@ -318,7 +318,7 @@ def captureBall():
 	global captured
 	captured = 1
 	drive(0, 0)
-	time.sleep(5)
+	time.sleep(2)
 
 def returnBall():
 	midServo()
@@ -588,7 +588,7 @@ def naviagtion():
 		obstacleArray[:] = np.NaN
 		for j in range(0, len(obstaclePeak)):
 			print("set obstacleArray")
-			if obstacleDist[j] < 30:
+			if obstacleDist[j] < 35:
 				print("stop")
 				max_val = 0
 				rot = 0
@@ -702,6 +702,6 @@ if __name__ == '__main__':
 	if (init == False):
 		bounds()
 		laserSetup()
-		#offLander()
+		offLander()
 		init = True
 	main()
