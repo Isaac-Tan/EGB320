@@ -541,11 +541,13 @@ def naviagtion():
 		obstacleArray[:] = np.NaN
 		for j in range(0, len(obstaclePeak)-1):
 			print("set obstacleArray")
-			obstacleArray[obstaclePeak[j]] = obstacleDist[j]
-		minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
-		print("minval", minvalIndex[0])
-		if (obstacleArray[minvalIndex[0]] < 30):
-			print("Avoid!!!!")
+			if obstacleDist[j] < 30:
+				print("stop")
+		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
+		# minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
+		# print("minval", minvalIndex[0])
+		# if (obstacleArray[minvalIndex[0]] < 30):
+		# 	print("Avoid!!!!")
 			# if minval < 160:
 			# 	drive(10 -15)
 			# 	time.sleep(1)
