@@ -358,7 +358,7 @@ def LED(colour):
 
 
 
-def thresh(input_frame, type, output_frame):
+def thresh(input_frame, type, total_img):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
