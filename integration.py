@@ -318,7 +318,7 @@ def flipRock():
 def captureBall():
 	upServo()
 	time.sleep(1)
-	drive(23, -3)
+	drive(23, -1)
 	time.sleep(3)
 	midServo()
 	global captured
