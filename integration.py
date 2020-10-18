@@ -317,8 +317,7 @@ def captureBall():
 	time.sleep(3)
 	downServo()
 	global captured
-	if (laser() > LASERTHRESH):
-		captured = 1
+	captured = 1
 	drive(0, 0)
 	time.sleep(2)
 
@@ -543,11 +542,11 @@ def naviagtion():
 		#if last seen on the left
 		if (max_index < 160):
 			#turn left
-			rot = 18
+			rot = 20
 		#if last seen on the right
 		else:
 			#turn right
-			rot = -18
+			rot = -20
 	#if it can see the target
 	else:
 		if (targDist < 15):
@@ -563,16 +562,14 @@ def naviagtion():
 				if flipped == 0:	#If Rock is tagret
 					flipRock()
 					time.sleep(1)
-					if (laser() > LASERTHRESH):
-						captured = 1
+					captured = 1
 				else:	#Once rock has been flipped
 					if (captured == 0):	#If it doesn't have the ball
 						captureBall()
 						time.sleep(1)
 					else:	#If it has the ball
 						returnBall()
-						if (laser() < LASERTHRESH):
-							captured = 0
+						captured = 0
 		else:
 			max_val = VEL_SCALE * targDist + VEL_MIN
 			rot = round(ROT_SCALE*bearing,2)
