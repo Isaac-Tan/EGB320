@@ -59,7 +59,7 @@ cap.set(4, 240)									# Set the frame HEIGHT
 #picamera.exposure_mode = 'night'
 cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
 cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.6)
-cap.se(cv2.CAP_PROP_BUFFERSIZE, 1)
+cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
 def bounds():
 	##Gets the HSV values from the .txt files
