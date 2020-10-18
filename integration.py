@@ -616,6 +616,7 @@ def naviagtion():
 			LED(3)
 			#print("looking for targ")
 	drive(max_val, -1*rot)
+	LED(1)
 
 	#drive(15,0)
 
