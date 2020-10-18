@@ -12,7 +12,7 @@ servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
 RED = 21 #Red LED
 YELLOW = 20 #Yellow LED
-GREEN = 16 #Green LED
+GREEN = 12 #Green LED
 
 #setup pins
 GPIO.setmode(GPIO.BCM)
@@ -477,23 +477,27 @@ def capture():
 	if (cap.isOpened()== False): 
 	  print("Error opening video stream or file")
 
-	while(cap.isOpened()): 
-	# Capture frame-by-frame
-		ret, frame = cap.read()
-		if ret == True:
-			cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
-			process(frame)
-			k = cv2.waitKey(1) & 0xFF
+	try: 
+		while(cap.isOpened()): 
+		# Capture frame-by-frame
+			ret, frame = cap.read()
+			if ret == True:
+				cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
+				process(frame)
+				k = cv2.waitKey(1) & 0xFF
 
-			# exit if q or esc are pressed
-			if (k == ord('q') or k == 27):
+				# exit if q or esc are pressed
+				if (k == ord('q') or k == 27):
+					break
+
+			else:
 				break
-
-		else:
-			break
 	# When everything done, release the video capture object
-	cap.release()
-	cleanUp()
+	finally:
+		print("clean")
+		GPIO.cleanup() # this ensures a clean exit  
+		cap.release()
+		cleanUp()
 
 def naviagtion():
 	global max_index
