@@ -49,6 +49,7 @@ def capture():
 	cap.set(4, 240)									# Set the frame height
 	cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
 	cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.5)
+	cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 	# Check if camera opened successfully
 	if (cap.isOpened() == False):
 		print("Error opening video stream or file")
