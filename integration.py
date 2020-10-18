@@ -138,12 +138,12 @@ class Rock:
 class Obstacle:
 	#'Class for Obstacles'
 	obstacleCount = 0
-	def __init__(self, ID, Dist, Bearing, x1, x2):
+	def __init__(self, ID, Dist, Bearing, cX, cY):
 		self.Dist = Dist
 		self.Bearing = Bearing
 		self.ID = ID
-		self.x1 = x1
-		self.x2 = x2
+		self.x1 = cX
+		self.x2 = cY
 		Obstacle.obstacleCount += 1
 	def __del__(self):
 		Obstacle.obstacleCount -= 1
@@ -444,8 +444,8 @@ def thresh(input_frame, type, total_img):
 			# cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		elif (type == 2):	#if obstacle
-			obstacle = Obstacle(i,dist,bearing,x1,x2)
-			Obstacle_list.append(Obstacle(i,dist,bearing,x1,x2))
+			obstacle = Obstacle(i,dist,bearing,cX,cY)
+			Obstacle_list.append(Obstacle(i,dist,bearing,cX,cY))
 			del obstacle
 			# cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
 			# cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
@@ -499,7 +499,6 @@ def naviagtion():
 		else:
 			peak = max_index
 			targDist = 0.0
-		# for j in range(0, int(len()))
 	else:
 		if (captured == 0):
 			if len(Sample_list) > 0:
@@ -528,6 +527,27 @@ def naviagtion():
 	uball = [0] * WIDTH
 	for i in range(0,len(neg_field)-1):
 		uball[i] = u * neg_field[i]
+
+	obstaclePeak = []
+	if (len(Obstacle_list) > 0):
+		for i in range(0, len(Obstacle_list)-1):
+			obstaclePeak.append(Obstacle_list[i].cX)
+			obstacleDist.append(Obstacle_list[i].Dist)
+	obstacleArray = np.empty((1, WIDTH))
+	obstacleArray[:] = np.NaN
+	for j in range(0, len(obstaclePeak)):
+		obstacleArray[obstaclePeak[i]] = obstacleDist[i]
+	minval = np.min(obstacleArray[np.nonzero(obstacleArray)])
+	if obstacleArray[minval] < 30:
+		if minval < 160:
+			drive(10 -15)
+			time.sleep(1)
+		else:
+			drive(10, 15)
+			time.sleep(1)
+
+
+
 	
 	if max(uball) > 0:
 		max_index = uball.index(max(uball))
