@@ -585,6 +585,8 @@ def naviagtion():
 		for j in range(0, len(obstaclePeak)):
 			if obstacleDist[j] < 28:
 				print("stop")
+				max_val = 0
+				rot = 0
 				if obstaclePeak[j] < 160:
 					drive(-15, 0)
 					print("turn right")
@@ -609,8 +611,7 @@ def naviagtion():
 					drive(0,0)
 					time.sleep(2)
 					break
-				max_val = 0
-				rot = 0
+
 		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
 		# minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
 		# print("minval", minvalIndex[0])
