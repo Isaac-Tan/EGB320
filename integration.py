@@ -108,6 +108,7 @@ cap.set(3, 320)									# Set the frame WIDTH
 cap.set(4, 240)									# Set the frame HEIGHT
 cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
 cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.6)
+cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
 class Sample:
 	#'Class for Samples'
