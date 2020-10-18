@@ -587,9 +587,11 @@ def naviagtion():
 				print("stop")
 				if obstaclePeak[j] < 160:
 					drive(0, -15)
+					print("turn right")
 					time.sleep(2)
 				else:
 					drive(0, 15)
+					print("turn left")
 					time.sleep(2)
 				max_val = 0
 				rot = 0
