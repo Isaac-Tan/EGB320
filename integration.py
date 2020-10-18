@@ -6,6 +6,7 @@ import imutils
 import time
 import gpiozero
 import RPi.GPIO as GPIO
+from datetime import datetime
 
 servoPIN = 27	#Servo Pin
 PHOTOCELL = 17	#Photoresistor pin
@@ -59,7 +60,7 @@ VEL_MIN = 8 #Velocity min value
 LASERTHRESH	 = 0 #Initialise threshold at 0
 laserArr = []
 lasertol = 0.8 #Laser tolerance
-
+currentTime = datetime.now()
 
 #HSV Value arrays
 s_min_1 = [int]*3
@@ -578,6 +579,7 @@ def naviagtion():
 
 	obstaclePeak = []
 	obstacleDist = []
+	start = datetime.now()
 	if (len(Obstacle_list) > 0):
 		for i in range(0, len(Obstacle_list)):
 			obstaclePeak.append(Obstacle_list[i].cX)
@@ -587,30 +589,32 @@ def naviagtion():
 				print("stop")
 				max_val = 0
 				rot = 0
-				if obstaclePeak[j] < 160:
-					drive(-15, 0)
-					print("turn right")
-					max_index = 319
-					time.sleep(2)
-					drive(0, 0)
-					time.sleep(1)
-					drive(0, 15)
-					time.sleep(2)
-					drive(0,0)
-					time.sleep(2)
-					break
-				else:
-					drive(-15, 0)
-					print("turn left")
-					max_index = 1
-					time.sleep(2)
-					drive(0,0)
-					time.sleep(1)
-					drive(0, 15)
-					time.sleep(2)
-					drive(0,0)
-					time.sleep(2)
-					break
+				currentTime = datetime.now()
+				if ((currentTime - start) < 2):
+					if obstaclePeak[j] < 160:
+						drive(-15, 0)
+						print("turn right")
+						max_index = 319
+						time.sleep(2)
+						drive(0, 0)
+						time.sleep(1)
+						drive(0, 15)
+						time.sleep(2)
+						drive(0,0)
+						time.sleep(2)
+						break
+					else:
+						drive(-15, 0)
+						print("turn left")
+						max_index = 1
+						time.sleep(2)
+						drive(0,0)
+						time.sleep(1)
+						drive(0, 15)
+						time.sleep(2)
+						drive(0,0)
+						time.sleep(2)
+						break
 
 		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
 		# minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
