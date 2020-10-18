@@ -592,28 +592,21 @@ def naviagtion():
 				currentTime = datetime.now()
 				if ((currentTime.second + (currentTime.microsecond / 1000000) - start.second + (start.microsecond / 1000000)) < 2):
 					if obstaclePeak[j] < 160:
-						drive(-15, 0)
 						print("turn right")
 						max_index = 319
-						time.sleep(2)
-						drive(0, 0)
-						time.sleep(1)
 						drive(0, 15)
-						time.sleep(2)
+						time.sleep(1)
 						drive(0,0)
-						time.sleep(2)
+						time.sleep(1)
 						break
 					else:
-						drive(-15, 0)
 						print("turn left")
+						drive(-15, 0)
 						max_index = 1
-						time.sleep(2)
+						drive(0, -15)
+						time.sleep(1)
 						drive(0,0)
 						time.sleep(1)
-						drive(0, 15)
-						time.sleep(2)
-						drive(0,0)
-						time.sleep(2)
 						break
 
 		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
