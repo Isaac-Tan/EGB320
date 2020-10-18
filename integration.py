@@ -358,7 +358,7 @@ def LED(colour):
 
 
 
-def thresh(input_frame, type):
+def thresh(input_frame, type, output_frame):
 	#input frame, type (sample, rock, obst, etc), output frame
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
@@ -405,26 +405,26 @@ def thresh(input_frame, type):
 		if (type == 0):
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
-			# cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
+			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			# cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
+			cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 2):
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			# cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
+			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
-			# cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
+			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		# elif (type == 4):
 		# 	dist = round(0.1*(FOCAL_LEN*WALL_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
-		# cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
-		#Displays range and bearing on output img
-		# cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
-		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-		# cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
-		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
+		Displays range and bearing on output img
+		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
+		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 
 		global Sample_list		#Global needs to be called to store into a global variable
 		global Rock_list
@@ -495,25 +495,25 @@ def naviagtion():
 	if (flipped == 0):
 		if len(Rock_list) > 0:
 			peak = Rock_list[0].cX
-			bdist = Rock_list[0].Dist
+			targDist = Rock_list[0].Dist
 		else:
 			peak = max_index
-			bdist = 0.0
+			targDist = 0.0
 	else:
 		if (captured == 0):
 			if len(Sample_list) > 0:
 				peak = Sample_list[0].cX
-				bdist = Sample_list[0].Dist
+				targDist = Sample_list[0].Dist
 			else:
 				peak = max_index
-				bdist = 0.0
+				targDist = 0.0
 		else:
 			if len(Lander_list) > 0:
 				peak = Lander_list[0].cX
-				bdist = Lander_list[0].Dist
+				targDist = Lander_list[0].Dist
 			else:
 				peak = max_index
-				bdist = 0.0
+				targDist = 0.0
 
 	neg_field[peak] = 1
 	for i in range(peak-1,0,-1):
@@ -523,7 +523,7 @@ def naviagtion():
 	for i in range(0, WIDTH):
 		if (neg_field[i] < 0):
 			neg_field[i] = 0
-	u = 0.5 * scal * bdist**2
+	u = 0.5 * scal * targDist**2
 	uball = [0] * WIDTH
 	for i in range(0,len(neg_field)-1):
 		uball[i] = u * neg_field[i]
@@ -535,7 +535,7 @@ def naviagtion():
 	max_val = 0
 	rot = 0
 	#if it cant see the target
-	if (bdist == 0):
+	if (targDist == 0):
 		#if last seen on the left
 		if (max_index < 160):
 			#turn left
@@ -546,7 +546,7 @@ def naviagtion():
 			rot = -16
 	#if it can see the target
 	else:
-		if (bdist < 15):
+		if (targDist < 15):
 			#if not centred, centre
 			if (abs(bearing) > 5):
 				if bearing > 0:
@@ -570,13 +570,13 @@ def naviagtion():
 						if (laser() < LASERTHRESH):
 							captured = 0
 		else:
-			max_val = VEL_SCALE * bdist + VEL_MIN
+			max_val = VEL_SCALE * targDist + VEL_MIN
 			rot = round(ROT_SCALE*bearing,2)
 	if (captured == 1):
 		LED(1)
 		print("Go lander")
 	else:
-		if(bdist != 0):
+		if(targDist != 0):
 			LED(2)
 			print("sees targ")
 		else:
@@ -634,10 +634,10 @@ def process(frame):
 	Lander_list = []
 
 	#object frame = thresh(input img, obj type, output img)
-	sample = thresh(sample_img, 0)
-	rock = thresh(rock_img, 1)
-	obstacle = thresh(obstacle_img, 2)
-	lander = thresh(lander_img, 3)
+	sample = thresh(sample_img, 0, total_img)
+	rock = thresh(rock_img, 1, total_img)
+	obstacle = thresh(obstacle_img, 2, total_img)
+	lander = thresh(lander_img, 3, total_img)
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
@@ -655,7 +655,7 @@ def process(frame):
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	naviagtion()
-	# cv2.imshow("Total", total_img)		#display final output img
+	cv2.imshow("Total", total_img)		#display final output img
 
 
 def cleanUp():
