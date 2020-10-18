@@ -593,7 +593,7 @@ def naviagtion():
 				if ((currentTime.second + (currentTime.microsecond / 1000000) - start.second + (start.microsecond / 1000000)) < 2):
 					if obstaclePeak[j] < 160:
 						print("turn right")
-						max_index = 319
+						max_index = 1
 						drive(0, -15)
 						time.sleep(1)
 						drive(0,0)
@@ -602,7 +602,7 @@ def naviagtion():
 					else:
 						print("turn left")
 						drive(15, 0)
-						max_index = 1
+						max_index = 319
 						drive(0, -15)
 						time.sleep(1)
 						drive(0,0)
