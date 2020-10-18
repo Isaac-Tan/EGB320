@@ -142,8 +142,8 @@ class Obstacle:
 		self.Dist = Dist
 		self.Bearing = Bearing
 		self.ID = ID
-		self.x1 = cX
-		self.x2 = cY
+		self.cX = cX
+		self.cY = cY
 		Obstacle.obstacleCount += 1
 	def __del__(self):
 		Obstacle.obstacleCount -= 1
