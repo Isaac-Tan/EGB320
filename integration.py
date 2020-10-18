@@ -573,16 +573,17 @@ def naviagtion():
 		else:
 			max_val = VEL_SCALE * bdist + VEL_MIN
 			rot = round(ROT_SCALE*bearing,2)
-	if (captured == 1):
-		LED(1)
-		print("Go lander")
-	else:
-		if(bdist != 0):
-			LED(2)
-			print("sees targ")
-		else:
-			LED(3)
-			print("looking for targ")
+	# if (captured == 1):
+	# 	LED(1)
+	# 	print("Go lander")
+	# else:
+	# 	if(bdist != 0):
+	# 		LED(2)
+	# 		print("sees targ")
+	# 	else:
+	# 		LED(3)
+	# 		print("looking for targ")
+	LED(1)
 	drive(max_val, -1*rot)
 
 	#drive(15,0)
