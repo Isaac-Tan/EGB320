@@ -420,7 +420,7 @@ def thresh(input_frame, type, output_frame):
 		# 	cv2.drawContours(total_img, [c], -1, (255, 255, 255), 2)
 
 		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
-		Displays range and bearing on output img
+		# Displays range and bearing on output img
 		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
