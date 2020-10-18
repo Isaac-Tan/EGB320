@@ -531,15 +531,17 @@ def naviagtion():
 	obstaclePeak = []
 	obstacleDist = []
 	if (len(Obstacle_list) > 0):
+		print("There is at least 1 obstacle")
 		for i in range(0, len(Obstacle_list)-1):
 			obstaclePeak.append(Obstacle_list[i].cX)
 			obstacleDist.append(Obstacle_list[i].Dist)
 		obstacleArray = np.empty((WIDTH))
 		obstacleArray[:] = np.NaN
 		for j in range(0, len(obstaclePeak)):
-			obstacleArray[obstaclePeak[i]] = obstacleDist[i]
-		minval = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
-		if (obstacleArray[minval] < 30):
+			obstacleArray[obstaclePeak[j]] = obstacleDist[j]
+		minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
+		print("minval", minvalIndex)
+		if (obstacleArray[minvalIndex] < 30):
 			print("Avoid!!!!")
 			# if minval < 160:
 			# 	drive(10 -15)
@@ -597,14 +599,14 @@ def naviagtion():
 			rot = round(ROT_SCALE*bearing,2)
 	if (captured == 1):
 		LED(1)
-		print("Go lander")
+		#print("Go lander")
 	else:
 		if(targDist != 0):
 			LED(2)
-			print("sees targ")
+			#print("sees targ")
 		else:
 			LED(3)
-			print("looking for targ")
+			#print("looking for targ")
 	drive(max_val, -1*rot)
 
 	#drive(15,0)
