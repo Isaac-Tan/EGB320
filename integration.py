@@ -341,17 +341,17 @@ def laser():
 
 def LED(colour):
 	if (colour == 1):
-		#Green
+		#Green - going to lander
 		GPIO.output(GREEN,GPIO.HIGH)
 		GPIO.output(YELLOW,GPIO.LOW)
 		GPIO.output(RED,GPIO.LOW)
 	elif (colour == 2):
-		#Yellow
+		#Yellow - going to target
 		GPIO.output(GREEN,GPIO.LOW)
 		GPIO.output(YELLOW,GPIO.HIGH)
 		GPIO.output(RED,GPIO.LOW)
 	elif (colour == 3):
-		#Red
+		#Red - looking for target
 		GPIO.output(GREEN,GPIO.LOW)
 		GPIO.output(YELLOW,GPIO.LOW)
 		GPIO.output(RED,GPIO.HIGH)
@@ -573,14 +573,18 @@ def naviagtion():
 		else:
 			max_val = VEL_SCALE * bdist + VEL_MIN
 			rot = round(ROT_SCALE*bearing,2)
-	drive(max_val, -1*rot)
 	if (captured == 1):
 		LED(1)
+		print("Go lander")
 	else:
 		if(bdist != 0):
 			LED(2)
+			print("sees targ")
 		else:
 			LED(3)
+			print("looking for targ")
+	drive(max_val, -1*rot)
+
 	#drive(15,0)
 
 
