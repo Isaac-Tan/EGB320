@@ -710,7 +710,7 @@ def main():
 if __name__ == '__main__':
 	if (init == False):
 		bounds()
-		laserSetup()
+		#laserSetup()
 		offLander()
 		init = True
 	main()
