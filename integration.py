@@ -579,14 +579,14 @@ def naviagtion():
 	obstacleDist = []
 	if (len(Obstacle_list) > 0):
 		print("There is at least 1 obstacle")
-		for i in range(0, len(Obstacle_list)-1):
+		for i in range(0, len(Obstacle_list)):
 			print("setting peaks")
 			obstaclePeak.append(Obstacle_list[i].cX)
 			obstacleDist.append(Obstacle_list[i].Dist)
 		print("init NaN")
 		obstacleArray = np.empty((WIDTH))
 		obstacleArray[:] = np.NaN
-		for j in range(0, len(obstaclePeak)-1):
+		for j in range(0, len(obstaclePeak)):
 			print("set obstacleArray")
 			if obstacleDist[j] < 30:
 				print("stop")
@@ -613,7 +613,7 @@ def naviagtion():
 		else:
 			LED(3)
 			#print("looking for targ")
-			
+
 	drive(max_val, -1*rot)
 
 	#drive(15,0)
