@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 
 RED = 21 #Red LED
 YELLOW = 20 #Yellow LED
-GREEN = 16 #Green LED
+GREEN = 12 #Green LED
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(GREEN, GPIO.OUT) #Green LED
@@ -12,7 +12,7 @@ GPIO.setup(RED, GPIO.OUT) #Red LED
 counter = 0
 
 try: 
-    while (counter < 10000000000):
+    while (counter < 100000000):
         GPIO.output(GREEN, GPIO.HIGH)
         GPIO.output(YELLOW, GPIO.HIGH)
         GPIO.output(RED, GPIO.HIGH)
