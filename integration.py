@@ -533,11 +533,14 @@ def naviagtion():
 	if (len(Obstacle_list) > 0):
 		print("There is at least 1 obstacle")
 		for i in range(0, len(Obstacle_list)-1):
+			print("setting peaks")
 			obstaclePeak.append(Obstacle_list[i].cX)
 			obstacleDist.append(Obstacle_list[i].Dist)
+		print("init NaN")
 		obstacleArray = np.empty((WIDTH))
 		obstacleArray[:] = np.NaN
 		for j in range(0, len(obstaclePeak)-1):
+			print("set obstacleArray")
 			obstacleArray[obstaclePeak[j]] = obstacleDist[j]
 		minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
 		print("minval", minvalIndex)
