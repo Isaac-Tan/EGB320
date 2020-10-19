@@ -329,7 +329,7 @@ def captureBall():
 def returnBall():
 	midServo()
 	drive(55, 0)
-	time.sleep(1.75)
+	time.sleep(1.7)
 	upServo()
 	drive(0,0)
 	time.sleep(1)
@@ -402,7 +402,7 @@ def thresh(input_frame, type, total_img):
 		ratio = h / w	#Calculate the ratio of height to width			
 		#if the object exceeds the lower bounds of the screen region
 		if (type != 3):
-			if (y2 > 235 and ratio < 0.9 and ratio != 0.0):
+			if ((y2 > 235 or y1 < 5 )and ratio < 0.9 and ratio != 0.0):
 				#Divide it by the ratio of height to width
 				h = h / ratio		
 		
@@ -598,7 +598,7 @@ def naviagtion():
 			obstacleDist.append(Obstacle_list[i].Dist)
 	if (len(obstaclePeak) > 0):
 		for j in range(0, len(obstaclePeak)):
-			if obstacleDist[j] < 28:
+			if obstacleDist[j] < 20:
 				print("stop")
 				max_val = 0
 				rot = 0
