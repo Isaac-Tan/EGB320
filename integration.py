@@ -329,7 +329,7 @@ def captureBall():
 def returnBall():
 	midServo()
 	drive(55, 0)
-	time.sleep(1.75)
+	time.sleep(1.8)
 	upServo()
 	drive(0,0)
 	time.sleep(1)
