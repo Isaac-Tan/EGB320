@@ -166,7 +166,7 @@ def thresh(input_frame, type, total_img):
 		ratio = h / w				
 				
 		if (type != 3):
-			if ((y2 > 235 or y2 < 5 ) and ratio < 0.9 and ratio != 0.0):
+			if ((y2 > 235 or y1 < 5 ) and ratio < 0.9 and ratio != 0.0):
 				#Divide it by the ratio of height to width
 				h = h / ratio	
 		# compute bearing of the contour
