@@ -289,7 +289,7 @@ def downServo():
 
 def flipRock():
 	downServo()
-	drive(23, 0)
+	drive(21, 0)
 	time.sleep(1.7)
 	drive(0, 0)
 	time.sleep(2)
