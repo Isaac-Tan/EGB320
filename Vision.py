@@ -58,7 +58,7 @@ cap.set(4, 240)									# Set the frame HEIGHT
 # cap.set(cv2.CAP_PROP_EXPOSURE, 0.05)		# Set auto exposure to manual			# Set exposure to 0.05
 #picamera.exposure_mode = 'night'
 cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
-cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.6)
+cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.5)
 cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 
 def bounds():
@@ -158,16 +158,17 @@ def thresh(input_frame, type, total_img):
 		extrbottom = tuple(c[c[:, :, 1].argmax()][0])
 		x1 = extrleft[0]
 		x2 = extrright[0]
-		x = float(x2 - x1)
+		w = float(x2 - x1)
 		y1 = extrtop[1]
 		y2 = extrbottom[1]
 
 		h = float(y2 - y1)
-		ratio = h / x				
+		ratio = h / w				
 				
-		if (y2 > 235 and ratio < 0.9 and ratio != 0.0):
-			h = h / ratio
-
+		if (type != 3):
+			if ((y2 > 235 or y2 < 5 ) and ratio < 0.9 and ratio != 0.0):
+				#Divide it by the ratio of height to width
+				h = h / ratio	
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
 		# get height/width of contour
