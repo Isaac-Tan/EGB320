@@ -48,7 +48,7 @@ def capture():
 	cap.set(3, 320)									# Set the frame width
 	cap.set(4, 240)									# Set the frame height
 	cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
-	cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.6)
+	cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.4)
 	cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
 	# Check if camera opened successfully
 	if (cap.isOpened() == False):
