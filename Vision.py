@@ -229,7 +229,6 @@ def capture():
 	# Capture frame-by-frame
 		ret, frame = cap.read()
 		if ret == True:
-			cv2.imshow("Raw", frame)
 			cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
 			process(frame)
 			k = cv2.waitKey(1) & 0xFF
@@ -247,6 +246,7 @@ def capture():
 def process(frame):
 	now = time.time()	#start process time
 	frame = cv2.rotate(frame, cv2.ROTATE_180)		#rotate the frame 180'
+	cv2.imshow("Raw", frame)
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)	#convert rgb to hsv
 
 	#sample has 2 mask because hue wraps from 179 around to 0
