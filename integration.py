@@ -564,11 +564,11 @@ def naviagtion():
 		#if last seen on the left
 		if (max_index < 160):
 			#turn left
-			rot = -19
+			rot = 19
 		#if last seen on the right
 		else:
 			#turn right
-			rot = 19
+			rot = -19
 	else:		#if it can see the target
 		if (targDist < 15):		#if the target is near
 			if (abs(bearing) > 5):	#if not centred - centre
