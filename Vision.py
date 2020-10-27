@@ -135,7 +135,7 @@ def bounds():
 
 def thresh(input_frame, type, total_img):
 	#input frame, type (sample, rock, obst, etc), output frame
-	cv2.imshow("Raw", input_frame)
+	cv2.imshow("Normalised", input_frame)
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 	cv2.imshow("Greyscale", thresh)
@@ -229,6 +229,7 @@ def capture():
 	# Capture frame-by-frame
 		ret, frame = cap.read()
 		if ret == True:
+			cv2.imshow("Raw", frame)
 			cv2.normalize(frame, frame, 0, 255, cv2.NORM_MINMAX)
 			process(frame)
 			k = cv2.waitKey(1) & 0xFF
