@@ -326,7 +326,7 @@ def captureBall():
 	time.sleep(3)
 	midServo()		#Lower the servo
 	global captured
-	captured = 1	#Set the sample as captured
+	captured = 0	#Set the sample as captured
 	drive(0, 0)		#Stop
 	time.sleep(1)
 
