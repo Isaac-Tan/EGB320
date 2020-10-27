@@ -380,6 +380,7 @@ def thresh(input_frame, type, total_img):
 	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
 	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
 	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)	#applies gausian blur of 5x5
+	cv2.namedWindow("Binary", cv2.WINDOW_NORMAL)
 	cv2.imshow("Binary", blurred_thresh)
 	#ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(blurred_thresh, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
@@ -683,6 +684,7 @@ def process(frame):
 	#cv2.imshow("Sample",sample_img)
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
+	cv2.namedWindow("Raw", cv2.WINDOW_NORMAL)
 	cv2.imshow("Raw", total_img)
 
 	global Sample_list		#Global needs to be called to store into a global variable	
