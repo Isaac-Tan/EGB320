@@ -272,71 +272,75 @@ def stop():
 	pwm[1].stop() #stop the pwm pin at index 1 (right motor)
 
 def upServo():
+	#Put the servo in the up position
 	servo.ChangeDutyCycle(3.5)
 	time.sleep(0.5)
 
 def pushingServo():
+	#Put the servo low enough to push the rock but not the ball
 	servo.ChangeDutyCycle(5)
 	time.sleep(0.5)
 
 def midServo():
+	#Put the servo low enough to capture the ball but not touch the carpet
 	servo.ChangeDutyCycle(6.5)
 	time.sleep(0.5)
 
 def downServo():
+	#Put the servo in the down position
 	servo.ChangeDutyCycle(7)
 	time.sleep(0.5)
 
 def flipRock():
-	downServo()
-	drive(21, 0)
+	downServo()		#Put the servo in the down position
+	drive(21, 0)	#Drive forward for 1.7 secs
 	time.sleep(1.7)
-	drive(0, 0)
+	drive(0, 0)		#Stop
 	time.sleep(2)
-	upServo()
+	upServo()		#Lift the servo up - flipping rock
 	time.sleep(1)
-	drive(-15,0)
+	drive(-15,0)	#Drive backwards for 1 sec
 	time.sleep(1)
-	drive(0,0)
-	pushingServo()
-	drive(23, 0)
+	drive(0,0)		#Stop
+	pushingServo()	#Put the servo low enough to push the rock, and capture the ball
+	drive(23, 0)	#Drive forward for 1.5 secs
 	time.sleep(1.5)
-	drive(0,0)
+	drive(0,0)		#Stop
 	time.sleep(0.5)
-	drive(-10,0)
+	drive(-10,0)	#Drive backwards slightly so the servo doesn't clip the rock
 	time.sleep(0.5)
 	drive(0,0)
-	midServo()
-	drive(-20,0)
+	midServo()		#Put the servo down but not low enough to scrape the carpet
+	drive(-20,0)	#Drive backwards for 2 seconds
 	time.sleep(2)
-	drive(0,0)
+	drive(0,0)		#stop
 	global flipped
-	flipped = 1
+	flipped = 1		#Set the rock as flipped
 	global captured
-	captured = 1
+	captured = 1	#Set the sample as captured
 
 def captureBall():
-	upServo()
+	upServo()		#Lift the servo up
 	time.sleep(1)
-	drive(23, -1)
+	drive(23, -1)	#Drive forward for 3 seconds
 	time.sleep(3)
-	midServo()
+	midServo()		#Lower the servo
 	global captured
-	captured = 1
-	drive(0, 0)
-	time.sleep(2)
+	captured = 1	#Set the sample as captured
+	drive(0, 0)		#Stop
+	time.sleep(1)
 
 def returnBall():
-	midServo()
-	drive(55, 0)
+	midServo()		#Ensure the gate won't catch on the lander
+	drive(55, 0)	#Drive hard for 1.8 seconds
 	time.sleep(1.8)
-	upServo()
-	drive(0,0)
+	upServo()		#Lift the gate -releasing the sample
+	drive(0,0)		#Stop
 	time.sleep(1)
-	drive(-20, 0)
+	drive(-20, 0)	#Drive backwards down the lander
 	time.sleep(2)
-	drive(0, 0)
-	midServo()
+	drive(0, 0)		#Stop
+	midServo()		#Put the servo back down
 
 def laser():  
     reading = 0  
@@ -505,26 +509,32 @@ def naviagtion():
 	neg_field = [0] * WIDTH
 	M = 0.01
 	scal = 0.002
-	if (flipped == 0):
+	if (flipped == 0):	#If a rock hasn't been flipped yet
 		if len(Rock_list) > 0:
+			#Set a known rock location as the target
 			peak = Rock_list[0].cX
 			targDist = Rock_list[0].Dist
 		else:
+			#Set the last known location as the target
 			peak = max_index
 			targDist = 0.0
-	else:
-		if (captured == 0):
+	else:	#Once a rock has been flipped
+		if (captured == 0):		#If it doesn't have a ball
 			if len(Sample_list) > 0:
+				#Set a known sample location as the target
 				peak = Sample_list[0].cX
 				targDist = Sample_list[0].Dist
 			else:
+				#Set the last known location as the target
 				peak = max_index
 				targDist = 0.0
-		else:
+		else:		#If it has a ball
 			if len(Lander_list) > 0:
+				#Set a knwon lander location as the target
 				peak = Lander_list[0].cX
 				targDist = Lander_list[0].Dist
 			else:
+				#Set the last known location as the target
 				peak = max_index
 				targDist = 0.0
 
@@ -548,8 +558,7 @@ def naviagtion():
 
 	max_val = 0
 	rot = 0
-	#if it cant see the target
-	if (targDist == 0):
+	if (targDist == 0):		#if it cant see the target
 		#if last seen on the left
 		if (max_index < 160):
 			#turn left
@@ -558,18 +567,15 @@ def naviagtion():
 		else:
 			#turn right
 			rot = -19
-	#if it can see the target
-	else:
-		if (targDist < 15):
-			#if not centred, centre
-			if (abs(bearing) > 5):
-				if bearing > 0:
-					rot = 12
-				else:
-					rot = -12
-			#if centred
-			else:
-				#what is targ
+	else:		#if it can see the target
+		if (targDist < 15):		#if the target is near
+			if (abs(bearing) > 5):	#if not centred - centre
+				if bearing > 0:	#if target is on the right
+					rot = 12	#turn right
+				else:	#if the target is on the left
+					rot = -12	#turn left
+			else:		#if the target is centred
+				#what is targ?
 				if flipped == 0:	#If Rock is tagret
 					flipRock()
 					time.sleep(1)
@@ -580,67 +586,64 @@ def naviagtion():
 					else:	#If it has the ball
 						returnBall()
 						captured = 0
-		else:
+		else:	#Drive to target
 			max_val = VEL_SCALE * targDist + VEL_MIN
 			rot = round(ROT_SCALE*bearing,2)
 
 	obstaclePeak = []
 	obstacleDist = []
 	start = datetime.now()
-	if (flipped == 1):
+	if (flipped == 1):	#If the rock has been flipped
+		#Set the rocks as obstacles
 		if (len(Rock_list) > 0):
-			for i in range(0, len(Rock_list)):
-				obstaclePeak.append(Rock_list[i].cX)
-				obstacleDist.append(Rock_list[i].Dist)
+			for i in range(0, len(Rock_list)):	#For all known rocks
+				obstaclePeak.append(Rock_list[i].cX)	#Add it's bearing to the obstacle list
+				obstacleDist.append(Rock_list[i].Dist)	#Add it's distance to the obstacle list
+	#Set the obstacles as obstacles
 	if (len(Obstacle_list) > 0):
-		for i in range(0, len(Obstacle_list)):
-			obstaclePeak.append(Obstacle_list[i].cX)
-			obstacleDist.append(Obstacle_list[i].Dist)
+		for i in range(0, len(Obstacle_list)):	#For all known obstacles
+			obstaclePeak.append(Obstacle_list[i].cX)	#Add it's bearing to the obstacle list
+			obstacleDist.append(Obstacle_list[i].Dist)	#Add it's distance to the obstacle list
+	#Avoid obstacles
 	if (len(obstaclePeak) > 0):
-		for j in range(0, len(obstaclePeak)):
-			if obstacleDist[j] < 20:
+		for j in range(0, len(obstaclePeak)):	#For all the known obstacles
+			if obstacleDist[j] < 20:	#If they are less than 20cm away
 				print("stop")
+				#Stop
 				max_val = 0
 				rot = 0
 				currentTime = datetime.now()
 				if ((currentTime.second + (currentTime.microsecond / 1000000) - start.second + (start.microsecond / 1000000)) < 2):
-					if obstaclePeak[j] < 160:
+					#if it has been less than 2 sec since last avoiding an obstacle
+					if obstaclePeak[j] < 160:	#If the obstacle is on the left
 						print("turn right")
-						max_index = 1
-						drive(0, -15)
+						max_index = 1	#Set the target's last known location as on the left
+						drive(0, -15)	#Turn right
 						time.sleep(1)
 						drive(0,0)
 						time.sleep(1)
 						break
-					else:
+					else:		#If obstacle is on the right
 						print("turn left")
-						drive(15, 0)
-						max_index = 319
+						drive(15, 0)	#Turn left
+						max_index = 319	#Set the target's last known location on the right
 						drive(0, -15)
 						time.sleep(1)
 						drive(0,0)
 						time.sleep(1)
 						break
 
-		# 	obstacleArray[obstaclePeak[j]] = obstacleDist[j]
-		# minvalIndex = np.where(obstacleArray == np.min(obstacleArray[np.nonzero(obstacleArray)]))
-		# print("minval", minvalIndex[0])
-		# if (obstacleArray[minvalIndex[0]] < 30):
-		# 	print("Avoid!!!!")
 			
 	if (captured == 0):
-		if(targDist != 0):
+		if(targDist != 0):	#Going towards the target
 			LED(2)
-			#print("sees targ")
-		else:
+		else:	#Looking for the target
 			LED(3)
-			#print("looking for targ")
-	else:
+	else:	#Going to the lander
 		LED(1)
 
 	drive(max_val, -1*rot)
 
-	#drive(15,0)
 
 
 
