@@ -39,7 +39,7 @@ pwm[1].start(0)
 servo.start(6.5)
 #Multipliers for uneven motor power
 m1mult = 1.0 #Left motor multiplier
-m2mult = 1.0 #Right motor multiplier
+m2mult = 0.9 #Right motor multiplier
 
 
 FREQUENCY = 20 #Hz
