@@ -285,7 +285,7 @@ def process(frame):
 	rock = thresh(rock_img, 1, total_img)
 	obstacle = thresh(obstacle_img, 2, total_img)
 	lander = thresh(lander_img, 3, total_img)
-	wall = thresh(wall_img, 4,total_img)
+	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
 	#cv2.line(frame, ((int(WIDTH/2)),0), ((int(WIDTH/2)),int(HEIGHT)), (255, 255, 255))
@@ -299,7 +299,7 @@ def process(frame):
 	#Display Frequency in top left corner
 	cv2.putText(total_img, "Frequency: " + str(rate) + "Hz", (15, 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-	cv2.namedWindow("Total",WINDOW_NORMAL)
+	cv2.namedWindow("Total", cv2.WINDOW_NORMAL)
 	cv2.imshow("Total", total_img)		#display final output img
 	
 
