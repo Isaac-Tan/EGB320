@@ -380,6 +380,7 @@ def thresh(input_frame, type, total_img):
 	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
 	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
 	blurred_thresh = cv2.GaussianBlur(opened, (5, 5), 0)	#applies gausian blur of 5x5
+	cv2.imshow("Binary", blurred_thresh)
 	#ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(blurred_thresh, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
 	cnts = imutils.grab_contours(cnts)		#grabs contours from cnts
@@ -694,9 +695,9 @@ def process(frame):
 
 	#object frame = thresh(input img, obj type, output img)
 	sample = thresh(sample_img, 0, total_img)
-	rock = thresh(rock_img, 1, total_img)
-	obstacle = thresh(obstacle_img, 2, total_img)
-	lander = thresh(lander_img, 3, total_img)
+	#rock = thresh(rock_img, 1, total_img)
+	#obstacle = thresh(obstacle_img, 2, total_img)
+	#lander = thresh(lander_img, 3, total_img)
 	#wall = thresh(wall_img, 4,total_img)
 
 	# draw a line down the centre of the screen
@@ -714,7 +715,7 @@ def process(frame):
 	# cv2.putText(total_img, "Frequency: " + str(rate2) + "Hz", (15, 20),
 	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	naviagtion()
-	cv2.imshow("Total", total_img)		#display final output img
+	#cv2.imshow("Total", total_img)		#display final output img
 
 
 def cleanUp():
