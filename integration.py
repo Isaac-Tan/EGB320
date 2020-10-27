@@ -97,7 +97,7 @@ Lander_list = []
 max_index = 160
 
 captured = 0
-flipped = 0
+flipped = 1
 
 init = False
 
@@ -571,9 +571,9 @@ def naviagtion():
 		if (targDist < 15):		#if the target is near
 			if (abs(bearing) > 5):	#if not centred - centre
 				if bearing > 0:	#if target is on the right
-					rot = 12	#turn right
+					rot = 15	#turn right
 				else:	#if the target is on the left
-					rot = -12	#turn left
+					rot = -15	#turn left
 			else:		#if the target is centred
 				#what is targ?
 				if flipped == 0:	#If Rock is tagret
