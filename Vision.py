@@ -173,7 +173,7 @@ def thresh(input_frame, type, total_img):
 				#Divide it by the ratio of height to width
 				h = h / ratio	
 		# compute bearing of the contour
-		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),3)
+		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),1)
 		# get height/width of contour
 		#x,y,h,w = cv2.boundingRect(c)
 		#calculate distance
@@ -182,7 +182,7 @@ def thresh(input_frame, type, total_img):
 			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
-			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),3)
+			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),1)
 			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
 			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
