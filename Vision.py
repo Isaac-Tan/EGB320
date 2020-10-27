@@ -299,7 +299,7 @@ def process(frame):
 	#Display Frequency in top left corner
 	cv2.putText(total_img, "Frequency: " + str(rate) + "Hz", (15, 20),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-
+	cv2.namedWindow("Total",WINDOW_NORMAL)
 	cv2.imshow("Total", total_img)		#display final output img
 	
 
