@@ -196,7 +196,7 @@ def thresh(input_frame, type, total_img):
 			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
 			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
+			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
 		elif (type == 4):
@@ -297,7 +297,7 @@ def process(frame):
 	elapsed2 = time.time() - now
 	rate2 = round(1.0/elapsed2,0)
 	#Display Frequency in top left corner
-	cv2.putText(total_img, "Frequency: " + str(rate) + "Hz", (15, 20),
+	cv2.putText(total_img, "Frequency: " + str(10) + "Hz", (15, 220),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	cv2.namedWindow("Total", cv2.WINDOW_NORMAL)
 	cv2.imshow("Total", total_img)		#display final output img
