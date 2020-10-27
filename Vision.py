@@ -135,15 +135,15 @@ def bounds():
 
 def thresh(input_frame, type, total_img):
 	#input frame, type (sample, rock, obst, etc), output frame
-	cv2.imshow("Normalised", input_frame)
+	#cv2.imshow("Normalised", input_frame)
 	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
-	cv2.imshow("Greyscale", thresh)
+	#cv2.imshow("Greyscale", thresh)
 	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
 	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
 	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
 	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
-	cv2.imshow("Morphology", opened)
+	#cv2.imshow("Morphology", opened)
 	blurred_thresh = cv2.GaussianBlur(opened, (3, 3), 0)	#applies gausian blur of 5x5
 	#ims = blurred_thresh	#somewhat redundant but smaller variable name
 	cnts = cv2.findContours(blurred_thresh, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)		#finds the contours and stores them in cnts
@@ -179,23 +179,23 @@ def thresh(input_frame, type, total_img):
 		#calculate distance
 		if (type == 0):
 			#Displays "sample" in the centre of the contour
-			cv2.putText(total_img, "Sample", (cX - 15, cY - 20),
+			cv2.putText(total_img, "Sample", (cX - 15, cY - 12),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			#dist(cm) = 0.1 x (focal length(mm) x real sample height(mm) x screen height(px))/(pixel height(px) x sensor height(mm))
 			dist = round(0.1*(FOCAL_LEN * SAMPLE_HEIGHT * HEIGHT)/(h * SENSOR_HEIGHT),1)
 			cv2.drawContours(total_img, [c], -1, (0, 69, 255), 2)	#Draws bounding box on output img around contour #c
 		elif (type == 1):
-			cv2.putText(total_img, "Rock", (cX - 15, cY - 20),
+			cv2.putText(total_img, "Rock", (cX - 10, cY - 12),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			dist = round(0.1*(FOCAL_LEN*ROCK_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (255, 0, 0), 2)
 		elif (type == 2):
-			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 20),
+			cv2.putText(total_img, "Obstacle", (cX - 15, cY - 12),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			dist = round(0.1*(FOCAL_LEN*OBST_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 0), 2)
 		elif (type == 3):
-			cv2.putText(total_img, "Lander", (cX - 15, cY - 20),
+			cv2.putText(total_img, "Lander", (cX - 15, cY - 12),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 			dist = round(0.1*(FOCAL_LEN*LANDER_HEIGHT*HEIGHT)/(h*SENSOR_HEIGHT),3)
 			cv2.drawContours(total_img, [c], -1, (0, 255, 255), 2)
@@ -213,11 +213,6 @@ def thresh(input_frame, type, total_img):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
 
 	return total_img		#return output image
-
-def walls(input_frame, total_img):
-	#input frame, type (sample, rock, obst, etc), output frame
-	gray = input_frame[:, :, 2]		#sets to the 3rd channel of input (greyscale)
-	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 
 
 def capture():
@@ -270,15 +265,17 @@ def process(frame):
 	rock_img = cv2.bitwise_and(frame, frame, mask= r_mask)
 	obstacle_img = cv2.bitwise_and(frame, frame, mask= o_mask)
 	lander_img = cv2.bitwise_and(frame, frame, mask= l_mask)
-	wall_img = cv2.bitwise_and(frame, frame, mask= b_mask)
+	#wall_img = cv2.bitwise_and(frame, frame, mask= b_mask)
 
 	# total_img = sample_img + rock_img + obstacle_img
 	total_img = frame
 
 
-	#cv2.imshow("Sample",sample_img)
-	# cv2.imshow("Rock", rock_img)
-	# cv2.imshow("Obstacle", obstacle_img)
+	cv2.imshow("Sample",sample_img)
+	cv2.imshow("Rock", rock_img)
+	cv2.imshow("Obstacle", obstacle_img)
+	cv2.imshow("Lander", lander_img)
+
 
 	#object frame = thresh(input img, obj type, output img)
 	sample = thresh(sample_img, 0, total_img)
