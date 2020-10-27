@@ -729,6 +729,6 @@ if __name__ == '__main__':
 	if (init == False):
 		bounds()
 		#laserSetup()
-		#offLander()
+		offLander()
 		init = True
 	main()
