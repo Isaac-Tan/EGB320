@@ -55,8 +55,8 @@ WALL_HEIGHT = 450 #mm
 HEIGHT = 240 #screen height
 WIDTH = 320 #screen width
 ROT_SCALE = 0.15 #Rotation Scaler
-VEL_SCALE = 0.4 #Velocity Scaler
-VEL_MIN = 12 #Velocity min value
+VEL_SCALE = 0.35 #Velocity Scaler
+VEL_MIN = 11 #Velocity min value
 LASERTHRESH	 = 0 #Initialise threshold at 0
 laserArr = []
 lasertol = 0.8 #Laser tolerance
@@ -563,11 +563,11 @@ def naviagtion():
 		#if last seen on the left
 		if (max_index < 160):
 			#turn left
-			rot = 23
+			rot = 21
 		#if last seen on the right
 		else:
 			#turn right
-			rot = -23
+			rot = -21
 	else:		#if it can see the target
 		if (targDist < 15):		#if the target is near
 			if (abs(bearing) > 5):	#if not centred - centre
@@ -683,6 +683,7 @@ def process(frame):
 	#cv2.imshow("Sample",sample_img)
 	# cv2.imshow("Rock", rock_img)
 	# cv2.imshow("Obstacle", obstacle_img)
+	cv2.imshow("Raw", total_img)
 
 	global Sample_list		#Global needs to be called to store into a global variable	
 	Sample_list = []
