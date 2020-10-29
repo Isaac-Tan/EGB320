@@ -17,7 +17,7 @@ writing = False
 obj = 'Live_feed'
 
 cv2.namedWindow('Thresholder_App', cv2.WINDOW_NORMAL)
-cv2.namedWindow("Live_feed", cv2.WINDOW_NORMAL)
+#cv2.namedWindow("Live_feed", cv2.WINDOW_NORMAL)
 
 cv2.createTrackbar("HMax", "Thresholder_App",0,179,nothing)
 cv2.createTrackbar("HMin", "Thresholder_App",0,179,nothing)
@@ -107,7 +107,7 @@ def process(frame):
 	elif (writing == True):
 		cv2.putText(thresholded_img,"Writing", (15, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	cv2.putText(thresholded_img, obj, (270, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-	cv2.imshow("Live_feed", thresholded_img)
+	cv2.imshow('Thresholder_App', thresholded_img)
 
 	k = cv2.waitKey(1) & 0xFF
 	# exit if r is pressed
