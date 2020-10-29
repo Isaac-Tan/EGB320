@@ -140,9 +140,8 @@ def thresh(input_frame, type, total_img):
 	thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY)[1]		#converts greyscale to binary
 	#cv2.imshow("Greyscale", thresh)
 	kernel = np.ones((5,5),np.uint8)	#creates a 5x5 matrix of ones for dilation and erotion
-	#dilation = cv2.dilate(thresh,kernel,iterations = 2)		#dilates anything larger than the 5x5 matrix, twice
-	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes anything larger than the 5x5 matrix, 4 times
-	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates anything larger than the 5x5 matrix, twice
+	erosion = cv2.erode(thresh,kernel,iterations = 1)		#erodes with a 5x5 matrix
+	opened = cv2.dilate(erosion,kernel,iterations = 1)		#dilates with a 5x5 matrix
 	#cv2.imshow("Morphology", opened)
 	blurred_thresh = cv2.GaussianBlur(opened, (3, 3), 0)	#applies gausian blur of 5x5
 	#ims = blurred_thresh	#somewhat redundant but smaller variable name
@@ -241,7 +240,7 @@ def capture():
 def process(frame):
 	now = time.time()	#start process time
 	frame = cv2.rotate(frame, cv2.ROTATE_180)		#rotate the frame 180'
-	cv2.imshow("Raw", frame)
+	# cv2.imshow("Raw", frame)
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)	#convert rgb to hsv
 
 	#sample has 2 mask because hue wraps from 179 around to 0
@@ -271,10 +270,10 @@ def process(frame):
 	total_img = frame
 
 
-	cv2.imshow("Sample",sample_img)
-	cv2.imshow("Rock", rock_img)
-	cv2.imshow("Obstacle", obstacle_img)
-	cv2.imshow("Lander", lander_img)
+	# cv2.imshow("Sample",sample_img)
+	# cv2.imshow("Rock", rock_img)
+	# cv2.imshow("Obstacle", obstacle_img)
+	# cv2.imshow("Lander", lander_img)
 
 
 	#object frame = thresh(input img, obj type, output img)
