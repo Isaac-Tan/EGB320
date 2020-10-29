@@ -107,8 +107,8 @@ def process(frame):
 	elif (writing == True):
 		cv2.putText(thresholded_img,"Writing", (15, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
 	cv2.putText(thresholded_img, obj, (270, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 255, 255), 1)
-	cv2.namedWindow('Live_feed', cv2.WINDOW_NORMAL)
-	cv2.imshow('Live_feed', thresholded_img)
+	cv2.namedWindow("Live_feed", cv2.WINDOW_NORMAL)
+	cv2.imshow("Live_feed", thresholded_img)
 
 	k = cv2.waitKey(1) & 0xFF
 	# exit if r is pressed
