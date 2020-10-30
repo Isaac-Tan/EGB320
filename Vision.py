@@ -4,7 +4,7 @@ import sys
 import argparse
 import imutils
 import time
-import picamera
+#import picamera
 
 FREQUENCY = 20 #Hz
 INTERVAL = 1.0/FREQUENCY
@@ -49,7 +49,7 @@ b_min_arr = []
 init = False
 
 #Video
-#cap = cv2.VideoCapture(sys.argv[1])
+# cap = cv2.VideoCapture(sys.argv[1])
 #Camera
 cap = cv2.VideoCapture(-1)
 cap.set(3, 320)									# Set the frame WIDTH
@@ -154,23 +154,23 @@ def thresh(input_frame, type, total_img):
 		M = cv2.moments(c)	#Moments
 		cX = int(M["m10"] / M["m00"])#Centre x-coord
 		cY = int(M["m01"] / M["m00"])#Centre y-coord
-		extrleft = tuple(c[c[:,:,0].argmin()][0])#Left most x-coord
-		extrright = tuple(c[c[:,:,0].argmax()][0])#Right most x-coord
-		extrtop = tuple(c[c[:, :, 1].argmin()][0])
-		extrbottom = tuple(c[c[:, :, 1].argmax()][0])
-		x1 = extrleft[0]
-		x2 = extrright[0]
-		w = float(x2 - x1)
-		y1 = extrtop[1]
-		y2 = extrbottom[1]
+		xmin = tuple(c[c[:,:,0].argmin()][0])		#Left most x-coord
+		xmax = tuple(c[c[:,:,0].argmax()][0])		#Right most x-coord
+		x1 = xmin[0]	#Take only the x-coordinate from the tuple
+		x2 = xmax[0]	#Take only the x-coordinate from the tuple
+		w = float(x2 - x1)	#Width of the contour
+		ymin = tuple(c[c[:, :, 1].argmin()][0])		#Top most y-coord
+		ymax = tuple(c[c[:, :, 1].argmax()][0])		#Bottom most y-coord
+		y1 = ymin[1]	#Take only the y-coordinate from the tuple
+		y2 = ymax[1]	#Take only the y-coordinate from the tuple
+		h = float(y2 - y1)	#Height of the contour
 
-		h = float(y2 - y1)
 		ratio = h / w				
 				
 		if (type != 3):
 			if ((y2 > 235 or y1 < 5 ) and ratio < 0.9 and ratio != 0.0):
 				#Divide it by the ratio of height to width
-				h = h / ratio	
+				h = h / ratio
 		# compute bearing of the contour
 		bearing = round(31.1 * ((cX - (WIDTH/2.0))/(WIDTH/2.0)),1)
 		# get height/width of contour
@@ -206,10 +206,10 @@ def thresh(input_frame, type, total_img):
 
 		cv2.circle(total_img, (cX, cY), 3, (150, 150, 150), -1)		#draws a circle at the centre of the contour
 		#Displays range and bearing on output img
-		cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
-		cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
+		# cv2.putText(total_img, "R: " + str(dist) + "cm", (cX - 15, cY + 20),
+		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
+		# cv2.putText(total_img, "B: " + str(bearing), (cX - 15, cY + 30),
+		# 	cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 0), 1)
 
 	return total_img		#return output image
 
